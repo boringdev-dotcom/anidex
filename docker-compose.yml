@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: anidex
+      POSTGRES_PASSWORD: anidex_password
+      POSTGRES_DB: anidex
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - anidex-network
+
+  backend:
+    build: ./src/backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://anidex:anidex_password@postgres:5432/anidex?sslmode=disable
+      JWT_SECRET: your-secret-key-change-this-in-production
+      PORT: 8080
+      GIN_MODE: release
+    networks:
+      - anidex-network
+
+volumes:
+  postgres_data:
+
+networks:
+  anidex-network:
+    driver: bridge
