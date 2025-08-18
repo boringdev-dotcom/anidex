@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -17,15 +18,18 @@ type AuthService interface {
 	RefreshToken(refreshToken string) (*models.AuthResponse, error)
 	GetUserByID(userID uuid.UUID) (*models.User, error)
 	HandleOAuthLogin(provider models.AuthProvider, providerID, email, name, avatar string) (*models.AuthResponse, error)
+	HandleFirebaseLogin(idToken string, name *string) (*models.AuthResponse, error)
 }
 
 type authService struct {
-	userRepo repositories.UserRepository
+	userRepo        repositories.UserRepository
+	firebaseService FirebaseService
 }
 
-func NewAuthService(userRepo repositories.UserRepository) AuthService {
+func NewAuthService(userRepo repositories.UserRepository, firebaseService FirebaseService) AuthService {
 	return &authService{
-		userRepo: userRepo,
+		userRepo:        userRepo,
+		firebaseService: firebaseService,
 	}
 }
 
@@ -122,6 +126,61 @@ func (s *authService) HandleOAuthLogin(provider models.AuthProvider, providerID,
 			Avatar:     avatar,
 			Provider:   provider,
 			ProviderID: providerID,
+		}
+
+		if err := s.userRepo.Create(user); err != nil {
+			return nil, err
+		}
+	}
+
+	return s.generateAuthResponse(user)
+}
+
+func (s *authService) HandleFirebaseLogin(idToken string, name *string) (*models.AuthResponse, error) {
+	ctx := context.Background()
+	
+	// Verify the Firebase ID token
+	token, err := s.firebaseService.VerifyIDToken(ctx, idToken)
+	if err != nil {
+		return nil, fmt.Errorf("invalid Firebase token: %v", err)
+	}
+
+	// Extract user information from the token
+	uid := token.UID
+	email := token.Claims["email"].(string)
+	
+	// Try to find existing user by Firebase UID
+	user, err := s.userRepo.FindByProviderID(models.AuthProviderFirebase, uid)
+	if err != nil {
+		if !errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, err
+		}
+
+		// Check if user exists with this email but different provider
+		existingUser, _ := s.userRepo.FindByEmail(email)
+		if existingUser != nil && existingUser.Provider != models.AuthProviderFirebase {
+			return nil, fmt.Errorf("email already registered with %s", existingUser.Provider)
+		}
+
+		// Create new user
+		displayName := ""
+		if name != nil {
+			displayName = *name
+		} else if token.Claims["name"] != nil {
+			displayName = token.Claims["name"].(string)
+		}
+
+		avatar := ""
+		if token.Claims["picture"] != nil {
+			avatar = token.Claims["picture"].(string)
+		}
+
+		user = &models.User{
+			Email:      email,
+			Name:       displayName,
+			Avatar:     avatar,
+			Provider:   models.AuthProviderFirebase,
+			ProviderID: uid,
 		}
 
 		if err := s.userRepo.Create(user); err != nil {

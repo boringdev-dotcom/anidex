@@ -9,7 +9,7 @@ import (
 	"github.com/anidex/backend/internal/repositories"
 	"github.com/anidex/backend/internal/services"
 
-	_ "anidex-backend/docs"
+	_ "github.com/anidex/backend/docs"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -41,7 +41,8 @@ func main() {
 	router.Use(middleware.CORSMiddleware())
 
 	userRepo := repositories.NewUserRepository()
-	authService := services.NewAuthService(userRepo)
+	firebaseService := services.NewFirebaseService()
+	authService := services.NewAuthService(userRepo, firebaseService)
 	oauthService := services.NewOAuthService()
 	authController := controllers.NewAuthController(authService, oauthService)
 
@@ -52,6 +53,7 @@ func main() {
 			auth.POST("/register", authController.Register)
 			auth.POST("/login", authController.Login)
 			auth.POST("/refresh", authController.RefreshToken)
+			auth.POST("/firebase", authController.FirebaseLogin)
 			auth.GET("/google", authController.GoogleLogin)
 			auth.GET("/google/callback", authController.GoogleCallback)
 			auth.GET("/facebook", authController.FacebookLogin)

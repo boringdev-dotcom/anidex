@@ -1,30 +1,33 @@
 # Anidex - Mobile Application
 
-A full-stack mobile application with React Native frontend and Go backend, featuring user authentication with JWT tokens and social login integration.
+A full-stack mobile application with React Native frontend and Go backend, featuring Firebase authentication, JWT tokens, and modern authentication patterns.
 
 ## Features
 
-- **User Authentication**: JWT-based authentication system
-- **Social Login**: Google and Facebook OAuth integration
+- **Firebase Authentication**: Email/password authentication with Firebase
+- **JWT Integration**: Secure token-based API authentication
 - **RESTful API**: Go backend with controller/service/repository pattern
 - **Swagger Documentation**: Auto-generated API documentation
 - **Cross-platform**: iOS and Android support with React Native
 - **Docker Support**: Containerized backend deployment
+- **Modern Auth Flow**: Firebase tokens verified server-side
 
 ## Tech Stack
 
 ### Backend
-- **Go** (Golang 1.21+)
+- **Go** (Golang 1.23+)
 - **Gin** - Web framework
 - **GORM** - ORM library
 - **PostgreSQL** - Database
-- **JWT** - Authentication
+- **Firebase Admin SDK** - Authentication verification
+- **JWT** - API authentication
 - **Swagger** - API documentation
 - **Docker** - Containerization
 
 ### Frontend
 - **React Native** - Mobile framework
 - **TypeScript** - Type safety
+- **Firebase Auth** - Authentication service
 - **React Navigation** - Navigation
 - **Zustand** - State management
 - **Axios** - HTTP client
@@ -56,25 +59,48 @@ anidex/
 │       │   ├── services/     # API services
 │       │   ├── store/        # State management
 │       │   ├── types/        # TypeScript types
+│       │   ├── config/       # Firebase configuration
 │       │   └── utils/        # Utility functions
 │       ├── ios/              # iOS specific code
-│       └── android/          # Android specific code
+│       ├── android/          # Android specific code
+│       └── firebase.json     # Firebase configuration
 └── docker-compose.yml
 ```
 
 ## Prerequisites
 
-- Go 1.21+
+- Go 1.23+
 - Node.js 18+
 - PostgreSQL 16+
 - Docker & Docker Compose (optional)
+- Firebase project with Authentication enabled
 - React Native development environment:
   - For iOS: Xcode (Mac only)
   - For Android: Android Studio
 
 ## Setup Instructions
 
-### Backend Setup
+### 1. Firebase Setup (Required)
+
+1. **Create Firebase Project**
+   - Go to [Firebase Console](https://console.firebase.google.com/)
+   - Create a new project named "Anidex"
+   - Enable Authentication → Sign-in method → Email/Password
+
+2. **Get Firebase Configuration Files**
+   
+   **Backend Service Account:**
+   - Go to Project Settings → Service Accounts
+   - Click "Generate new private key"
+   - Save as `serviceAccountKey.json` in `/src/backend/`
+
+   **Frontend Configuration:**
+   - Add Android app (package: `com.anidex`)
+   - Download `google-services.json` → place in `/src/frontend/android/app/`
+   - Add iOS app (bundle ID: `com.anidex`)
+   - Download `GoogleService-Info.plist` → place in `/src/frontend/ios/`
+
+### 2. Backend Setup
 
 1. **Clone the repository**
    ```bash
@@ -89,56 +115,32 @@ anidex/
    # Edit .env with your configuration
    ```
 
-3. **Configure OAuth providers**
-   
-   **Google OAuth:**
-   - Go to [Google Cloud Console](https://console.cloud.google.com/)
-   - Create a new project or select existing
-   - Enable Google+ API
-   - Create OAuth 2.0 credentials
-   - Add redirect URI: `http://localhost:8080/api/auth/google/callback`
-   - Copy Client ID and Secret to `.env`
-
-   **Facebook OAuth:**
-   - Go to [Facebook Developers](https://developers.facebook.com/)
-   - Create a new app
-   - Add Facebook Login product
-   - Configure OAuth redirect URI: `http://localhost:8080/api/auth/facebook/callback`
-   - Copy App ID and Secret to `.env`
+3. **Configure Firebase**
+   - Place your `serviceAccountKey.json` in the backend root directory
+   - The `GOOGLE_APPLICATION_CREDENTIALS` environment variable is already set
 
 4. **Install dependencies**
    ```bash
-   go mod download
+   make deps
    ```
 
-5. **Run database migrations**
+5. **Start database**
    ```bash
-   # Start PostgreSQL (if using Docker from root directory)
+   # From root directory
    cd ../..
-   docker-compose up -d postgres
-   
-   # Run the application (auto-migrates)
+   docker compose up -d postgres
+   ```
+
+6. **Run the backend**
+   ```bash
    cd src/backend
-   go run cmd/api/main.go
-   ```
-
-6. **Generate Swagger documentation**
-   ```bash
-   make swagger
-   ```
-
-7. **Run the backend**
-   ```bash
    make run
-   # Or with Docker from root directory
-   cd ../..
-   docker-compose up backend
    ```
 
    The API will be available at `http://localhost:8080`
    Swagger docs at `http://localhost:8080/swagger/index.html`
 
-### Frontend Setup
+### 3. Frontend Setup
 
 1. **Navigate to frontend directory**
    ```bash
@@ -148,48 +150,28 @@ anidex/
 2. **Install dependencies**
    ```bash
    npm install
-   # or
-   yarn install
    ```
 
-3. **Configure OAuth**
-   
-   Edit `src/App.tsx` and add your OAuth credentials:
-   ```typescript
-   GoogleSignin.configure({
-     webClientId: 'YOUR_GOOGLE_WEB_CLIENT_ID',
-     iosClientId: 'YOUR_IOS_CLIENT_ID',
-   });
-   ```
+3. **Configure Firebase**
+   - Ensure `google-services.json` is in `/android/app/`
+   - Ensure `GoogleService-Info.plist` is in `/ios/`
+   - Firebase configuration is already set up in `src/config/firebase.ts`
 
 4. **iOS Setup (Mac only)**
    ```bash
-   cd ios
-   pod install
-   cd ..
+   npx pod-install
    ```
 
-5. **Update API URL**
-   
-   Edit `src/services/api.ts` and update the API_URL:
-   ```typescript
-   const API_URL = 'http://YOUR_BACKEND_URL:8080';
-   ```
-
-6. **Run the application**
+5. **Run the application**
    
    **iOS:**
    ```bash
    npm run ios
-   # or
-   yarn ios
    ```
    
    **Android:**
    ```bash
    npm run android
-   # or
-   yarn android
    ```
 
 ## Docker Deployment
@@ -212,25 +194,30 @@ anidex/
 
 ### Authentication
 
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login with email/password
+- `POST /api/auth/firebase` - Authenticate with Firebase ID token
+- `POST /api/auth/register` - Register new user (legacy)
+- `POST /api/auth/login` - Login with email/password (legacy)
 - `POST /api/auth/refresh` - Refresh access token
 - `GET /api/auth/profile` - Get user profile (protected)
-- `GET /api/auth/google` - Initiate Google OAuth
-- `GET /api/auth/google/callback` - Google OAuth callback
-- `GET /api/auth/facebook` - Initiate Facebook OAuth
-- `GET /api/auth/facebook/callback` - Facebook OAuth callback
+- `GET /api/auth/google` - Initiate Google OAuth (legacy)
+- `GET /api/auth/google/callback` - Google OAuth callback (legacy)
+- `GET /api/auth/facebook` - Initiate Facebook OAuth (legacy)
+- `GET /api/auth/facebook/callback` - Facebook OAuth callback (legacy)
 
 ## Environment Variables
 
 ### Backend (.env)
 
 ```env
-DATABASE_URL=postgres://user:password@localhost:5432/anidex?sslmode=disable
-JWT_SECRET=your-secret-key
+DATABASE_URL=postgres://anidex:anidex_password@localhost:5432/anidex?sslmode=disable
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 PORT=8080
 GIN_MODE=debug
 
+# Firebase Configuration
+GOOGLE_APPLICATION_CREDENTIALS=serviceAccountKey.json
+
+# OAuth (Legacy - Optional)
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 GOOGLE_REDIRECT_URL=http://localhost:8080/api/auth/google/callback
@@ -240,6 +227,25 @@ FACEBOOK_CLIENT_SECRET=your-facebook-app-secret
 FACEBOOK_REDIRECT_URL=http://localhost:8080/api/auth/facebook/callback
 
 FRONTEND_URL=http://localhost:3000
+```
+
+## Authentication Flow
+
+### Firebase Authentication
+
+1. **User Registration/Login**: Users authenticate through Firebase on the frontend
+2. **Token Generation**: Firebase provides an ID token
+3. **Backend Verification**: Backend verifies the Firebase ID token using Firebase Admin SDK
+4. **JWT Creation**: Backend creates its own JWT for API access
+5. **API Access**: Frontend uses the JWT for subsequent API calls
+
+### API Request Example
+
+```bash
+# Authenticate with Firebase
+curl -X POST http://localhost:8080/api/auth/firebase \
+  -H "Content-Type: application/json" \
+  -d '{"idToken": "FIREBASE_ID_TOKEN", "name": "User Name"}'
 ```
 
 ## Testing
@@ -288,14 +294,15 @@ npm test
 
 ## Security Considerations
 
-- Change JWT_SECRET in production
-- Use HTTPS in production
-- Configure CORS properly
-- Implement rate limiting
-- Add input validation
-- Use secure password requirements
-- Implement account lockout policies
-- Add 2FA support (future enhancement)
+- **Firebase Security**: Authentication is handled by Firebase with industry-standard security
+- **Token Verification**: Firebase ID tokens are verified server-side using Firebase Admin SDK
+- **JWT Security**: Change JWT_SECRET in production to a long, random string
+- **HTTPS**: Use HTTPS in production for all communications
+- **CORS**: Configure CORS properly for your frontend domain
+- **Rate Limiting**: Implement rate limiting for API endpoints
+- **Input Validation**: All inputs are validated on both client and server
+- **Service Account**: Protect Firebase service account key file
+- **Environment Variables**: Keep all secrets in environment variables, never in code
 
 ## Contributing
 

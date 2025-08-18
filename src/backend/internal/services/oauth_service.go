@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"net/http"
 
 	"github.com/anidex/backend/internal/config"
 	"golang.org/x/oauth2"
