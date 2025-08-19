@@ -13,6 +13,7 @@ const (
 	AuthProviderLocal    AuthProvider = "local"
 	AuthProviderGoogle   AuthProvider = "google"
 	AuthProviderFacebook AuthProvider = "facebook"
+	AuthProviderFirebase AuthProvider = "firebase"
 )
 
 type User struct {

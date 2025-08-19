@@ -212,3 +212,40 @@ func (ctrl *AuthController) FacebookCallback(c *gin.Context) {
 
 	c.Redirect(http.StatusTemporaryRedirect, config.AppConfig.FrontendURL+"/auth/callback?token="+response.AccessToken+"&refresh="+response.RefreshToken)
 }
+
+// FirebaseLogin godoc
+// @Summary Authenticate with Firebase ID token
+// @Description Verify Firebase ID token and authenticate user
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body map[string]interface{} true "Firebase ID token and optional name"
+// @Success 200 {object} models.AuthResponse
+// @Failure 400 {object} map[string]string
+// @Router /api/auth/firebase [post]
+func (ctrl *AuthController) FirebaseLogin(c *gin.Context) {
+	var req map[string]interface{}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	idToken, exists := req["idToken"].(string)
+	if !exists || idToken == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "idToken is required"})
+		return
+	}
+
+	var name *string
+	if nameValue, exists := req["name"].(string); exists && nameValue != "" {
+		name = &nameValue
+	}
+
+	response, err := ctrl.authService.HandleFirebaseLogin(idToken, name)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
+}
