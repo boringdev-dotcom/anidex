@@ -12,34 +12,42 @@ import {
 } from 'react-native';
 import { useAuthStore } from '../store/authStore';
 
-interface LoginScreenProps {
+interface SignUpScreenProps {
   navigation: any;
 }
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
+const SignUpScreen: React.FC<SignUpScreenProps> = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { signIn, loading } = useAuthStore();
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const { signUp, loading } = useAuthStore();
 
-  const handleLogin = async () => {
-    if (!email || !password) {
+  const handleSignUp = async () => {
+    if (!email || !password || !confirmPassword || !displayName) {
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
 
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert('Error', 'Password must be at least 6 characters');
+      return;
+    }
+
     try {
-      await signIn(email, password);
+      await signUp(email, password, displayName);
     } catch (error: any) {
-      Alert.alert('Login Failed', error.message || 'An error occurred during login');
+      Alert.alert('Sign Up Failed', error.message || 'An error occurred during sign up');
     }
   };
 
-  const navigateToSignUp = () => {
-    navigation.navigate('SignUp');
-  };
-
-  const navigateToForgotPassword = () => {
-    navigation.navigate('ForgotPassword');
+  const navigateToLogin = () => {
+    navigation.navigate('Login');
   };
 
   return (
@@ -49,11 +57,24 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.headerContainer}>
-          <Text style={styles.title}>Welcome to Anidex</Text>
-          <Text style={styles.subtitle}>Sign in to continue</Text>
+          <Text style={styles.title}>Join Anidex</Text>
+          <Text style={styles.subtitle}>Create your account</Text>
         </View>
 
         <View style={styles.formContainer}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Full Name</Text>
+            <TextInput
+              style={styles.input}
+              value={displayName}
+              onChangeText={setDisplayName}
+              placeholder="Enter your full name"
+              placeholderTextColor="#999"
+              autoCapitalize="words"
+              autoCorrect={false}
+            />
+          </View>
+
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Email</Text>
             <TextInput
@@ -81,27 +102,33 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             />
           </View>
 
-          <TouchableOpacity
-            style={styles.forgotPasswordButton}
-            onPress={navigateToForgotPassword}
-          >
-            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-          </TouchableOpacity>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Confirm Password</Text>
+            <TextInput
+              style={styles.input}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              placeholder="Confirm your password"
+              placeholderTextColor="#999"
+              secureTextEntry
+              autoCapitalize="none"
+            />
+          </View>
 
           <TouchableOpacity
-            style={[styles.loginButton, loading && styles.disabledButton]}
-            onPress={handleLogin}
+            style={[styles.signUpButton, loading && styles.disabledButton]}
+            onPress={handleSignUp}
             disabled={loading}
           >
-            <Text style={styles.loginButtonText}>
-              {loading ? 'Signing In...' : 'Sign In'}
+            <Text style={styles.signUpButtonText}>
+              {loading ? 'Creating Account...' : 'Create Account'}
             </Text>
           </TouchableOpacity>
 
-          <View style={styles.signupContainer}>
-            <Text style={styles.signupText}>Don't have an account? </Text>
-            <TouchableOpacity onPress={navigateToSignUp}>
-              <Text style={styles.signupLink}>Sign Up</Text>
+          <View style={styles.loginContainer}>
+            <Text style={styles.loginText}>Already have an account? </Text>
+            <TouchableOpacity onPress={navigateToLogin}>
+              <Text style={styles.loginLink}>Sign In</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -154,44 +181,36 @@ const styles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: '#f9f9f9',
   },
-  forgotPasswordButton: {
-    alignSelf: 'flex-end',
-    marginBottom: 24,
-  },
-  forgotPasswordText: {
-    color: '#007AFF',
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  loginButton: {
+  signUpButton: {
     backgroundColor: '#007AFF',
     borderRadius: 8,
     padding: 16,
     alignItems: 'center',
+    marginTop: 8,
     marginBottom: 24,
   },
   disabledButton: {
     backgroundColor: '#ccc',
   },
-  loginButtonText: {
+  signUpButtonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '600',
   },
-  signupContainer: {
+  loginContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  signupText: {
+  loginText: {
     fontSize: 16,
     color: '#666',
   },
-  signupLink: {
+  loginLink: {
     fontSize: 16,
     color: '#007AFF',
     fontWeight: '600',
   },
 });
 
-export default LoginScreen;
+export default SignUpScreen;

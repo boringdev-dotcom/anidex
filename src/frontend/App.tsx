@@ -1,11 +1,14 @@
-import { StatusBar } from 'expo-status-bar';
-import { AppNavigator } from './src/navigation/AppNavigator';
+import React from 'react';
+import { StatusBar } from 'react-native';
+import AppNavigator from './src/navigation/AppNavigator';
 
-export default function App() {
+const App: React.FC = () => {
   return (
     <>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <AppNavigator />
-      <StatusBar style="auto" />
     </>
   );
-}
+};
+
+export default App;

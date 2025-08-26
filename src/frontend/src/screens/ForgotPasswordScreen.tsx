@@ -12,34 +12,43 @@ import {
 } from 'react-native';
 import { useAuthStore } from '../store/authStore';
 
-interface LoginScreenProps {
+interface ForgotPasswordScreenProps {
   navigation: any;
 }
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
+const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation }) => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { signIn, loading } = useAuthStore();
+  const [loading, setLoading] = useState(false);
+  const { resetPassword } = useAuthStore();
 
-  const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'Please fill in all fields');
+  const handleResetPassword = async () => {
+    if (!email) {
+      Alert.alert('Error', 'Please enter your email address');
       return;
     }
 
     try {
-      await signIn(email, password);
+      setLoading(true);
+      await resetPassword(email);
+      Alert.alert(
+        'Reset Email Sent',
+        'Check your email for password reset instructions.',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('Login'),
+          },
+        ]
+      );
     } catch (error: any) {
-      Alert.alert('Login Failed', error.message || 'An error occurred during login');
+      Alert.alert('Error', error.message || 'An error occurred while sending reset email');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const navigateToSignUp = () => {
-    navigation.navigate('SignUp');
-  };
-
-  const navigateToForgotPassword = () => {
-    navigation.navigate('ForgotPassword');
+  const navigateToLogin = () => {
+    navigation.navigate('Login');
   };
 
   return (
@@ -49,8 +58,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.headerContainer}>
-          <Text style={styles.title}>Welcome to Anidex</Text>
-          <Text style={styles.subtitle}>Sign in to continue</Text>
+          <Text style={styles.title}>Reset Password</Text>
+          <Text style={styles.subtitle}>
+            Enter your email address and we'll send you a link to reset your password.
+          </Text>
         </View>
 
         <View style={styles.formContainer}>
@@ -68,40 +79,20 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             />
           </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Password</Text>
-            <TextInput
-              style={styles.input}
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Enter your password"
-              placeholderTextColor="#999"
-              secureTextEntry
-              autoCapitalize="none"
-            />
-          </View>
-
           <TouchableOpacity
-            style={styles.forgotPasswordButton}
-            onPress={navigateToForgotPassword}
-          >
-            <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.loginButton, loading && styles.disabledButton]}
-            onPress={handleLogin}
+            style={[styles.resetButton, loading && styles.disabledButton]}
+            onPress={handleResetPassword}
             disabled={loading}
           >
-            <Text style={styles.loginButtonText}>
-              {loading ? 'Signing In...' : 'Sign In'}
+            <Text style={styles.resetButtonText}>
+              {loading ? 'Sending...' : 'Send Reset Email'}
             </Text>
           </TouchableOpacity>
 
-          <View style={styles.signupContainer}>
-            <Text style={styles.signupText}>Don't have an account? </Text>
-            <TouchableOpacity onPress={navigateToSignUp}>
-              <Text style={styles.signupLink}>Sign Up</Text>
+          <View style={styles.loginContainer}>
+            <Text style={styles.loginText}>Remember your password? </Text>
+            <TouchableOpacity onPress={navigateToLogin}>
+              <Text style={styles.loginLink}>Sign In</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -128,17 +119,19 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     color: '#333',
-    marginBottom: 8,
+    marginBottom: 16,
   },
   subtitle: {
     fontSize: 16,
     color: '#666',
+    textAlign: 'center',
+    lineHeight: 22,
   },
   formContainer: {
     width: '100%',
   },
   inputContainer: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   label: {
     fontSize: 16,
@@ -154,16 +147,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: '#f9f9f9',
   },
-  forgotPasswordButton: {
-    alignSelf: 'flex-end',
-    marginBottom: 24,
-  },
-  forgotPasswordText: {
-    color: '#007AFF',
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  loginButton: {
+  resetButton: {
     backgroundColor: '#007AFF',
     borderRadius: 8,
     padding: 16,
@@ -173,25 +157,25 @@ const styles = StyleSheet.create({
   disabledButton: {
     backgroundColor: '#ccc',
   },
-  loginButtonText: {
+  resetButtonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '600',
   },
-  signupContainer: {
+  loginContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  signupText: {
+  loginText: {
     fontSize: 16,
     color: '#666',
   },
-  signupLink: {
+  loginLink: {
     fontSize: 16,
     color: '#007AFF',
     fontWeight: '600',
   },
 });
 
-export default LoginScreen;
+export default ForgotPasswordScreen;
