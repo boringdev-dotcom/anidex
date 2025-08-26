@@ -1,37 +1,85 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+# OSX
+#
+.DS_Store
 
-# dependencies
+# Xcode
+#
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+
+# Android/IntelliJ
+#
+build/
+.idea
+.gradle
+local.properties
+*.iml
+*.hprof
+.cxx/
+*.keystore
+!debug.keystore
+
+# node.js
+#
 node_modules/
+npm-debug.log
+yarn-error.log
 
-# Expo
-.expo/
-dist/
-web-build/
-expo-env.d.ts
+# BUCK
+buck-out/
+\.buckd/
+*.keystore
+!debug.keystore
 
-# Native
-.kotlin/
-*.orig.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
+# fastlane
+#
+# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
+# screenshots whenever they are needed.
+# For more information about the recommended setup visit:
+# https://docs.fastlane.tools/best-practices/source-control/
 
-# Metro
+*/fastlane/report.xml
+*/fastlane/Preview.html
+*/fastlane/screenshots
+
+# Bundle artifacts
+*.jsbundle
+
+# CocoaPods
+/ios/Pods/
+Podfile.lock
+
+# React Native
+# Temporary files created by Metro
 .metro-health-check*
 
-# debug
-npm-debug.*
-yarn-debug.*
-yarn-error.*
+# Xcode User Data
+ios/**/xcuserdata/
+ios/**/*.xcuserstate
 
-# macOS
-.DS_Store
-*.pem
+# Flipper
+/android/app/src/main/assets/flipper/
+/ios/build/
 
-# local env files
-.env*.local
+# Bundle
+android/app/src/main/assets/index.android.bundle
+ios/main.jsbundle
 
-# typescript
-*.tsbuildinfo
+# Firebase config files (you'll need to add these yourself)
+# These files contain sensitive configuration and should not be committed
+android/app/google-services.json
+ios/GoogleService-Info.plist

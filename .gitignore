@@ -31,3 +31,22 @@ go.work.sum
 # .idea/
 # .vscode/
 serviceAccountKey.json
+
+# Frontend - React Native/Expo
+src/frontend/node_modules/
+src/frontend/.expo/
+src/frontend/dist/
+src/frontend/web-build/
+src/frontend/*.orig.*
+src/frontend/*.jks
+src/frontend/*.p8
+src/frontend/*.p12
+src/frontend/*.key
+src/frontend/*.mobileprovision
+src/frontend/.metro-health-check*
+src/frontend/npm-debug.*
+src/frontend/yarn-debug.*
+src/frontend/yarn-error.*
+src/frontend/*.tsbuildinfo
+src/frontend/google-services.json
+src/frontend/GoogleService-Info.plist
