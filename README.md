@@ -1,6 +1,6 @@
-# Anidex - Mobile Application
+# Anidex - Cross-Platform Application
 
-A full-stack mobile application with React Native frontend and Go backend, featuring Firebase authentication, JWT tokens, and modern authentication patterns.
+A full-stack application with React Native frontend (iOS, Android, Web) and Go backend, featuring Firebase authentication, JWT tokens, and modern authentication patterns.
 
 ## Features
 
@@ -8,7 +8,7 @@ A full-stack mobile application with React Native frontend and Go backend, featu
 - **JWT Integration**: Secure token-based API authentication
 - **RESTful API**: Go backend with controller/service/repository pattern
 - **Swagger Documentation**: Auto-generated API documentation
-- **Cross-platform**: iOS and Android support with React Native
+- **Cross-platform**: iOS, Android, and Web support with React Native
 - **Docker Support**: Containerized backend deployment
 - **Modern Auth Flow**: Firebase tokens verified server-side
 
@@ -25,13 +25,15 @@ A full-stack mobile application with React Native frontend and Go backend, featu
 - **Docker** - Containerization
 
 ### Frontend
-- **React Native** - Mobile framework
+- **React Native** - Cross-platform framework (iOS, Android, Web)
+- **React Native Web** - Web platform support
 - **TypeScript** - Type safety
 - **Firebase Auth** - Authentication service
 - **React Navigation** - Navigation
 - **Zustand** - State management
 - **Axios** - HTTP client
 - **React Native Vector Icons** - Icons
+- **Webpack** - Web bundling
 
 ## Project Structure
 
@@ -173,6 +175,39 @@ anidex/
    ```bash
    npm run android
    ```
+   
+   **Web:**
+   ```bash
+   npm run web
+   # or for development without auto-open
+   npm run web:dev
+   ```
+
+### 4. Web Development
+
+The application now supports web development with React Native Web:
+
+1. **Web-specific features:**
+   - Responsive design for desktop and mobile browsers
+   - Web-optimized navigation and routing
+   - Platform-specific styling for web
+
+2. **Web build commands:**
+   ```bash
+   # Development server (with hot reload)
+   npm run web:dev
+   
+   # Production build
+   npm run web:build
+   
+   # Development with auto-open browser
+   npm run web
+   ```
+
+3. **Web hosting:**
+   - Built files are output to `/dist` directory
+   - Can be deployed to any static hosting service (Vercel, Netlify, etc.)
+   - Backend API should be deployed separately
 
 ## Docker Deployment
 

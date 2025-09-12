@@ -6,6 +6,7 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
+  Platform,
 } from 'react-native';
 import { useAuthStore } from '../store/authStore';
 
@@ -78,11 +79,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f9fa',
+    ...(Platform.OS === 'web' && {
+      minHeight: '100vh',
+      display: 'flex',
+    }),
   },
   content: {
     flex: 1,
     padding: 24,
     justifyContent: 'space-between',
+    ...(Platform.OS === 'web' && {
+      maxWidth: 600,
+      margin: '0 auto',
+      width: '100%',
+    }),
   },
   headerContainer: {
     alignItems: 'center',
