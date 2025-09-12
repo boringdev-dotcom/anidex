@@ -54,7 +54,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({ navigation 
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === 'ios' ? 'padding' : Platform.OS === 'web' ? 'height' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.headerContainer}>
@@ -105,11 +105,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    ...(Platform.OS === 'web' && {
+      minHeight: '100vh',
+      display: 'flex',
+    }),
   },
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
     padding: 24,
+    ...(Platform.OS === 'web' && {
+      maxWidth: 400,
+      margin: '0 auto',
+      width: '100%',
+    }),
   },
   headerContainer: {
     alignItems: 'center',

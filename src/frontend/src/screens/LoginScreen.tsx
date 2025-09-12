@@ -22,14 +22,22 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const { signIn, loading } = useAuthStore();
 
   const handleLogin = async () => {
+    console.log('🖱️ Login button clicked!');
+    console.log('📧 Email:', email);
+    console.log('🔒 Password length:', password.length);
+    
     if (!email || !password) {
+      console.log('❌ Missing email or password');
       Alert.alert('Error', 'Please fill in all fields');
       return;
     }
 
+    console.log('🚀 Calling signIn function...');
     try {
       await signIn(email, password);
+      console.log('✅ SignIn completed successfully');
     } catch (error: any) {
+      console.error('❌ SignIn error:', error);
       Alert.alert('Login Failed', error.message || 'An error occurred during login');
     }
   };
@@ -45,7 +53,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === 'ios' ? 'padding' : Platform.OS === 'web' ? 'height' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.headerContainer}>
@@ -114,11 +122,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    ...(Platform.OS === 'web' && {
+      minHeight: '100vh',
+      display: 'flex',
+    }),
   },
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
     padding: 24,
+    ...(Platform.OS === 'web' && {
+      maxWidth: 400,
+      margin: '0 auto',
+      width: '100%',
+    }),
   },
   headerContainer: {
     alignItems: 'center',

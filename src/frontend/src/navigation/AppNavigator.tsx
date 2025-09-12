@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
-import { auth } from '../config/firebase';
+import { authHelper } from '../config/authHelper';
 import { useAuthStore } from '../store/authStore';
 
 import LoginScreen from '../screens/LoginScreen';
@@ -23,7 +23,7 @@ const AppNavigator: React.FC = () => {
   const { user, loading, setUser, setLoading } = useAuthStore();
 
   useEffect(() => {
-    const unsubscribe = auth().onAuthStateChanged((firebaseUser) => {
+    const unsubscribe = authHelper.onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
         setUser({
           uid: firebaseUser.uid,

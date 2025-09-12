@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { auth } from '../config/firebase';
+import { authHelper } from '../config/authHelper';
 import { AuthStore, User } from '../types';
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
@@ -16,10 +16,13 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   },
 
   signIn: async (email: string, password: string) => {
+    console.log('🚀 Auth store signIn called with:', email);
     try {
       set({ loading: true });
-      const userCredential = await auth().signInWithEmailAndPassword(email, password);
+      console.log('🔄 Setting loading to true');
+      const userCredential = await authHelper.signInWithEmailAndPassword(email, password);
       const user = userCredential.user;
+      console.log('👤 User credential received:', user);
       
       set({
         user: {
@@ -31,7 +34,9 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         isAuthenticated: true,
         loading: false,
       });
+      console.log('✅ User state updated successfully');
     } catch (error) {
+      console.error('❌ Auth store signIn error:', error);
       set({ loading: false });
       throw error;
     }
@@ -40,11 +45,11 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   signUp: async (email: string, password: string, displayName?: string) => {
     try {
       set({ loading: true });
-      const userCredential = await auth().createUserWithEmailAndPassword(email, password);
+      const userCredential = await authHelper.createUserWithEmailAndPassword(email, password);
       const user = userCredential.user;
 
       if (displayName) {
-        await user.updateProfile({ displayName });
+        await authHelper.updateProfile(user, { displayName });
       }
 
       set({
@@ -66,7 +71,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   signOut: async () => {
     try {
       set({ loading: true });
-      await auth().signOut();
+      await authHelper.signOut();
       set({
         user: null,
         isAuthenticated: false,
@@ -80,7 +85,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
   resetPassword: async (email: string) => {
     try {
-      await auth().sendPasswordResetEmail(email);
+      await authHelper.sendPasswordResetEmail(email);
     } catch (error) {
       throw error;
     }
