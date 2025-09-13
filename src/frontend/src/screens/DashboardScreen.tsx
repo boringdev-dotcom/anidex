@@ -52,56 +52,27 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) => {
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.greeting}>Welcome back!</Text>
-            <Text style={styles.username}>{user?.displayName || user?.email}</Text>
+            <Text style={styles.greeting}>Good morning</Text>
+            <Text style={styles.username}>{user?.displayName || user?.email?.split('@')[0]}</Text>
           </View>
-          <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
-            <Text style={styles.signOutText}>Sign Out</Text>
-          </TouchableOpacity>
         </View>
 
-        {/* Stats Cards */}
+        {/* Stats Overview */}
         <View style={styles.statsContainer}>
-          <View style={styles.statsRow}>
-            <View style={[styles.statCard, styles.statCardPrimary]}>
-              <Text style={styles.statNumber}>{stats.totalSightings}</Text>
-              <Text style={styles.statLabel}>Total Sightings</Text>
-            </View>
-            <View style={[styles.statCard, styles.statCardSecondary]}>
-              <Text style={styles.statNumber}>{stats.speciesDiscovered}</Text>
-              <Text style={styles.statLabel}>Species Found</Text>
-            </View>
+          <View style={styles.statCard}>
+            <Text style={styles.statNumber}>{stats.totalSightings}</Text>
+            <Text style={styles.statLabel}>Sightings</Text>
           </View>
-          <View style={styles.statsRow}>
-            <View style={[styles.statCard, styles.statCardAccent]}>
-              <Text style={styles.statNumber}>{stats.rareAnimals}</Text>
-              <Text style={styles.statLabel}>Rare Animals</Text>
-            </View>
-            <View style={[styles.statCard, styles.statCardWater]}>
-              <Text style={styles.statNumber}>{stats.friendsCount}</Text>
-              <Text style={styles.statLabel}>Friends</Text>
-            </View>
+          <View style={styles.statCard}>
+            <Text style={styles.statNumber}>{stats.speciesDiscovered}</Text>
+            <Text style={styles.statLabel}>Species</Text>
+          </View>
+          <View style={styles.statCard}>
+            <Text style={styles.statNumber}>{stats.rareAnimals}</Text>
+            <Text style={styles.statLabel}>Rare</Text>
           </View>
         </View>
 
-        {/* Quick Actions */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
-          <View style={styles.actionsContainer}>
-            <TouchableOpacity style={styles.actionButton}>
-              <Text style={styles.actionIcon}>📸</Text>
-              <Text style={styles.actionText}>Spot Animal</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton}>
-              <Text style={styles.actionIcon}>🗺️</Text>
-              <Text style={styles.actionText}>Explore Map</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton}>
-              <Text style={styles.actionIcon}>👥</Text>
-              <Text style={styles.actionText}>Find Friends</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
 
         {/* Recent Sightings */}
         <View style={styles.section}>
@@ -175,14 +146,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: Spacing.lg,
-    paddingTop: Platform.OS === 'ios' ? Spacing.sm : Spacing.lg,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.md,
+    paddingTop: Platform.OS === 'ios' ? Spacing.sm : Spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.gray200,
+    backgroundColor: Colors.surface,
   },
   greeting: {
-    fontSize: Typography.fontSize.lg,
+    fontSize: Typography.fontSize.base,
     color: Colors.onSurfaceVariant,
     fontWeight: Typography.fontWeight.normal,
   },
@@ -191,55 +163,25 @@ const styles = StyleSheet.create({
     color: Colors.onBackground,
     fontWeight: Typography.fontWeight.bold,
   },
-  signOutButton: {
-    backgroundColor: Colors.error,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
-    borderRadius: BorderRadius.md,
-  },
-  signOutText: {
-    color: Colors.onPrimary,
-    fontSize: Typography.fontSize.sm,
-    fontWeight: Typography.fontWeight.medium,
-  },
   statsContainer: {
-    paddingHorizontal: Spacing.lg,
-    marginBottom: Spacing.lg,
-  },
-  statsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: Spacing.md,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.md,
+    justifyContent: 'space-around',
   },
   statCard: {
-    flex: 1,
-    padding: Spacing.lg,
-    borderRadius: BorderRadius.lg,
     alignItems: 'center',
-    marginHorizontal: Spacing.xs,
-    ...Shadows.md,
-  },
-  statCardPrimary: {
-    backgroundColor: Colors.primary,
-  },
-  statCardSecondary: {
-    backgroundColor: Colors.secondary,
-  },
-  statCardAccent: {
-    backgroundColor: Colors.accent,
-  },
-  statCardWater: {
-    backgroundColor: Colors.water,
+    flex: 1,
   },
   statNumber: {
-    fontSize: Typography.fontSize['3xl'],
+    fontSize: Typography.fontSize['2xl'],
     fontWeight: Typography.fontWeight.bold,
-    color: Colors.onPrimary,
+    color: Colors.onBackground,
     marginBottom: Spacing.xs,
   },
   statLabel: {
     fontSize: Typography.fontSize.sm,
-    color: Colors.onPrimary,
+    color: Colors.onSurfaceVariant,
     textAlign: 'center',
     fontWeight: Typography.fontWeight.medium,
   },

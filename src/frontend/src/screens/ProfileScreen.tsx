@@ -169,45 +169,34 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Profile Header */}
         <View style={styles.profileHeader}>
-          <View style={styles.avatarContainer}>
+          <View style={styles.profileTop}>
             <View style={styles.avatar}>
               <Text style={styles.avatarText}>
                 {user?.displayName?.charAt(0) || user?.email?.charAt(0) || 'U'}
               </Text>
             </View>
-            <View style={styles.levelBadge}>
-              <Text style={styles.levelText}>Lv. {userStats.level}</Text>
+            
+            <View style={styles.statsRow}>
+              <View style={styles.statItem}>
+                <Text style={styles.statNumber}>{userStats.totalSightings}</Text>
+                <Text style={styles.statLabel}>Sightings</Text>
+              </View>
+              <View style={styles.statItem}>
+                <Text style={styles.statNumber}>{userStats.speciesDiscovered}</Text>
+                <Text style={styles.statLabel}>Species</Text>
+              </View>
+              <View style={styles.statItem}>
+                <Text style={styles.statNumber}>{userStats.rareAnimals}</Text>
+                <Text style={styles.statLabel}>Rare</Text>
+              </View>
             </View>
           </View>
           
           <View style={styles.profileInfo}>
             <Text style={styles.profileName}>
-              {user?.displayName || user?.email}
+              {user?.displayName || user?.email?.split('@')[0]}
             </Text>
             <Text style={styles.profileLocation}>{userStats.location}</Text>
-            <Text style={styles.joinDate}>Joined {userStats.joinDate}</Text>
-          </View>
-
-          <TouchableOpacity style={styles.editButton}>
-            <Text style={styles.editButtonText}>Edit Profile</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Experience Bar */}
-        <View style={styles.experienceContainer}>
-          <View style={styles.experienceHeader}>
-            <Text style={styles.experienceLabel}>Experience</Text>
-            <Text style={styles.experienceText}>
-              {userStats.experience} / {userStats.nextLevelExp} XP
-            </Text>
-          </View>
-          <View style={styles.experienceBar}>
-            <View 
-              style={[
-                styles.experienceFill, 
-                { width: `${(userStats.experience / userStats.nextLevelExp) * 100}%` }
-              ]} 
-            />
           </View>
         </View>
 
@@ -244,10 +233,6 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         {activeTab === 'badges' && renderBadges()}
         {activeTab === 'friends' && renderFriends()}
 
-        {/* Sign Out Button */}
-        <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
-          <Text style={styles.signOutButtonText}>Sign Out</Text>
-        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -267,11 +252,10 @@ const styles = StyleSheet.create({
   profileHeader: {
     backgroundColor: Colors.surface,
     padding: Spacing.lg,
-    alignItems: 'center',
-    ...Shadows.sm,
   },
-  avatarContainer: {
-    position: 'relative',
+  profileTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: Spacing.md,
   },
   avatar: {
@@ -281,32 +265,36 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: Spacing.lg,
   },
   avatarText: {
-    fontSize: Typography.fontSize['3xl'],
+    fontSize: Typography.fontSize['2xl'],
     fontWeight: Typography.fontWeight.bold,
     color: Colors.onPrimary,
   },
-  levelBadge: {
-    position: 'absolute',
-    bottom: -5,
-    right: -5,
-    backgroundColor: Colors.accent,
-    borderRadius: BorderRadius.full,
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: Spacing.xs,
+  statsRow: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
-  levelText: {
-    fontSize: Typography.fontSize.xs,
+  statItem: {
+    alignItems: 'center',
+  },
+  statNumber: {
+    fontSize: Typography.fontSize.lg,
     fontWeight: Typography.fontWeight.bold,
-    color: Colors.onPrimary,
+    color: Colors.onSurface,
+  },
+  statLabel: {
+    fontSize: Typography.fontSize.sm,
+    color: Colors.onSurfaceVariant,
+    marginTop: Spacing.xs,
   },
   profileInfo: {
-    alignItems: 'center',
-    marginBottom: Spacing.md,
+    alignItems: 'flex-start',
   },
   profileName: {
-    fontSize: Typography.fontSize['2xl'],
+    fontSize: Typography.fontSize.lg,
     fontWeight: Typography.fontWeight.bold,
     color: Colors.onSurface,
   },
@@ -314,22 +302,6 @@ const styles = StyleSheet.create({
     fontSize: Typography.fontSize.base,
     color: Colors.onSurfaceVariant,
     marginTop: Spacing.xs,
-  },
-  joinDate: {
-    fontSize: Typography.fontSize.sm,
-    color: Colors.onSurfaceVariant,
-    marginTop: Spacing.xs,
-  },
-  editButton: {
-    backgroundColor: Colors.primaryLight,
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.sm,
-    borderRadius: BorderRadius.full,
-  },
-  editButtonText: {
-    color: Colors.onPrimary,
-    fontSize: Typography.fontSize.sm,
-    fontWeight: Typography.fontWeight.medium,
   },
   experienceContainer: {
     backgroundColor: Colors.surface,

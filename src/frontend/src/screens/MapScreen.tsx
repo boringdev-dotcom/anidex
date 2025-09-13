@@ -154,8 +154,7 @@ const MapScreen: React.FC<MapScreenProps> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Animal Map</Text>
-        <Text style={styles.subtitle}>Discover animals around you</Text>
+        <Text style={styles.title}>Map</Text>
       </View>
 
       {/* Map Controls */}
@@ -184,12 +183,8 @@ const MapScreen: React.FC<MapScreenProps> = ({ navigation }) => {
       {/* Map Placeholder */}
       <View style={styles.mapContainer}>
         <View style={[styles.mapPlaceholder, { backgroundColor: mapMode === 'satellite' ? Colors.gray800 : Colors.gray200 }]}>
-          <Text style={styles.mapIcon}>🗺️</Text>
           <Text style={[styles.mapText, { color: mapMode === 'satellite' ? Colors.gray300 : Colors.gray600 }]}>
-            Interactive Map View
-          </Text>
-          <Text style={[styles.mapSubtext, { color: mapMode === 'satellite' ? Colors.gray400 : Colors.gray500 }]}>
-            {currentLocation.address}
+            Map View
           </Text>
           
           {/* Simulated Animal Pins */}
@@ -213,39 +208,42 @@ const MapScreen: React.FC<MapScreenProps> = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Filter Tabs */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        style={styles.filtersContainer}
-        contentContainerStyle={styles.filtersContent}
-      >
-        {filters.map((filter) => (
-          <TouchableOpacity
-            key={filter}
-            style={[
-              styles.filterButton,
-              selectedFilter === filter && styles.filterButtonActive
-            ]}
-            onPress={() => setSelectedFilter(filter)}
+      {/* Combined Content */}
+      <ScrollView style={styles.mainScrollView} showsVerticalScrollIndicator={false}>
+        {/* Filter Tabs - Header Component */}
+        <View style={styles.filtersContainerFixed}>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.filtersContentFixed}
           >
-            <Text style={[
-              styles.filterText,
-              selectedFilter === filter && styles.filterTextActive
-            ]}>
-              {filter.charAt(0).toUpperCase() + filter.slice(1).replace('-', ' ')}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-      {/* Sightings List */}
-      <View style={styles.sightingsContainer}>
-        <Text style={styles.sightingsTitle}>
-          Recent Sightings ({filteredSightings.length})
-        </Text>
+            {filters.map((filter) => (
+              <TouchableOpacity
+                key={filter}
+                style={[
+                  styles.filterButton,
+                  selectedFilter === filter && styles.filterButtonActive
+                ]}
+                onPress={() => setSelectedFilter(filter)}
+              >
+                <Text style={[
+                  styles.filterText,
+                  selectedFilter === filter && styles.filterTextActive
+                ]}>
+                  {filter.charAt(0).toUpperCase() + filter.slice(1).replace('-', ' ')}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
         
-        <ScrollView style={styles.sightingsList} showsVerticalScrollIndicator={false}>
+        {/* Sightings List */}
+        <View style={styles.sightingsContainer}>
+          <Text style={styles.sightingsTitle}>
+            Recent Sightings ({filteredSightings.length})
+          </Text>
+          
+          <View style={styles.sightingsList}>
           {filteredSightings.map((sighting) => (
             <TouchableOpacity key={sighting.id} style={styles.sightingItem}>
               <View style={styles.sightingIcon}>
@@ -277,20 +275,10 @@ const MapScreen: React.FC<MapScreenProps> = ({ navigation }) => {
               </TouchableOpacity>
             </TouchableOpacity>
           ))}
-        </ScrollView>
-      </View>
-
-      {/* Current Location Info */}
-      <View style={styles.locationInfo}>
-        <View style={styles.locationHeader}>
-          <Text style={styles.locationIcon}>📍</Text>
-          <Text style={styles.locationTitle}>Current Location</Text>
+          </View>
         </View>
-        <Text style={styles.locationText}>{currentLocation.address}</Text>
-        <Text style={styles.coordinatesText}>
-          {currentLocation.latitude.toFixed(4)}, {currentLocation.longitude.toFixed(4)}
-        </Text>
-      </View>
+      </ScrollView>
+
     </SafeAreaView>
   );
 };
@@ -304,18 +292,17 @@ const styles = StyleSheet.create({
     }),
   },
   header: {
-    padding: Spacing.lg,
-    paddingTop: Platform.OS === 'ios' ? Spacing.sm : Spacing.lg,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.md,
+    paddingTop: Platform.OS === 'ios' ? Spacing.sm : Spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.gray200,
+    backgroundColor: Colors.surface,
   },
   title: {
-    fontSize: Typography.fontSize['3xl'],
+    fontSize: Typography.fontSize['2xl'],
     fontWeight: Typography.fontWeight.bold,
     color: Colors.onBackground,
-  },
-  subtitle: {
-    fontSize: Typography.fontSize.base,
-    color: Colors.onSurfaceVariant,
-    marginTop: Spacing.xs,
   },
   mapControls: {
     flexDirection: 'row',
@@ -368,10 +355,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     ...Shadows.md,
   },
-  mapIcon: {
-    fontSize: 50,
-    marginBottom: Spacing.sm,
-  },
   mapText: {
     fontSize: Typography.fontSize.lg,
     fontWeight: Typography.fontWeight.semibold,
@@ -399,34 +382,42 @@ const styles = StyleSheet.create({
   pinIcon: {
     fontSize: 16,
   },
-  filtersContainer: {
-    paddingLeft: Spacing.lg,
-    marginBottom: Spacing.md,
+  mainScrollView: {
+    flex: 1,
   },
-  filtersContent: {
-    paddingRight: Spacing.lg,
+  filtersContainerFixed: {
+    paddingHorizontal: Spacing.lg,
+    paddingBottom: Spacing.xs,
+    backgroundColor: Colors.background,
+  },
+  filtersContentFixed: {
+    alignItems: 'center',
   },
   filterButton: {
     backgroundColor: Colors.surface,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: 6,
     borderRadius: BorderRadius.full,
     marginRight: Spacing.sm,
+    height: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
     ...Shadows.sm,
   },
   filterButtonActive: {
     backgroundColor: Colors.primary,
   },
   filterText: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: Typography.fontSize.xs,
     color: Colors.onSurface,
     fontWeight: Typography.fontWeight.medium,
+    textAlign: 'center',
+    lineHeight: 16,
   },
   filterTextActive: {
     color: Colors.onPrimary,
   },
   sightingsContainer: {
-    flex: 1,
     paddingHorizontal: Spacing.lg,
   },
   sightingsTitle: {
@@ -436,7 +427,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.md,
   },
   sightingsList: {
-    flex: 1,
+    paddingBottom: Spacing.xl,
   },
   sightingItem: {
     flexDirection: 'row',

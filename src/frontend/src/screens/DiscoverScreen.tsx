@@ -185,8 +185,7 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Discover Animals</Text>
-        <Text style={styles.subtitle}>Find and learn about amazing creatures</Text>
+        <Text style={styles.title}>Discover</Text>
       </View>
 
       {/* Search Bar */}
@@ -200,43 +199,47 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
         />
       </View>
 
-      {/* Animals Grid */}
+      {/* Combined Content */}
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        {/* Filter Tabs - moved inside main scroll */}
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false}
-          style={styles.filtersContainerInline}
-          contentContainerStyle={styles.filtersContentInline}
-        >
-          {filters.map((filter) => (
-            <TouchableOpacity
-              key={filter}
-              style={[
-                styles.filterButton,
-                selectedFilter === filter && styles.filterButtonActive
-              ]}
-              onPress={() => setSelectedFilter(filter)}
-            >
-              <Text style={[
-                styles.filterText,
-                selectedFilter === filter && styles.filterTextActive
-              ]}>
-                {filter.charAt(0).toUpperCase() + filter.slice(1)}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+        {/* Filter Tabs - Header Component */}
+        <View style={styles.filtersContainerFixed}>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.filtersContentFixed}
+          >
+            {filters.map((filter) => (
+              <TouchableOpacity
+                key={filter}
+                style={[
+                  styles.filterButton,
+                  selectedFilter === filter && styles.filterButtonActive
+                ]}
+                onPress={() => setSelectedFilter(filter)}
+              >
+                <Text style={[
+                  styles.filterText,
+                  selectedFilter === filter && styles.filterTextActive
+                ]}>
+                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
         
+        {/* Animals Grid */}
         <View style={styles.animalsGrid}>
           {filteredAnimals.map((animal) => (
             <TouchableOpacity key={animal.id} style={styles.animalCard}>
-              {/* Animal Image Placeholder */}
-              <View style={[styles.animalImage, { backgroundColor: getRarityColor(animal.rarity) }]}>
-                <Text style={styles.animalEmoji}>
-                  {animal.type === 'Bird' ? '🐦' : 
-                   animal.type === 'Mammal' ? '🐾' : '🦋'}
-                </Text>
+              {/* Animal Image */}
+              <View style={styles.animalImageContainer}>
+                <View style={[styles.animalImage, { backgroundColor: getRarityColor(animal.rarity) }]}>
+                  <Text style={styles.animalEmoji}>
+                    {animal.type === 'Bird' ? '🐦' : 
+                     animal.type === 'Mammal' ? '🐾' : '🦋'}
+                  </Text>
+                </View>
                 {animal.seen && (
                   <View style={styles.seenBadge}>
                     <Text style={styles.seenText}>✓</Text>
@@ -250,30 +253,10 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
                 <Text style={styles.animalScientific}>{animal.scientificName}</Text>
                 
                 <View style={styles.animalMeta}>
-                  <View style={[styles.rarityBadge, { backgroundColor: getRarityColor(animal.rarity) }]}>
-                    <Text style={styles.rarityText}>{animal.rarity}</Text>
-                  </View>
+                  <View style={[styles.rarityDot, { backgroundColor: getRarityColor(animal.rarity) }]} />
+                  <Text style={styles.rarityText}>{animal.rarity}</Text>
                   <Text style={styles.pointsText}>{animal.points} pts</Text>
                 </View>
-
-                <View style={styles.statsContainer}>
-                  <View style={styles.statItem}>
-                    <Text style={styles.statLabel}>Difficulty</Text>
-                    <Text style={styles.statValue}>{renderDifficultyStars(animal.stats.difficulty)}</Text>
-                  </View>
-                  <View style={styles.statItem}>
-                    <Text style={styles.statLabel}>Size</Text>
-                    <Text style={styles.statValue}>{animal.stats.size}</Text>
-                  </View>
-                  <View style={styles.statItem}>
-                    <Text style={styles.statLabel}>Activity</Text>
-                    <Text style={styles.statValue}>{animal.stats.activity}</Text>
-                  </View>
-                </View>
-
-                <Text style={styles.animalDescription} numberOfLines={2}>
-                  {animal.description}
-                </Text>
               </View>
             </TouchableOpacity>
           ))}
@@ -299,18 +282,17 @@ const styles = StyleSheet.create({
     }),
   },
   header: {
-    padding: Spacing.lg,
-    paddingTop: Platform.OS === 'ios' ? Spacing.sm : Spacing.lg,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.md,
+    paddingTop: Platform.OS === 'ios' ? Spacing.sm : Spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.gray200,
+    backgroundColor: Colors.surface,
   },
   title: {
-    fontSize: Typography.fontSize['3xl'],
+    fontSize: Typography.fontSize['2xl'],
     fontWeight: Typography.fontWeight.bold,
     color: Colors.onBackground,
-  },
-  subtitle: {
-    fontSize: Typography.fontSize.base,
-    color: Colors.onSurfaceVariant,
-    marginTop: Spacing.xs,
   },
   searchContainer: {
     paddingHorizontal: Spacing.lg,
@@ -366,37 +348,42 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  filtersContainerInline: {
-    paddingLeft: Spacing.lg,
-    marginBottom: Spacing.sm,
-    height: 36,
+  filtersContainerFixed: {
+    paddingHorizontal: Spacing.lg,
+    paddingBottom: Spacing.xs,
+    backgroundColor: Colors.background,
   },
-  filtersContentInline: {
-    paddingRight: Spacing.lg,
+  filtersContentFixed: {
     alignItems: 'center',
-    height: 36,
   },
   animalsGrid: {
-    paddingHorizontal: Spacing.lg,
+    paddingHorizontal: Spacing.md,
     paddingBottom: Spacing.xl,
     paddingTop: 0,
-    marginTop: -8,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
   },
   animalCard: {
     backgroundColor: Colors.surface,
-    borderRadius: BorderRadius.lg,
-    marginBottom: Spacing.lg,
+    borderRadius: BorderRadius.md,
+    marginBottom: Spacing.md,
+    width: '48%',
     overflow: 'hidden',
-    ...Shadows.md,
+    ...Shadows.sm,
   },
-  animalImage: {
-    height: 120,
-    justifyContent: 'center',
-    alignItems: 'center',
+  animalImageContainer: {
     position: 'relative',
   },
+  animalImage: {
+    height: 140,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: Spacing.sm,
+    borderRadius: BorderRadius.sm,
+  },
   animalEmoji: {
-    fontSize: 40,
+    fontSize: 32,
   },
   seenBadge: {
     position: 'absolute',
@@ -404,78 +391,54 @@ const styles = StyleSheet.create({
     right: Spacing.sm,
     backgroundColor: Colors.success,
     borderRadius: BorderRadius.full,
-    width: 24,
-    height: 24,
+    width: 20,
+    height: 20,
     justifyContent: 'center',
     alignItems: 'center',
   },
   seenText: {
     color: Colors.onPrimary,
-    fontSize: Typography.fontSize.sm,
+    fontSize: Typography.fontSize.xs,
     fontWeight: Typography.fontWeight.bold,
   },
   animalInfo: {
     padding: Spacing.md,
+    paddingTop: Spacing.sm,
   },
   animalName: {
-    fontSize: Typography.fontSize.lg,
+    fontSize: Typography.fontSize.base,
     fontWeight: Typography.fontWeight.bold,
     color: Colors.onSurface,
+    marginBottom: Spacing.xs,
   },
   animalScientific: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: Typography.fontSize.xs,
     color: Colors.onSurfaceVariant,
     fontStyle: 'italic',
     marginBottom: Spacing.sm,
   },
   animalMeta: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: Spacing.sm,
+    justifyContent: 'space-between',
   },
-  rarityBadge: {
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: Spacing.xs,
-    borderRadius: BorderRadius.full,
+  rarityDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: Spacing.xs,
   },
   rarityText: {
     fontSize: Typography.fontSize.xs,
-    color: Colors.onPrimary,
-    fontWeight: Typography.fontWeight.bold,
-    textTransform: 'uppercase',
-  },
-  pointsText: {
-    fontSize: Typography.fontSize.sm,
-    color: Colors.accent,
-    fontWeight: Typography.fontWeight.bold,
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: Spacing.sm,
-    backgroundColor: Colors.gray50,
-    padding: Spacing.sm,
-    borderRadius: BorderRadius.md,
-  },
-  statItem: {
-    alignItems: 'center',
+    color: Colors.onSurfaceVariant,
+    fontWeight: Typography.fontWeight.medium,
+    textTransform: 'capitalize',
     flex: 1,
   },
-  statLabel: {
+  pointsText: {
     fontSize: Typography.fontSize.xs,
     color: Colors.onSurfaceVariant,
-    marginBottom: Spacing.xs,
-  },
-  statValue: {
-    fontSize: Typography.fontSize.sm,
-    color: Colors.onSurface,
     fontWeight: Typography.fontWeight.medium,
-  },
-  animalDescription: {
-    fontSize: Typography.fontSize.sm,
-    color: Colors.onSurfaceVariant,
-    lineHeight: Typography.lineHeight.normal * Typography.fontSize.sm,
   },
   emptyState: {
     alignItems: 'center',

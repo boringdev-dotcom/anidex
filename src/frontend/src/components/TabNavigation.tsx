@@ -158,27 +158,27 @@ const styles = StyleSheet.create({
   cameraTab: {
     flex: 0,
     backgroundColor: 'transparent',
-    marginHorizontal: Spacing.md,
+    marginHorizontal: Spacing.sm,
   },
   cameraButtonInner: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
     backgroundColor: Colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
-    ...Shadows.lg,
+    ...Shadows.md,
   },
   cameraIcon: {
-    fontSize: Typography.fontSize['2xl'],
+    fontSize: Typography.fontSize.lg,
     color: Colors.onPrimary,
   },
   tabIcon: {
-    fontSize: Typography.fontSize.lg,
+    fontSize: Typography.fontSize.base,
     marginBottom: Spacing.xs,
   },
   tabIconActive: {
-    fontSize: Typography.fontSize.xl,
+    fontSize: Typography.fontSize.lg,
   },
   tabLabel: {
     fontSize: Typography.fontSize.xs,

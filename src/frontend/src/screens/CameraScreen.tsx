@@ -104,8 +104,7 @@ const CameraScreen: React.FC<CameraScreenProps> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Catch an Animal</Text>
-        <Text style={styles.subtitle}>Take a photo to add it to your collection</Text>
+        <Text style={styles.title}>Camera</Text>
       </View>
 
       {/* Camera Viewfinder Area */}
@@ -157,33 +156,6 @@ const CameraScreen: React.FC<CameraScreenProps> = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Location Info */}
-      <View style={styles.locationContainer}>
-        <View style={styles.locationHeader}>
-          <Text style={styles.locationIcon}>📍</Text>
-          <Text style={styles.locationTitle}>Current Location</Text>
-        </View>
-        <Text style={styles.locationText}>{currentLocation.address}</Text>
-        <Text style={styles.coordinatesText}>
-          {currentLocation.latitude.toFixed(4)}, {currentLocation.longitude.toFixed(4)}
-        </Text>
-      </View>
-
-      {/* Photography Tips */}
-      <View style={styles.tipsContainer}>
-        <Text style={styles.tipsTitle}>Photography Tips</Text>
-        <View style={styles.tipsGrid}>
-          {tips.map((tip, index) => (
-            <View key={index} style={styles.tipItem}>
-              <Text style={styles.tipIcon}>{tip.icon}</Text>
-              <View style={styles.tipContent}>
-                <Text style={styles.tipTitle}>{tip.title}</Text>
-                <Text style={styles.tipDescription}>{tip.description}</Text>
-              </View>
-            </View>
-          ))}
-        </View>
-      </View>
 
       {/* Action Buttons */}
       {lastPhoto && (
@@ -209,18 +181,17 @@ const styles = StyleSheet.create({
     }),
   },
   header: {
-    padding: Spacing.lg,
-    paddingTop: Platform.OS === 'ios' ? Spacing.sm : Spacing.lg,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.md,
+    paddingTop: Platform.OS === 'ios' ? Spacing.sm : Spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.gray200,
+    backgroundColor: Colors.surface,
   },
   title: {
-    fontSize: Typography.fontSize['3xl'],
+    fontSize: Typography.fontSize['2xl'],
     fontWeight: Typography.fontWeight.bold,
     color: Colors.onBackground,
-  },
-  subtitle: {
-    fontSize: Typography.fontSize.base,
-    color: Colors.onSurfaceVariant,
-    marginTop: Spacing.xs,
   },
   cameraContainer: {
     flex: 1,
