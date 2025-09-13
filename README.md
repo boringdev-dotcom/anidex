@@ -1,4 +1,4 @@
-# 🦁 AniDex - Pokemon Go for Real Animals!
+# 🦁 AniDex
 
 A cross-platform wildlife photography and collection app that gamifies animal spotting and conservation awareness. Catch, collect, and explore the animal kingdom while contributing to wildlife conservation efforts!
 
