@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,9 +7,12 @@ import {
   StyleSheet,
   SafeAreaView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { useAuthStore } from '../store/authStore';
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from '../styles/theme';
+import { dataService } from '../services/dataService';
+import { UserStats, RecentSighting, Badge, Friend } from '../types';
 
 interface ProfileScreenProps {
   navigation: any;
@@ -18,42 +21,52 @@ interface ProfileScreenProps {
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   const { user, signOut } = useAuthStore();
   const [activeTab, setActiveTab] = useState('collection');
+  const [userStats, setUserStats] = useState<UserStats | null>(null);
+  const [badges, setBadges] = useState<Badge[]>([]);
+  const [recentSightings, setRecentSightings] = useState<RecentSighting[]>([]);
+  const [friends, setFriends] = useState<Friend[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock user data
-  const userStats = {
-    totalSightings: 47,
-    speciesDiscovered: 23,
-    rareAnimals: 5,
-    friendsCount: 12,
-    level: 8,
-    experience: 2450,
-    nextLevelExp: 3000,
-    joinDate: 'March 2024',
-    location: 'New York, NY',
+  useEffect(() => {
+    loadProfileData();
+  }, []);
+
+  const loadProfileData = async () => {
+    try {
+      setLoading(true);
+      const [stats, userBadges, sightings] = await Promise.all([
+        dataService.getUserStats(),
+        dataService.getBadges(),
+        dataService.getRecentSightings(),
+      ]);
+      
+      setUserStats(stats);
+      setBadges(userBadges);
+      setRecentSightings(sightings);
+      
+      // TODO: Implement friends API when available
+      setFriends([]); // No friends for now
+    } catch (error) {
+      console.error('Failed to load profile data:', error);
+      // Set fallback data
+      setUserStats({
+        totalSightings: 0,
+        speciesDiscovered: 0,
+        rareAnimals: 0,
+        friendsCount: 0,
+        level: 1,
+        experience: 0,
+        nextLevelExp: 1000,
+        joinDate: 'Recently',
+        location: 'Unknown',
+      });
+      setBadges([]);
+      setRecentSightings([]);
+      setFriends([]);
+    } finally {
+      setLoading(false);
+    }
   };
-
-  const badges = [
-    { id: '1', name: 'Bird Watcher', description: 'Seen 10 bird species', icon: '🐦', earned: true },
-    { id: '2', name: 'Urban Explorer', description: 'Found animals in 5 cities', icon: '🏙️', earned: true },
-    { id: '3', name: 'Early Bird', description: 'Seen animals before 7 AM', icon: '🌅', earned: true },
-    { id: '4', name: 'Night Owl', description: 'Spotted nocturnal animals', icon: '🦉', earned: false },
-    { id: '5', name: 'Rare Hunter', description: 'Seen 5 legendary animals', icon: '🏆', earned: false },
-    { id: '6', name: 'Social Butterfly', description: 'Connected with 20 friends', icon: '🦋', earned: false },
-  ];
-
-  const recentSightings = [
-    { id: '1', name: 'Red Cardinal', rarity: 'uncommon', date: '2 days ago', location: 'Central Park' },
-    { id: '2', name: 'Gray Squirrel', rarity: 'common', date: '3 days ago', location: 'Backyard' },
-    { id: '3', name: 'Red-tailed Hawk', rarity: 'rare', date: '1 week ago', location: 'City Bridge' },
-    { id: '4', name: 'Monarch Butterfly', rarity: 'epic', date: '2 weeks ago', location: 'Botanical Garden' },
-  ];
-
-  const friends = [
-    { id: '1', name: 'Sarah Johnson', sightings: 34, mutualFriends: 5, status: 'online' },
-    { id: '2', name: 'Mike Chen', sightings: 67, mutualFriends: 8, status: 'offline' },
-    { id: '3', name: 'Emma Davis', sightings: 23, mutualFriends: 3, status: 'online' },
-    { id: '4', name: 'Alex Rodriguez', sightings: 89, mutualFriends: 12, status: 'offline' },
-  ];
 
   const handleSignOut = async () => {
     try {
@@ -84,15 +97,15 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
     <View style={styles.tabContent}>
       <View style={styles.statsGrid}>
         <View style={styles.statCard}>
-          <Text style={styles.statNumber}>{userStats.totalSightings}</Text>
+          <Text style={styles.statNumber}>{userStats?.totalSightings || 0}</Text>
           <Text style={styles.statLabel}>Total Sightings</Text>
         </View>
         <View style={styles.statCard}>
-          <Text style={styles.statNumber}>{userStats.speciesDiscovered}</Text>
+          <Text style={styles.statNumber}>{userStats?.speciesDiscovered || 0}</Text>
           <Text style={styles.statLabel}>Species</Text>
         </View>
         <View style={styles.statCard}>
-          <Text style={styles.statNumber}>{userStats.rareAnimals}</Text>
+          <Text style={styles.statNumber}>{userStats?.rareAnimals || 0}</Text>
           <Text style={styles.statLabel}>Rare Animals</Text>
         </View>
       </View>
@@ -138,7 +151,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   const renderFriends = () => (
     <View style={styles.tabContent}>
       <View style={styles.friendsHeader}>
-        <Text style={styles.sectionTitle}>Friends ({userStats.friendsCount})</Text>
+        <Text style={styles.sectionTitle}>Friends ({userStats?.friendsCount || 0})</Text>
         <TouchableOpacity style={styles.addFriendButton}>
           <Text style={styles.addFriendText}>+ Add Friends</Text>
         </TouchableOpacity>
@@ -167,8 +180,17 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* Loading State */}
+        {loading && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={Colors.primary} />
+            <Text style={styles.loadingText}>Loading profile...</Text>
+          </View>
+        )}
+
         {/* Profile Header */}
-        <View style={styles.profileHeader}>
+        {!loading && (
+          <View style={styles.profileHeader}>
           <View style={styles.profileTop}>
             <View style={styles.avatar}>
               <Text style={styles.avatarText}>
@@ -178,15 +200,15 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             
             <View style={styles.statsRow}>
               <View style={styles.statItem}>
-                <Text style={styles.statNumber}>{userStats.totalSightings}</Text>
+                <Text style={styles.statNumber}>{userStats?.totalSightings || 0}</Text>
                 <Text style={styles.statLabel}>Sightings</Text>
               </View>
               <View style={styles.statItem}>
-                <Text style={styles.statNumber}>{userStats.speciesDiscovered}</Text>
+                <Text style={styles.statNumber}>{userStats?.speciesDiscovered || 0}</Text>
                 <Text style={styles.statLabel}>Species</Text>
               </View>
               <View style={styles.statItem}>
-                <Text style={styles.statNumber}>{userStats.rareAnimals}</Text>
+                <Text style={styles.statNumber}>{userStats?.rareAnimals || 0}</Text>
                 <Text style={styles.statLabel}>Rare</Text>
               </View>
             </View>
@@ -196,42 +218,49 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             <Text style={styles.profileName}>
               {user?.displayName || user?.email?.split('@')[0]}
             </Text>
-            <Text style={styles.profileLocation}>{userStats.location}</Text>
+            <Text style={styles.profileLocation}>{userStats?.location || 'Unknown'}</Text>
           </View>
         </View>
+        )}
 
         {/* Tab Navigation */}
-        <View style={styles.tabNavigation}>
-          <TouchableOpacity
-            style={[styles.tabButton, activeTab === 'collection' && styles.tabButtonActive]}
-            onPress={() => setActiveTab('collection')}
-          >
-            <Text style={[styles.tabText, activeTab === 'collection' && styles.tabTextActive]}>
-              Collection
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tabButton, activeTab === 'badges' && styles.tabButtonActive]}
-            onPress={() => setActiveTab('badges')}
-          >
-            <Text style={[styles.tabText, activeTab === 'badges' && styles.tabTextActive]}>
-              Badges
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.tabButton, activeTab === 'friends' && styles.tabButtonActive]}
-            onPress={() => setActiveTab('friends')}
-          >
-            <Text style={[styles.tabText, activeTab === 'friends' && styles.tabTextActive]}>
-              Friends
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {!loading && (
+          <View style={styles.tabNavigation}>
+            <TouchableOpacity
+              style={[styles.tabButton, activeTab === 'collection' && styles.tabButtonActive]}
+              onPress={() => setActiveTab('collection')}
+            >
+              <Text style={[styles.tabText, activeTab === 'collection' && styles.tabTextActive]}>
+                Collection
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.tabButton, activeTab === 'badges' && styles.tabButtonActive]}
+              onPress={() => setActiveTab('badges')}
+            >
+              <Text style={[styles.tabText, activeTab === 'badges' && styles.tabTextActive]}>
+                Badges
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.tabButton, activeTab === 'friends' && styles.tabButtonActive]}
+              onPress={() => setActiveTab('friends')}
+            >
+              <Text style={[styles.tabText, activeTab === 'friends' && styles.tabTextActive]}>
+                Friends
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         {/* Tab Content */}
-        {activeTab === 'collection' && renderCollection()}
-        {activeTab === 'badges' && renderBadges()}
-        {activeTab === 'friends' && renderFriends()}
+        {!loading && (
+          <>
+            {activeTab === 'collection' && renderCollection()}
+            {activeTab === 'badges' && renderBadges()}
+            {activeTab === 'friends' && renderFriends()}
+          </>
+        )}
 
       </ScrollView>
     </SafeAreaView>
@@ -407,8 +436,18 @@ const styles = StyleSheet.create({
   },
   sightingName: {
     fontSize: Typography.fontSize.base,
-    fontWeight: Typography.fontWeight.semibold,
+    fontWeight: Typography.fontWeight.semibold as any,
     color: Colors.onSurface,
+  },
+  loadingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: Spacing.xl,
+  },
+  loadingText: {
+    marginTop: Spacing.md,
+    fontSize: Typography.fontSize.base,
+    color: Colors.onSurfaceVariant,
   },
   sightingDetails: {
     fontSize: Typography.fontSize.sm,
