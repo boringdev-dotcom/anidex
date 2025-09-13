@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/anidex/backend/internal/config"
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
@@ -86,4 +87,22 @@ func ValidateRefreshToken(tokenString string) (uuid.UUID, error) {
 	}
 
 	return uuid.Nil, errors.New("invalid refresh token")
+}
+
+// GetUserIDFromContext extracts user ID from Gin context (set by auth middleware)
+func GetUserIDFromContext(c *gin.Context) (uuid.UUID, error) {
+	userID, exists := c.Get("userID")
+	if !exists {
+		return uuid.Nil, errors.New("user ID not found in context")
+	}
+
+	if uid, ok := userID.(uuid.UUID); ok {
+		return uid, nil
+	}
+
+	if uidStr, ok := userID.(string); ok {
+		return uuid.Parse(uidStr)
+	}
+
+	return uuid.Nil, errors.New("invalid user ID format in context")
 }

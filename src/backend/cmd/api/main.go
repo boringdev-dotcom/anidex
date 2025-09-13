@@ -41,13 +41,22 @@ func main() {
 	router.Use(middleware.CORSMiddleware())
 
 	userRepo := repositories.NewUserRepository()
+	speciesRepo := repositories.NewSpeciesRepository()
+	animalCatchRepo := repositories.NewAnimalCatchRepository()
+	locationRepo := repositories.NewLocationRepository()
+	
 	firebaseService := services.NewFirebaseService()
 	authService := services.NewAuthService(userRepo, firebaseService)
 	oauthService := services.NewOAuthService()
+	
 	authController := controllers.NewAuthController(authService, oauthService)
+	speciesController := controllers.NewSpeciesController(speciesRepo)
+	catchController := controllers.NewCatchController(animalCatchRepo, speciesRepo, locationRepo)
+	locationController := controllers.NewLocationController(locationRepo, animalCatchRepo)
 
 	api := router.Group("/api")
 	{
+		// Authentication routes
 		auth := api.Group("/auth")
 		{
 			auth.POST("/register", authController.Register)
@@ -64,6 +73,36 @@ func main() {
 			{
 				protected.GET("/profile", authController.GetProfile)
 			}
+		}
+
+		// Species routes (public)
+		species := api.Group("/species")
+		{
+			species.GET("", speciesController.GetAllSpecies)
+			species.GET("/search", speciesController.SearchSpecies)
+			species.GET("/:id", speciesController.GetSpeciesById)
+		}
+
+		// Animal catches routes
+		catches := api.Group("/catches")
+		{
+			// Public routes
+			catches.GET("/:id", catchController.GetCatchById)
+			
+			// Protected routes
+			protected := catches.Group("")
+			protected.Use(middleware.AuthMiddleware())
+			{
+				protected.POST("", catchController.CreateCatch)
+				protected.GET("/my", catchController.GetUserCatches)
+			}
+		}
+
+		// Location routes (public)
+		locations := api.Group("/locations")
+		{
+			locations.GET("/nearby", locationController.GetNearbyLocations)
+			locations.GET("/catches", locationController.GetLocationCatches)
 		}
 	}
 

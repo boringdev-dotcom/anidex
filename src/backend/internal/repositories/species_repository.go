@@ -17,13 +17,13 @@ func NewSpeciesRepository() *SpeciesRepository {
 	}
 }
 
-// CreateSpecies creates a new species record
-func (r *SpeciesRepository) CreateSpecies(species *models.Species) error {
+// Create creates a new species record
+func (r *SpeciesRepository) Create(species *models.Species) error {
 	return r.db.Create(species).Error
 }
 
-// GetSpeciesByID retrieves a species by ID
-func (r *SpeciesRepository) GetSpeciesByID(id uuid.UUID) (*models.Species, error) {
+// GetByID retrieves a species by ID
+func (r *SpeciesRepository) GetByID(id uuid.UUID) (*models.Species, error) {
 	var species models.Species
 	err := r.db.First(&species, "id = ?", id).Error
 	if err != nil {
@@ -60,15 +60,44 @@ func (r *SpeciesRepository) GetSpeciesByRarity(rarity models.Rarity, limit, offs
 	return species, err
 }
 
-// SearchSpecies searches species by name (common or scientific)
-func (r *SpeciesRepository) SearchSpecies(query string, limit, offset int) ([]models.Species, error) {
+// SearchByName searches species by name (common or scientific)
+func (r *SpeciesRepository) SearchByName(query string, limit int) ([]models.Species, error) {
 	var species []models.Species
 	searchPattern := "%" + query + "%"
 	err := r.db.Where("(common_name ILIKE ? OR scientific_name ILIKE ?) AND is_active = ?", 
 		searchPattern, searchPattern, true).
-		Limit(limit).Offset(offset).
+		Limit(limit).
 		Find(&species).Error
 	return species, err
+}
+
+// GetAllWithFilters retrieves all species with optional filtering
+func (r *SpeciesRepository) GetAllWithFilters(category, rarity string, limit, offset int) ([]models.Species, int64, error) {
+	var species []models.Species
+	var total int64
+	
+	query := r.db.Model(&models.Species{}).Where("is_active = ?", true)
+	
+	if category != "" {
+		query = query.Where("category = ?", category)
+	}
+	
+	if rarity != "" {
+		query = query.Where("rarity = ?", rarity)
+	}
+	
+	// Count total records
+	err := query.Count(&total).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	
+	// Get paginated results
+	err = query.Order("common_name ASC").
+		Limit(limit).Offset(offset).
+		Find(&species).Error
+	
+	return species, total, err
 }
 
 // GetPopularSpecies retrieves species ordered by catch count
