@@ -1,35 +1,69 @@
 version: '3.8'
 
 services:
+  # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
+    container_name: anidex_postgres
     environment:
-      POSTGRES_USER: anidex
-      POSTGRES_PASSWORD: anidex_password
-      POSTGRES_DB: anidex
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: anidex_development
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - anidex-network
 
+  # Go Backend API
   backend:
-    build: ./src/backend
+    build: 
+      context: ./src/backend
+      dockerfile: Dockerfile
+    container_name: anidex_backend
     ports:
       - "8080:8080"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
-      DATABASE_URL: postgres://anidex:anidex_password@postgres:5432/anidex?sslmode=disable
-      JWT_SECRET: your-secret-key-change-this-in-production
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/anidex_development?sslmode=disable
+      JWT_SECRET: super-secret-jwt-key-change-in-production
       PORT: 8080
-      GIN_MODE: release
+      GIN_MODE: debug
+    volumes:
+      - ./src/backend:/app
     networks:
       - anidex-network
+    restart: unless-stopped
+
+  # React Native Web Frontend (optional)
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile.web
+    container_name: anidex_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: http://localhost:8080/api
+    volumes:
+      - ./src/frontend:/app
+      - /app/node_modules
+    networks:
+      - anidex-network
+    restart: unless-stopped
 
 volumes:
   postgres_data:
+    driver: local
 
 networks:
   anidex-network:
