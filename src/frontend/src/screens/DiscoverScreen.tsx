@@ -23,7 +23,7 @@ interface Animal {
   rarity: string;
   habitat: string;
   points: number;
-  caught: boolean;
+  seen: boolean;
   imageUrl?: string;
   description: string;
   stats: {
@@ -47,7 +47,7 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
       rarity: 'uncommon',
       habitat: 'Forest',
       points: 150,
-      caught: true,
+      seen: true,
       description: 'A vibrant red songbird known for its distinctive crest and melodious call.',
       stats: {
         difficulty: 3,
@@ -63,7 +63,7 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
       rarity: 'rare',
       habitat: 'Open Areas',
       points: 300,
-      caught: true,
+      seen: true,
       description: 'A large bird of prey with excellent hunting skills and keen eyesight.',
       stats: {
         difficulty: 7,
@@ -79,7 +79,7 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
       rarity: 'legendary',
       habitat: 'Forest',
       points: 1000,
-      caught: false,
+      seen: false,
       description: 'An apex predator and ancestor of domestic dogs, known for pack hunting.',
       stats: {
         difficulty: 10,
@@ -95,7 +95,7 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
       rarity: 'common',
       habitat: 'Urban Parks',
       points: 50,
-      caught: true,
+      seen: true,
       description: 'An agile tree-dwelling rodent commonly found in urban environments.',
       stats: {
         difficulty: 2,
@@ -111,7 +111,7 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
       rarity: 'epic',
       habitat: 'Gardens',
       points: 500,
-      caught: false,
+      seen: false,
       description: 'Famous for its incredible migration journey and beautiful orange wings.',
       stats: {
         difficulty: 5,
@@ -127,7 +127,7 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
       rarity: 'rare',
       habitat: 'Wetlands',
       points: 250,
-      caught: false,
+      seen: false,
       description: 'A patient wading bird with exceptional fishing skills.',
       stats: {
         difficulty: 6,
@@ -137,7 +137,7 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
     },
   ];
 
-  const filters = ['all', 'caught', 'uncaught', 'birds', 'mammals', 'insects'];
+  const filters = ['all', 'seen', 'unseen', 'birds', 'mammals', 'insects'];
 
   const filteredAnimals = animals.filter(animal => {
     const matchesSearch = animal.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -146,10 +146,10 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
     if (!matchesSearch) return false;
 
     switch (selectedFilter) {
-      case 'caught':
-        return animal.caught;
-      case 'uncaught':
-        return !animal.caught;
+      case 'seen':
+        return animal.seen;
+      case 'unseen':
+        return !animal.seen;
       case 'birds':
         return animal.type.toLowerCase() === 'bird';
       case 'mammals':
@@ -200,34 +200,34 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
         />
       </View>
 
-      {/* Filter Tabs */}
-      <ScrollView 
-        horizontal 
-        showsHorizontalScrollIndicator={false}
-        style={styles.filtersContainer}
-        contentContainerStyle={styles.filtersContent}
-      >
-        {filters.map((filter) => (
-          <TouchableOpacity
-            key={filter}
-            style={[
-              styles.filterButton,
-              selectedFilter === filter && styles.filterButtonActive
-            ]}
-            onPress={() => setSelectedFilter(filter)}
-          >
-            <Text style={[
-              styles.filterText,
-              selectedFilter === filter && styles.filterTextActive
-            ]}>
-              {filter.charAt(0).toUpperCase() + filter.slice(1)}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-
       {/* Animals Grid */}
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* Filter Tabs - moved inside main scroll */}
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          style={styles.filtersContainerInline}
+          contentContainerStyle={styles.filtersContentInline}
+        >
+          {filters.map((filter) => (
+            <TouchableOpacity
+              key={filter}
+              style={[
+                styles.filterButton,
+                selectedFilter === filter && styles.filterButtonActive
+              ]}
+              onPress={() => setSelectedFilter(filter)}
+            >
+              <Text style={[
+                styles.filterText,
+                selectedFilter === filter && styles.filterTextActive
+              ]}>
+                {filter.charAt(0).toUpperCase() + filter.slice(1)}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+        
         <View style={styles.animalsGrid}>
           {filteredAnimals.map((animal) => (
             <TouchableOpacity key={animal.id} style={styles.animalCard}>
@@ -237,9 +237,9 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
                   {animal.type === 'Bird' ? '🐦' : 
                    animal.type === 'Mammal' ? '🐾' : '🦋'}
                 </Text>
-                {animal.caught && (
-                  <View style={styles.caughtBadge}>
-                    <Text style={styles.caughtText}>✓</Text>
+                {animal.seen && (
+                  <View style={styles.seenBadge}>
+                    <Text style={styles.seenText}>✓</Text>
                   </View>
                 )}
               </View>
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     paddingHorizontal: Spacing.lg,
-    marginBottom: Spacing.md,
+    marginBottom: Spacing.sm,
   },
   searchInput: {
     backgroundColor: Colors.surface,
@@ -326,26 +326,39 @@ const styles = StyleSheet.create({
   },
   filtersContainer: {
     paddingLeft: Spacing.lg,
-    marginBottom: Spacing.lg,
+    marginBottom: 0,
+    marginTop: 0,
+    margin: 0,
+    height: 36,
+    paddingVertical: 0,
+    paddingTop: 0,
+    paddingBottom: 0,
   },
   filtersContent: {
     paddingRight: Spacing.lg,
+    alignItems: 'center',
+    height: 36,
   },
   filterButton: {
     backgroundColor: Colors.surface,
-    paddingHorizontal: Spacing.md,
-    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: 6,
     borderRadius: BorderRadius.full,
     marginRight: Spacing.sm,
+    height: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
     ...Shadows.sm,
   },
   filterButtonActive: {
     backgroundColor: Colors.primary,
   },
   filterText: {
-    fontSize: Typography.fontSize.sm,
+    fontSize: Typography.fontSize.xs,
     color: Colors.onSurface,
     fontWeight: Typography.fontWeight.medium,
+    textAlign: 'center',
+    lineHeight: 16,
   },
   filterTextActive: {
     color: Colors.onPrimary,
@@ -353,9 +366,21 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
+  filtersContainerInline: {
+    paddingLeft: Spacing.lg,
+    marginBottom: Spacing.sm,
+    height: 36,
+  },
+  filtersContentInline: {
+    paddingRight: Spacing.lg,
+    alignItems: 'center',
+    height: 36,
+  },
   animalsGrid: {
     paddingHorizontal: Spacing.lg,
     paddingBottom: Spacing.xl,
+    paddingTop: 0,
+    marginTop: -8,
   },
   animalCard: {
     backgroundColor: Colors.surface,
@@ -373,7 +398,7 @@ const styles = StyleSheet.create({
   animalEmoji: {
     fontSize: 40,
   },
-  caughtBadge: {
+  seenBadge: {
     position: 'absolute',
     top: Spacing.sm,
     right: Spacing.sm,
@@ -384,7 +409,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  caughtText: {
+  seenText: {
     color: Colors.onPrimary,
     fontSize: Typography.fontSize.sm,
     fontWeight: Typography.fontWeight.bold,

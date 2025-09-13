@@ -21,7 +21,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 
   // Mock user data
   const userStats = {
-    totalCatches: 47,
+    totalSightings: 47,
     speciesDiscovered: 23,
     rareAnimals: 5,
     friendsCount: 12,
@@ -33,15 +33,15 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   };
 
   const badges = [
-    { id: '1', name: 'Bird Watcher', description: 'Caught 10 bird species', icon: '🐦', earned: true },
+    { id: '1', name: 'Bird Watcher', description: 'Seen 10 bird species', icon: '🐦', earned: true },
     { id: '2', name: 'Urban Explorer', description: 'Found animals in 5 cities', icon: '🏙️', earned: true },
-    { id: '3', name: 'Early Bird', description: 'Caught animals before 7 AM', icon: '🌅', earned: true },
+    { id: '3', name: 'Early Bird', description: 'Seen animals before 7 AM', icon: '🌅', earned: true },
     { id: '4', name: 'Night Owl', description: 'Spotted nocturnal animals', icon: '🦉', earned: false },
-    { id: '5', name: 'Rare Hunter', description: 'Caught 5 legendary animals', icon: '🏆', earned: false },
+    { id: '5', name: 'Rare Hunter', description: 'Seen 5 legendary animals', icon: '🏆', earned: false },
     { id: '6', name: 'Social Butterfly', description: 'Connected with 20 friends', icon: '🦋', earned: false },
   ];
 
-  const recentCatches = [
+  const recentSightings = [
     { id: '1', name: 'Red Cardinal', rarity: 'uncommon', date: '2 days ago', location: 'Central Park' },
     { id: '2', name: 'Gray Squirrel', rarity: 'common', date: '3 days ago', location: 'Backyard' },
     { id: '3', name: 'Red-tailed Hawk', rarity: 'rare', date: '1 week ago', location: 'City Bridge' },
@@ -49,10 +49,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   ];
 
   const friends = [
-    { id: '1', name: 'Sarah Johnson', catches: 34, mutualFriends: 5, status: 'online' },
-    { id: '2', name: 'Mike Chen', catches: 67, mutualFriends: 8, status: 'offline' },
-    { id: '3', name: 'Emma Davis', catches: 23, mutualFriends: 3, status: 'online' },
-    { id: '4', name: 'Alex Rodriguez', catches: 89, mutualFriends: 12, status: 'offline' },
+    { id: '1', name: 'Sarah Johnson', sightings: 34, mutualFriends: 5, status: 'online' },
+    { id: '2', name: 'Mike Chen', sightings: 67, mutualFriends: 8, status: 'offline' },
+    { id: '3', name: 'Emma Davis', sightings: 23, mutualFriends: 3, status: 'online' },
+    { id: '4', name: 'Alex Rodriguez', sightings: 89, mutualFriends: 12, status: 'offline' },
   ];
 
   const handleSignOut = async () => {
@@ -84,8 +84,8 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
     <View style={styles.tabContent}>
       <View style={styles.statsGrid}>
         <View style={styles.statCard}>
-          <Text style={styles.statNumber}>{userStats.totalCatches}</Text>
-          <Text style={styles.statLabel}>Total Catches</Text>
+          <Text style={styles.statNumber}>{userStats.totalSightings}</Text>
+          <Text style={styles.statLabel}>Total Sightings</Text>
         </View>
         <View style={styles.statCard}>
           <Text style={styles.statNumber}>{userStats.speciesDiscovered}</Text>
@@ -97,17 +97,17 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         </View>
       </View>
 
-      <Text style={styles.sectionTitle}>Recent Catches</Text>
-      {recentCatches.map((catch_item) => (
-        <View key={catch_item.id} style={styles.catchItem}>
-          <View style={styles.catchInfo}>
-            <Text style={styles.catchName}>{catch_item.name}</Text>
-            <Text style={styles.catchDetails}>
-              {catch_item.location} • {catch_item.date}
+      <Text style={styles.sectionTitle}>Recent Sightings</Text>
+      {recentSightings.map((sighting_item) => (
+        <View key={sighting_item.id} style={styles.sightingItem}>
+          <View style={styles.sightingInfo}>
+            <Text style={styles.sightingName}>{sighting_item.name}</Text>
+            <Text style={styles.sightingDetails}>
+              {sighting_item.location} • {sighting_item.date}
             </Text>
           </View>
-          <View style={[styles.rarityBadge, { backgroundColor: getRarityColor(catch_item.rarity) }]}>
-            <Text style={styles.rarityText}>{catch_item.rarity}</Text>
+          <View style={[styles.rarityBadge, { backgroundColor: getRarityColor(sighting_item.rarity) }]}>
+            <Text style={styles.rarityText}>{sighting_item.rarity}</Text>
           </View>
         </View>
       ))}
@@ -153,7 +153,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
           <View style={styles.friendInfo}>
             <Text style={styles.friendName}>{friend.name}</Text>
             <Text style={styles.friendStats}>
-              {friend.catches} catches • {friend.mutualFriends} mutual friends
+              {friend.sightings} sightings • {friend.mutualFriends} mutual friends
             </Text>
           </View>
           <TouchableOpacity style={styles.messageButton}>
@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     color: Colors.onSurfaceVariant,
     marginTop: Spacing.xs,
   },
-  catchItem: {
+  sightingItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -430,15 +430,15 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.sm,
     ...Shadows.sm,
   },
-  catchInfo: {
+  sightingInfo: {
     flex: 1,
   },
-  catchName: {
+  sightingName: {
     fontSize: Typography.fontSize.base,
     fontWeight: Typography.fontWeight.semibold,
     color: Colors.onSurface,
   },
-  catchDetails: {
+  sightingDetails: {
     fontSize: Typography.fontSize.sm,
     color: Colors.onSurfaceVariant,
     marginTop: Spacing.xs,

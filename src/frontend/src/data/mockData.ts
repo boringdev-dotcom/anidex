@@ -9,7 +9,7 @@ export interface Animal {
   rarity: string;
   habitat: string;
   points: number;
-  caught: boolean;
+  seen: boolean;
   imageUrl?: string;
   description: string;
   stats: {
@@ -105,7 +105,7 @@ export const mockAnimals: Animal[] = [
     rarity: 'uncommon',
     habitat: 'Forest',
     points: 150,
-    caught: true,
+    seen: true,
     description: 'A vibrant red songbird known for its distinctive crest and melodious call.',
     stats: {
       difficulty: 3,
@@ -121,7 +121,7 @@ export const mockAnimals: Animal[] = [
     rarity: 'rare',
     habitat: 'Open Areas',
     points: 300,
-    caught: true,
+    seen: true,
     description: 'A large bird of prey with excellent hunting skills and keen eyesight.',
     stats: {
       difficulty: 7,
@@ -137,7 +137,7 @@ export const mockAnimals: Animal[] = [
     rarity: 'legendary',
     habitat: 'Forest',
     points: 1000,
-    caught: false,
+    seen: false,
     description: 'An apex predator and ancestor of domestic dogs, known for pack hunting.',
     stats: {
       difficulty: 10,
@@ -153,7 +153,7 @@ export const mockAnimals: Animal[] = [
     rarity: 'common',
     habitat: 'Urban Parks',
     points: 50,
-    caught: true,
+    seen: true,
     description: 'An agile tree-dwelling rodent commonly found in urban environments.',
     stats: {
       difficulty: 2,
@@ -169,7 +169,7 @@ export const mockAnimals: Animal[] = [
     rarity: 'epic',
     habitat: 'Gardens',
     points: 500,
-    caught: false,
+    seen: false,
     description: 'Famous for its incredible migration journey and beautiful orange wings.',
     stats: {
       difficulty: 5,
@@ -185,7 +185,7 @@ export const mockAnimals: Animal[] = [
     rarity: 'rare',
     habitat: 'Wetlands',
     points: 250,
-    caught: false,
+    seen: false,
     description: 'A patient wading bird with exceptional fishing skills.',
     stats: {
       difficulty: 6,
@@ -201,7 +201,7 @@ export const mockAnimals: Animal[] = [
     rarity: 'common',
     habitat: 'Gardens',
     points: 75,
-    caught: true,
+    seen: true,
     description: 'A common songbird known for its orange breast and melodic song.',
     stats: {
       difficulty: 2,
@@ -217,7 +217,7 @@ export const mockAnimals: Animal[] = [
     rarity: 'uncommon',
     habitat: 'Forest',
     points: 200,
-    caught: false,
+    seen: false,
     description: 'A graceful deer species recognizable by its distinctive white tail.',
     stats: {
       difficulty: 4,
@@ -344,12 +344,12 @@ export const getAnimalsByRarity = (rarity: string): Animal[] => {
   return mockAnimals.filter(animal => animal.rarity.toLowerCase() === rarity.toLowerCase());
 };
 
-export const getCaughtAnimals = (): Animal[] => {
-  return mockAnimals.filter(animal => animal.caught);
+export const getSeenAnimals = (): Animal[] => {
+  return mockAnimals.filter(animal => animal.seen);
 };
 
-export const getUncaughtAnimals = (): Animal[] => {
-  return mockAnimals.filter(animal => !animal.caught);
+export const getUnseenAnimals = (): Animal[] => {
+  return mockAnimals.filter(animal => !animal.seen);
 };
 
 export const searchAnimals = (query: string): Animal[] => {

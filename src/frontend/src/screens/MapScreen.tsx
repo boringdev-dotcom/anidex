@@ -21,8 +21,8 @@ interface AnimalSighting {
   rarity: string;
   latitude: number;
   longitude: number;
-  userCaught: boolean;
-  caughtBy: string;
+  userSeen: boolean;
+  seenBy: string;
   timeAgo: string;
   distance: string;
 }
@@ -40,8 +40,8 @@ const MapScreen: React.FC<MapScreenProps> = ({ navigation }) => {
       rarity: 'uncommon',
       latitude: 40.7831,
       longitude: -73.9712,
-      userCaught: true,
-      caughtBy: 'You',
+      userSeen: true,
+      seenBy: 'You',
       timeAgo: '2 hours ago',
       distance: '0.2 miles',
     },
@@ -52,8 +52,8 @@ const MapScreen: React.FC<MapScreenProps> = ({ navigation }) => {
       rarity: 'common',
       latitude: 40.7829,
       longitude: -73.9714,
-      userCaught: false,
-      caughtBy: 'Sarah Johnson',
+      userSeen: false,
+      seenBy: 'Sarah Johnson',
       timeAgo: '5 hours ago',
       distance: '0.3 miles',
     },
@@ -64,8 +64,8 @@ const MapScreen: React.FC<MapScreenProps> = ({ navigation }) => {
       rarity: 'rare',
       latitude: 40.7835,
       longitude: -73.9708,
-      userCaught: true,
-      caughtBy: 'You',
+      userSeen: true,
+      seenBy: 'You',
       timeAgo: '1 day ago',
       distance: '0.5 miles',
     },
@@ -76,8 +76,8 @@ const MapScreen: React.FC<MapScreenProps> = ({ navigation }) => {
       rarity: 'epic',
       latitude: 40.7828,
       longitude: -73.9715,
-      userCaught: false,
-      caughtBy: 'Mike Chen',
+      userSeen: false,
+      seenBy: 'Mike Chen',
       timeAgo: '3 hours ago',
       distance: '0.1 miles',
     },
@@ -88,14 +88,14 @@ const MapScreen: React.FC<MapScreenProps> = ({ navigation }) => {
       rarity: 'rare',
       latitude: 40.7840,
       longitude: -73.9720,
-      userCaught: false,
-      caughtBy: 'Emma Davis',
+      userSeen: false,
+      seenBy: 'Emma Davis',
       timeAgo: '6 hours ago',
       distance: '0.8 miles',
     },
   ];
 
-  const filters = ['all', 'my-catches', 'friends', 'rare', 'nearby'];
+  const filters = ['all', 'my-sightings', 'friends', 'rare', 'nearby'];
   const currentLocation = {
     latitude: 40.7831,
     longitude: -73.9712,
@@ -104,10 +104,10 @@ const MapScreen: React.FC<MapScreenProps> = ({ navigation }) => {
 
   const filteredSightings = animalSightings.filter(sighting => {
     switch (selectedFilter) {
-      case 'my-catches':
-        return sighting.userCaught;
+      case 'my-sightings':
+        return sighting.userSeen;
       case 'friends':
-        return !sighting.userCaught;
+        return !sighting.userSeen;
       case 'rare':
         return ['rare', 'epic', 'legendary'].includes(sighting.rarity);
       case 'nearby':
@@ -252,9 +252,9 @@ const MapScreen: React.FC<MapScreenProps> = ({ navigation }) => {
                 <View style={[styles.sightingIconBg, { backgroundColor: getRarityColor(sighting.rarity) }]}>
                   <Text style={styles.sightingEmoji}>{getAnimalIcon(sighting.type)}</Text>
                 </View>
-                {sighting.userCaught && (
-                  <View style={styles.caughtIndicator}>
-                    <Text style={styles.caughtIcon}>✓</Text>
+                {sighting.userSeen && (
+                  <View style={styles.seenIndicator}>
+                    <Text style={styles.seenIcon}>✓</Text>
                   </View>
                 )}
               </View>
@@ -268,7 +268,7 @@ const MapScreen: React.FC<MapScreenProps> = ({ navigation }) => {
                   <Text style={styles.sightingDistance}>{sighting.distance}</Text>
                 </View>
                 <Text style={styles.sightingDetails}>
-                  Caught by {sighting.caughtBy} • {sighting.timeAgo}
+                  Seen by {sighting.seenBy} • {sighting.timeAgo}
                 </Text>
               </View>
 
@@ -461,7 +461,7 @@ const styles = StyleSheet.create({
   sightingEmoji: {
     fontSize: Typography.fontSize.lg,
   },
-  caughtIndicator: {
+  seenIndicator: {
     position: 'absolute',
     bottom: -2,
     right: -2,
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: Colors.surface,
   },
-  caughtIcon: {
+  seenIcon: {
     color: Colors.onPrimary,
     fontSize: Typography.fontSize.xs,
     fontWeight: Typography.fontWeight.bold,

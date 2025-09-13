@@ -28,22 +28,22 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) => {
 
   // Mock data for now
   const stats = {
-    totalCatches: 47,
+    totalSightings: 47,
     speciesDiscovered: 23,
     rareAnimals: 5,
     friendsCount: 12,
   };
 
-  const recentCatches = [
+  const recentSightings = [
     { id: '1', name: 'Red Cardinal', rarity: 'uncommon', time: '2 hours ago', location: 'Central Park' },
     { id: '2', name: 'Gray Squirrel', rarity: 'common', time: '5 hours ago', location: 'Backyard' },
     { id: '3', name: 'Red-tailed Hawk', rarity: 'rare', time: '1 day ago', location: 'City Bridge' },
   ];
 
   const achievements = [
-    { id: '1', title: 'Bird Watcher', description: 'Catch 10 different bird species', progress: 70 },
+    { id: '1', title: 'Bird Watcher', description: 'See 10 different bird species', progress: 70 },
     { id: '2', title: 'Urban Explorer', description: 'Discover animals in 5 cities', progress: 40 },
-    { id: '3', title: 'Early Bird', description: 'Catch animals before 7 AM', progress: 90 },
+    { id: '3', title: 'Early Bird', description: 'See animals before 7 AM', progress: 90 },
   ];
 
   return (
@@ -64,8 +64,8 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) => {
         <View style={styles.statsContainer}>
           <View style={styles.statsRow}>
             <View style={[styles.statCard, styles.statCardPrimary]}>
-              <Text style={styles.statNumber}>{stats.totalCatches}</Text>
-              <Text style={styles.statLabel}>Total Catches</Text>
+              <Text style={styles.statNumber}>{stats.totalSightings}</Text>
+              <Text style={styles.statLabel}>Total Sightings</Text>
             </View>
             <View style={[styles.statCard, styles.statCardSecondary]}>
               <Text style={styles.statNumber}>{stats.speciesDiscovered}</Text>
@@ -90,7 +90,7 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) => {
           <View style={styles.actionsContainer}>
             <TouchableOpacity style={styles.actionButton}>
               <Text style={styles.actionIcon}>📸</Text>
-              <Text style={styles.actionText}>Catch Animal</Text>
+              <Text style={styles.actionText}>Spot Animal</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton}>
               <Text style={styles.actionIcon}>🗺️</Text>
@@ -103,19 +103,19 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Recent Catches */}
+        {/* Recent Sightings */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Recent Catches</Text>
-          {recentCatches.map((catch_item) => (
-            <View key={catch_item.id} style={styles.catchItem}>
-              <View style={styles.catchInfo}>
-                <Text style={styles.catchName}>{catch_item.name}</Text>
-                <Text style={styles.catchDetails}>
-                  {catch_item.location} • {catch_item.time}
+          <Text style={styles.sectionTitle}>Recent Sightings</Text>
+          {recentSightings.map((sighting_item) => (
+            <View key={sighting_item.id} style={styles.sightingItem}>
+              <View style={styles.sightingInfo}>
+                <Text style={styles.sightingName}>{sighting_item.name}</Text>
+                <Text style={styles.sightingDetails}>
+                  {sighting_item.location} • {sighting_item.time}
                 </Text>
               </View>
-              <View style={[styles.rarityBadge, { backgroundColor: getRarityColor(catch_item.rarity) }]}>
-                <Text style={styles.rarityText}>{catch_item.rarity}</Text>
+              <View style={[styles.rarityBadge, { backgroundColor: getRarityColor(sighting_item.rarity) }]}>
+                <Text style={styles.rarityText}>{sighting_item.rarity}</Text>
               </View>
             </View>
           ))}
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
     fontWeight: Typography.fontWeight.medium,
     textAlign: 'center',
   },
-  catchItem: {
+  sightingItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -285,15 +285,15 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.sm,
     ...Shadows.sm,
   },
-  catchInfo: {
+  sightingInfo: {
     flex: 1,
   },
-  catchName: {
+  sightingName: {
     fontSize: Typography.fontSize.base,
     fontWeight: Typography.fontWeight.semibold,
     color: Colors.onSurface,
   },
-  catchDetails: {
+  sightingDetails: {
     fontSize: Typography.fontSize.sm,
     color: Colors.onSurfaceVariant,
     marginTop: Spacing.xs,
