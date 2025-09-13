@@ -8,13 +8,13 @@ import { useAuthStore } from '../store/authStore';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
-import ComingSoonScreen from '../screens/ComingSoonScreen';
+import TabNavigation from '../components/TabNavigation';
 
 export type RootStackParamList = {
   Login: undefined;
   SignUp: undefined;
   ForgotPassword: undefined;
-  ComingSoon: undefined;
+  Main: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -58,8 +58,8 @@ const AppNavigator: React.FC = () => {
       >
         {user ? (
           <Stack.Screen 
-            name="ComingSoon" 
-            component={ComingSoonScreen}
+            name="Main" 
+            component={TabNavigation}
             options={{ gestureEnabled: false }}
           />
         ) : (
