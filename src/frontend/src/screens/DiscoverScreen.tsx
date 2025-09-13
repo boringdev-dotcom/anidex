@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,8 +8,10 @@ import {
   SafeAreaView,
   Platform,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from '../styles/theme';
+import { dataService } from '../services/dataService';
 
 interface DiscoverScreenProps {
   navigation: any;
@@ -36,115 +38,55 @@ interface Animal {
 const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
+  const [animals, setAnimals] = useState<Animal[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock animal data
-  const animals: Animal[] = [
-    {
-      id: '1',
-      name: 'Red Cardinal',
-      scientificName: 'Cardinalis cardinalis',
-      type: 'Bird',
-      rarity: 'uncommon',
-      habitat: 'Forest',
-      points: 150,
-      seen: true,
-      description: 'A vibrant red songbird known for its distinctive crest and melodious call.',
-      stats: {
-        difficulty: 3,
-        size: 'Small',
-        activity: 'Diurnal',
-      },
-    },
-    {
-      id: '2',
-      name: 'Red-tailed Hawk',
-      scientificName: 'Buteo jamaicensis',
-      type: 'Bird',
-      rarity: 'rare',
-      habitat: 'Open Areas',
-      points: 300,
-      seen: true,
-      description: 'A large bird of prey with excellent hunting skills and keen eyesight.',
-      stats: {
-        difficulty: 7,
-        size: 'Large',
-        activity: 'Diurnal',
-      },
-    },
-    {
-      id: '3',
-      name: 'Gray Wolf',
-      scientificName: 'Canis lupus',
-      type: 'Mammal',
-      rarity: 'legendary',
-      habitat: 'Forest',
-      points: 1000,
-      seen: false,
-      description: 'An apex predator and ancestor of domestic dogs, known for pack hunting.',
-      stats: {
-        difficulty: 10,
-        size: 'Large',
-        activity: 'Crepuscular',
-      },
-    },
-    {
-      id: '4',
-      name: 'Eastern Gray Squirrel',
-      scientificName: 'Sciurus carolinensis',
-      type: 'Mammal',
-      rarity: 'common',
-      habitat: 'Urban Parks',
-      points: 50,
-      seen: true,
-      description: 'An agile tree-dwelling rodent commonly found in urban environments.',
-      stats: {
-        difficulty: 2,
-        size: 'Small',
-        activity: 'Diurnal',
-      },
-    },
-    {
-      id: '5',
-      name: 'Monarch Butterfly',
-      scientificName: 'Danaus plexippus',
-      type: 'Insect',
-      rarity: 'epic',
-      habitat: 'Gardens',
-      points: 500,
-      seen: false,
-      description: 'Famous for its incredible migration journey and beautiful orange wings.',
-      stats: {
-        difficulty: 5,
-        size: 'Tiny',
-        activity: 'Diurnal',
-      },
-    },
-    {
-      id: '6',
-      name: 'Great Blue Heron',
-      scientificName: 'Ardea herodias',
-      type: 'Bird',
-      rarity: 'rare',
-      habitat: 'Wetlands',
-      points: 250,
-      seen: false,
-      description: 'A patient wading bird with exceptional fishing skills.',
-      stats: {
-        difficulty: 6,
-        size: 'Large',
-        activity: 'Diurnal',
-      },
-    },
-  ];
+  // Load animals from backend
+  useEffect(() => {
+    loadAnimals();
+  }, []);
+
+  const loadAnimals = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const animalsData = await dataService.getAllAnimals();
+      setAnimals(animalsData);
+    } catch (err) {
+      console.error('Failed to load animals:', err);
+      setError('Failed to load animals. Please check your connection.');
+      // Fallback to empty array
+      setAnimals([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle search with debouncing
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      const timeoutId = setTimeout(async () => {
+        try {
+          const searchResults = await dataService.searchAnimals(searchQuery);
+          setAnimals(searchResults);
+        } catch (err) {
+          console.error('Search failed:', err);
+        }
+      }, 300); // 300ms debounce
+
+      return () => clearTimeout(timeoutId);
+    } else {
+      // If search is cleared, reload all animals
+      loadAnimals();
+    }
+  }, [searchQuery]);
 
   const filters = ['all', 'seen', 'unseen', 'birds', 'mammals', 'insects'];
 
+  // Filter animals based on search query and selected filter
   const filteredAnimals = animals.filter(animal => {
-    const matchesSearch = animal.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         animal.scientificName.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    if (!matchesSearch) return false;
-
+    // Note: Search is handled by the API now, so we mainly filter by category here
     switch (selectedFilter) {
       case 'seen':
         return animal.seen;
@@ -228,8 +170,27 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
           </ScrollView>
         </View>
         
+        {/* Loading State */}
+        {loading && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={Colors.primary} />
+            <Text style={styles.loadingText}>Loading animals...</Text>
+          </View>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{error}</Text>
+            <TouchableOpacity style={styles.retryButton} onPress={loadAnimals}>
+              <Text style={styles.retryButtonText}>Retry</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        
         {/* Animals Grid */}
-        <View style={styles.animalsGrid}>
+        {!loading && !error && (
+          <View style={styles.animalsGrid}>
           {filteredAnimals.map((animal) => (
             <TouchableOpacity key={animal.id} style={styles.animalCard}>
               {/* Animal Image */}
@@ -260,13 +221,15 @@ const DiscoverScreen: React.FC<DiscoverScreenProps> = ({ navigation }) => {
               </View>
             </TouchableOpacity>
           ))}
+          
+          {/* Empty State */}
+          {filteredAnimals.length === 0 && (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyStateText}>No animals found</Text>
+              <Text style={styles.emptyStateSubtext}>Try adjusting your search or filters</Text>
+            </View>
+          )}
         </View>
-
-        {filteredAnimals.length === 0 && (
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyStateText}>No animals found</Text>
-            <Text style={styles.emptyStateSubtext}>Try adjusting your search or filters</Text>
-          </View>
         )}
       </ScrollView>
     </SafeAreaView>
@@ -278,7 +241,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
     ...(Platform.OS === 'web' && {
-      minHeight: '100vh',
+      minHeight: '100vh' as any,
     }),
   },
   header: {
@@ -291,7 +254,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: Typography.fontSize['2xl'],
-    fontWeight: Typography.fontWeight.bold,
+    fontWeight: Typography.fontWeight.bold as any,
     color: Colors.onBackground,
   },
   searchContainer: {
@@ -338,7 +301,7 @@ const styles = StyleSheet.create({
   filterText: {
     fontSize: Typography.fontSize.xs,
     color: Colors.onSurface,
-    fontWeight: Typography.fontWeight.medium,
+    fontWeight: Typography.fontWeight.medium as any,
     textAlign: 'center',
     lineHeight: 16,
   },
@@ -399,7 +362,7 @@ const styles = StyleSheet.create({
   seenText: {
     color: Colors.onPrimary,
     fontSize: Typography.fontSize.xs,
-    fontWeight: Typography.fontWeight.bold,
+    fontWeight: Typography.fontWeight.bold as any,
   },
   animalInfo: {
     padding: Spacing.md,
@@ -407,7 +370,7 @@ const styles = StyleSheet.create({
   },
   animalName: {
     fontSize: Typography.fontSize.base,
-    fontWeight: Typography.fontWeight.bold,
+    fontWeight: Typography.fontWeight.bold as any,
     color: Colors.onSurface,
     marginBottom: Spacing.xs,
   },
@@ -431,14 +394,14 @@ const styles = StyleSheet.create({
   rarityText: {
     fontSize: Typography.fontSize.xs,
     color: Colors.onSurfaceVariant,
-    fontWeight: Typography.fontWeight.medium,
+    fontWeight: Typography.fontWeight.medium as any,
     textTransform: 'capitalize',
     flex: 1,
   },
   pointsText: {
     fontSize: Typography.fontSize.xs,
     color: Colors.onSurfaceVariant,
-    fontWeight: Typography.fontWeight.medium,
+    fontWeight: Typography.fontWeight.medium as any,
   },
   emptyState: {
     alignItems: 'center',
@@ -447,13 +410,48 @@ const styles = StyleSheet.create({
   },
   emptyStateText: {
     fontSize: Typography.fontSize.lg,
-    fontWeight: Typography.fontWeight.semibold,
+    fontWeight: Typography.fontWeight.semibold as any,
     color: Colors.onSurfaceVariant,
     marginBottom: Spacing.sm,
   },
   emptyStateSubtext: {
     fontSize: Typography.fontSize.base,
     color: Colors.onSurfaceVariant,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: Spacing.xl,
+  },
+  loadingText: {
+    marginTop: Spacing.md,
+    fontSize: Typography.fontSize.base,
+    color: Colors.onSurfaceVariant,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: Spacing.xl,
+    paddingHorizontal: Spacing.lg,
+  },
+  errorText: {
+    fontSize: Typography.fontSize.base,
+    color: Colors.error,
+    textAlign: 'center',
+    marginBottom: Spacing.md,
+  },
+  retryButton: {
+    backgroundColor: Colors.primary,
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.sm,
+    borderRadius: BorderRadius.md,
+  },
+  retryButtonText: {
+    color: Colors.onPrimary,
+    fontSize: Typography.fontSize.base,
+    fontWeight: Typography.fontWeight.medium as any,
   },
 });
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,9 +7,12 @@ import {
   StyleSheet,
   SafeAreaView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import { useAuthStore } from '../store/authStore';
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from '../styles/theme';
+import { dataService } from '../services/dataService';
+import { UserStats, RecentSighting, Achievement } from '../types';
 
 interface DashboardScreenProps {
   navigation: any;
@@ -17,6 +20,47 @@ interface DashboardScreenProps {
 
 const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) => {
   const { user, signOut } = useAuthStore();
+  const [stats, setStats] = useState<UserStats | null>(null);
+  const [recentSightings, setRecentSightings] = useState<RecentSighting[]>([]);
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadDashboardData();
+  }, []);
+
+  const loadDashboardData = async () => {
+    try {
+      setLoading(true);
+      const [userStats, sightings, userAchievements] = await Promise.all([
+        dataService.getUserStats(),
+        dataService.getRecentSightings(),
+        dataService.getAchievements(),
+      ]);
+      
+      setStats(userStats);
+      setRecentSightings(sightings);
+      setAchievements(userAchievements);
+    } catch (error) {
+      console.error('Failed to load dashboard data:', error);
+      // Set fallback data
+      setStats({
+        totalSightings: 0,
+        speciesDiscovered: 0,
+        rareAnimals: 0,
+        friendsCount: 0,
+        level: 1,
+        experience: 0,
+        nextLevelExp: 1000,
+        joinDate: 'Recently',
+        location: 'Unknown',
+      });
+      setRecentSightings([]);
+      setAchievements([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSignOut = async () => {
     try {
@@ -25,26 +69,6 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) => {
       console.error('Sign out error:', error);
     }
   };
-
-  // Mock data for now
-  const stats = {
-    totalSightings: 47,
-    speciesDiscovered: 23,
-    rareAnimals: 5,
-    friendsCount: 12,
-  };
-
-  const recentSightings = [
-    { id: '1', name: 'Red Cardinal', rarity: 'uncommon', time: '2 hours ago', location: 'Central Park' },
-    { id: '2', name: 'Gray Squirrel', rarity: 'common', time: '5 hours ago', location: 'Backyard' },
-    { id: '3', name: 'Red-tailed Hawk', rarity: 'rare', time: '1 day ago', location: 'City Bridge' },
-  ];
-
-  const achievements = [
-    { id: '1', title: 'Bird Watcher', description: 'See 10 different bird species', progress: 70 },
-    { id: '2', title: 'Urban Explorer', description: 'Discover animals in 5 cities', progress: 40 },
-    { id: '3', title: 'Early Bird', description: 'See animals before 7 AM', progress: 90 },
-  ];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -57,61 +81,83 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({ navigation }) => {
           </View>
         </View>
 
+        {/* Loading State */}
+        {loading && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={Colors.primary} />
+            <Text style={styles.loadingText}>Loading your data...</Text>
+          </View>
+        )}
+
         {/* Stats Overview */}
-        <View style={styles.statsContainer}>
-          <View style={styles.statCard}>
-            <Text style={styles.statNumber}>{stats.totalSightings}</Text>
-            <Text style={styles.statLabel}>Sightings</Text>
+        {!loading && stats && (
+          <View style={styles.statsContainer}>
+            <View style={styles.statCard}>
+              <Text style={styles.statNumber}>{stats.totalSightings}</Text>
+              <Text style={styles.statLabel}>Sightings</Text>
+            </View>
+            <View style={styles.statCard}>
+              <Text style={styles.statNumber}>{stats.speciesDiscovered}</Text>
+              <Text style={styles.statLabel}>Species</Text>
+            </View>
+            <View style={styles.statCard}>
+              <Text style={styles.statNumber}>{stats.rareAnimals}</Text>
+              <Text style={styles.statLabel}>Rare</Text>
+            </View>
           </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statNumber}>{stats.speciesDiscovered}</Text>
-            <Text style={styles.statLabel}>Species</Text>
-          </View>
-          <View style={styles.statCard}>
-            <Text style={styles.statNumber}>{stats.rareAnimals}</Text>
-            <Text style={styles.statLabel}>Rare</Text>
-          </View>
-        </View>
+        )}
 
 
         {/* Recent Sightings */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Recent Sightings</Text>
-          {recentSightings.map((sighting_item) => (
-            <View key={sighting_item.id} style={styles.sightingItem}>
-              <View style={styles.sightingInfo}>
-                <Text style={styles.sightingName}>{sighting_item.name}</Text>
-                <Text style={styles.sightingDetails}>
-                  {sighting_item.location} • {sighting_item.time}
-                </Text>
-              </View>
-              <View style={[styles.rarityBadge, { backgroundColor: getRarityColor(sighting_item.rarity) }]}>
-                <Text style={styles.rarityText}>{sighting_item.rarity}</Text>
-              </View>
-            </View>
-          ))}
-        </View>
+        {!loading && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Recent Sightings</Text>
+            {recentSightings.length > 0 ? (
+              recentSightings.map((sighting_item) => (
+                <View key={sighting_item.id} style={styles.sightingItem}>
+                  <View style={styles.sightingInfo}>
+                    <Text style={styles.sightingName}>{sighting_item.name}</Text>
+                    <Text style={styles.sightingDetails}>
+                      {sighting_item.location} • {sighting_item.time}
+                    </Text>
+                  </View>
+                  <View style={[styles.rarityBadge, { backgroundColor: getRarityColor(sighting_item.rarity) }]}>
+                    <Text style={styles.rarityText}>{sighting_item.rarity}</Text>
+                  </View>
+                </View>
+              ))
+            ) : (
+              <Text style={styles.emptyText}>No sightings yet. Go explore!</Text>
+            )}
+          </View>
+        )}
 
         {/* Achievements Preview */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Achievements</Text>
-          {achievements.map((achievement) => (
-            <View key={achievement.id} style={styles.achievementItem}>
-              <View style={styles.achievementInfo}>
-                <Text style={styles.achievementTitle}>{achievement.title}</Text>
-                <Text style={styles.achievementDescription}>{achievement.description}</Text>
-                <View style={styles.progressContainer}>
-                  <View style={styles.progressBar}>
-                    <View 
-                      style={[styles.progressFill, { width: `${achievement.progress}%` }]} 
-                    />
+        {!loading && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Achievements</Text>
+            {achievements.length > 0 ? (
+              achievements.slice(0, 3).map((achievement) => (
+                <View key={achievement.id} style={styles.achievementItem}>
+                  <View style={styles.achievementInfo}>
+                    <Text style={styles.achievementTitle}>{achievement.title}</Text>
+                    <Text style={styles.achievementDescription}>{achievement.description}</Text>
+                    <View style={styles.progressContainer}>
+                      <View style={styles.progressBar}>
+                        <View 
+                          style={[styles.progressFill, { width: `${achievement.progress}%` }]} 
+                        />
+                      </View>
+                      <Text style={styles.progressText}>{Math.round(achievement.progress)}%</Text>
+                    </View>
                   </View>
-                  <Text style={styles.progressText}>{achievement.progress}%</Text>
                 </View>
-              </View>
-            </View>
-          ))}
-        </View>
+              ))
+            ) : (
+              <Text style={styles.emptyText}>Achievements will appear as you explore!</Text>
+            )}
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -291,8 +337,25 @@ const styles = StyleSheet.create({
   progressText: {
     fontSize: Typography.fontSize.sm,
     color: Colors.onSurfaceVariant,
-    fontWeight: Typography.fontWeight.medium,
+    fontWeight: Typography.fontWeight.medium as any,
     minWidth: 40,
+  },
+  loadingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: Spacing.xl,
+  },
+  loadingText: {
+    marginTop: Spacing.md,
+    fontSize: Typography.fontSize.base,
+    color: Colors.onSurfaceVariant,
+  },
+  emptyText: {
+    fontSize: Typography.fontSize.base,
+    color: Colors.onSurfaceVariant,
+    textAlign: 'center',
+    padding: Spacing.lg,
+    fontStyle: 'italic',
   },
 });
 

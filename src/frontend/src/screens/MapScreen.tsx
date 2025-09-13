@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,93 +7,55 @@ import {
   SafeAreaView,
   Platform,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from '../styles/theme';
+import { dataService } from '../services/dataService';
+import { AnimalSighting } from '../types';
 
 interface MapScreenProps {
   navigation: any;
 }
 
-interface AnimalSighting {
-  id: string;
-  name: string;
-  type: string;
-  rarity: string;
-  latitude: number;
-  longitude: number;
-  userSeen: boolean;
-  seenBy: string;
-  timeAgo: string;
-  distance: string;
-}
-
 const MapScreen: React.FC<MapScreenProps> = ({ navigation }) => {
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [mapMode, setMapMode] = useState('standard'); // 'standard' or 'satellite'
+  const [animalSightings, setAnimalSightings] = useState<AnimalSighting[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // Mock animal sightings data
-  const animalSightings: AnimalSighting[] = [
-    {
-      id: '1',
-      name: 'Red Cardinal',
-      type: 'Bird',
-      rarity: 'uncommon',
-      latitude: 40.7831,
-      longitude: -73.9712,
-      userSeen: true,
-      seenBy: 'You',
-      timeAgo: '2 hours ago',
-      distance: '0.2 miles',
-    },
-    {
-      id: '2',
-      name: 'Gray Squirrel',
-      type: 'Mammal',
-      rarity: 'common',
-      latitude: 40.7829,
-      longitude: -73.9714,
-      userSeen: false,
-      seenBy: 'Sarah Johnson',
-      timeAgo: '5 hours ago',
-      distance: '0.3 miles',
-    },
-    {
-      id: '3',
-      name: 'Red-tailed Hawk',
-      type: 'Bird',
-      rarity: 'rare',
-      latitude: 40.7835,
-      longitude: -73.9708,
-      userSeen: true,
-      seenBy: 'You',
-      timeAgo: '1 day ago',
-      distance: '0.5 miles',
-    },
-    {
-      id: '4',
-      name: 'Monarch Butterfly',
-      type: 'Insect',
-      rarity: 'epic',
-      latitude: 40.7828,
-      longitude: -73.9715,
-      userSeen: false,
-      seenBy: 'Mike Chen',
-      timeAgo: '3 hours ago',
-      distance: '0.1 miles',
-    },
-    {
-      id: '5',
-      name: 'Great Blue Heron',
-      type: 'Bird',
-      rarity: 'rare',
-      latitude: 40.7840,
-      longitude: -73.9720,
-      userSeen: false,
-      seenBy: 'Emma Davis',
-      timeAgo: '6 hours ago',
-      distance: '0.8 miles',
-    },
-  ];
+  useEffect(() => {
+    loadSightings();
+  }, []);
+
+  const loadSightings = async () => {
+    try {
+      setLoading(true);
+      const sightings = await dataService.getAnimalSightings();
+      setAnimalSightings(sightings);
+    } catch (error) {
+      console.error('Failed to load sightings:', error);
+      setAnimalSightings([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Filter sightings based on selected filter
+  const filteredSightings = animalSightings.filter(sighting => {
+    switch (selectedFilter) {
+      case 'my-sightings':
+        return sighting.userSeen;
+      case 'friends':
+        return !sighting.userSeen && sighting.seenBy !== 'You';
+      case 'rare':
+        return sighting.rarity === 'rare' || sighting.rarity === 'epic' || sighting.rarity === 'legendary';
+      case 'nearby':
+        // Could implement distance filtering here
+        return true;
+      default:
+        return true;
+    }
+  });
 
   const filters = ['all', 'my-sightings', 'friends', 'rare', 'nearby'];
   const currentLocation = {
@@ -102,20 +64,6 @@ const MapScreen: React.FC<MapScreenProps> = ({ navigation }) => {
     address: "Central Park, New York, NY",
   };
 
-  const filteredSightings = animalSightings.filter(sighting => {
-    switch (selectedFilter) {
-      case 'my-sightings':
-        return sighting.userSeen;
-      case 'friends':
-        return !sighting.userSeen;
-      case 'rare':
-        return ['rare', 'epic', 'legendary'].includes(sighting.rarity);
-      case 'nearby':
-        return parseFloat(sighting.distance) <= 0.5;
-      default:
-        return true;
-    }
-  });
 
   const getRarityColor = (rarity: string): string => {
     switch (rarity.toLowerCase()) {
@@ -187,24 +135,34 @@ const MapScreen: React.FC<MapScreenProps> = ({ navigation }) => {
             Map View
           </Text>
           
+          {/* Loading State */}
+          {loading && (
+            <View style={styles.mapLoadingContainer}>
+              <ActivityIndicator size="large" color={Colors.primary} />
+              <Text style={styles.mapLoadingText}>Loading sightings...</Text>
+            </View>
+          )}
+
           {/* Simulated Animal Pins */}
-          <View style={styles.pinsContainer}>
-            {filteredSightings.slice(0, 5).map((sighting, index) => (
-              <TouchableOpacity
-                key={sighting.id}
-                style={[
-                  styles.animalPin,
-                  {
-                    backgroundColor: getRarityColor(sighting.rarity),
-                    left: `${20 + index * 15}%`,
-                    top: `${30 + index * 10}%`,
-                  }
-                ]}
-              >
-                <Text style={styles.pinIcon}>{getAnimalIcon(sighting.type)}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+          {!loading && (
+            <View style={styles.pinsContainer}>
+              {filteredSightings.slice(0, 5).map((sighting, index) => (
+                <TouchableOpacity
+                  key={sighting.id}
+                  style={[
+                    styles.animalPin,
+                    {
+                      backgroundColor: getRarityColor(sighting.rarity),
+                      left: `${20 + index * 15}%`,
+                      top: `${30 + index * 10}%`,
+                    }
+                  ]}
+                >
+                  <Text style={styles.pinIcon}>{getAnimalIcon(sighting.type)}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
         </View>
       </View>
 
@@ -515,6 +473,18 @@ const styles = StyleSheet.create({
   },
   navigateButtonIcon: {
     fontSize: Typography.fontSize.lg,
+  },
+  mapLoadingContainer: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -50 }, { translateY: -50 }],
+    alignItems: 'center',
+  },
+  mapLoadingText: {
+    marginTop: Spacing.sm,
+    color: Colors.onSurfaceVariant,
+    fontSize: Typography.fontSize.sm,
   },
   locationInfo: {
     backgroundColor: Colors.surface,
