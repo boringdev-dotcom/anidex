@@ -1,0 +1,33 @@
+version: '3.8'
+
+# Simplified Docker Compose for Development
+# Only runs PostgreSQL, you run Backend and Frontend manually
+
+services:
+  # PostgreSQL Database Only
+  postgres:
+    image: postgres:16-alpine
+    container_name: anidex_postgres_dev
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: anidex_development
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_dev_data:
+    driver: local
+
+# Usage:
+# 1. Start database: docker-compose -f docker-compose.dev.yml up -d
+# 2. Run backend: cd src/backend && go run cmd/api/main.go  
+# 3. Run frontend: cd src/frontend && npm run web
+# 4. Open testing UI: open testing-ui.html

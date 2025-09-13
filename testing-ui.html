@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anidex API Testing Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2d5a87 0%, #4a8bc2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #6c757d;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-tab.active {
+            color: #2d5a87;
+            border-bottom-color: #2d5a87;
+            background: white;
+        }
+
+        .nav-tab:hover {
+            background: #e9ecef;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .endpoint-section {
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            border: 1px solid #e9ecef;
+        }
+
+        .endpoint-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .endpoint-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2d5a87;
+            margin-bottom: 5px;
+        }
+
+        .endpoint-method {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .method-get {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .method-post {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .endpoint-url {
+            font-family: 'Monaco', 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .endpoint-body {
+            padding: 25px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #4a8bc2;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(74, 139, 194, 0.1);
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4a8bc2 0%, #2d5a87 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(74, 139, 194, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .response-container {
+            margin-top: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .response-header {
+            background: #2d5a87;
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+
+        .response-body {
+            padding: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .response-json {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4a8bc2;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .animal-card {
+            background: white;
+            border-radius: 15px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid #e9ecef;
+            transition: transform 0.3s ease;
+        }
+
+        .animal-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .animal-card-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .animal-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d5a87;
+            margin-bottom: 5px;
+        }
+
+        .scientific-name {
+            font-style: italic;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .animal-badges {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-category {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-rarity {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-conservation {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .animal-card-body {
+            padding: 20px;
+        }
+
+        .animal-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2d5a87;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .auth-section {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 1px solid #ffeaa7;
+        }
+
+        .auth-section h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background: linear-gradient(45deg, #f8f9fa 25%, transparent 25%), 
+                        linear-gradient(-45deg, #f8f9fa 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #f8f9fa 75%), 
+                        linear-gradient(-45deg, transparent 75%, #f8f9fa 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+
+        .gallery-image.loading {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        .gallery-image.error {
+            background: #f8d7da;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #721c24;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        .gallery-info {
+            padding: 15px;
+        }
+
+        .gallery-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2d5a87;
+            margin-bottom: 5px;
+        }
+
+        .gallery-scientific {
+            font-style: italic;
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .gallery-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .gallery-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .gallery-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            position: relative;
+            margin: 2% auto;
+            max-width: 90%;
+            max-height: 90vh;
+            background: white;
+            border-radius: 15px;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: auto;
+            max-height: 50vh;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .modal-info {
+            padding: 20px;
+            background: white;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .modal-content {
+                margin: 5% auto;
+                max-width: 95%;
+                max-height: 95vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🦁 Anidex API Testing Dashboard</h1>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('species')">🐾 Species</button>
+            <button class="nav-tab" onclick="switchTab('gallery')">🖼️ Gallery</button>
+            <button class="nav-tab" onclick="switchTab('catches')">📸 Catches</button>
+            <button class="nav-tab" onclick="switchTab('locations')">📍 Locations</button>
+            <button class="nav-tab" onclick="switchTab('auth')">🔐 Auth</button>
+        </div>
+
+        <!-- Species Tab -->
+        <div id="species" class="tab-content active">
+            <!-- Get All Species -->
+            <div class="endpoint-section">
+                <div class="endpoint-header">
+                    <div class="endpoint-title">
+                        <span class="endpoint-method method-get">GET</span>
+                        Get All Species
+                    </div>
+                    <div class="endpoint-url">/api/species</div>
+                </div>
+                <div class="endpoint-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category Filter</label>
+                            <select class="form-control" id="species-category">
+                                <option value="">All Categories</option>
+                                <option value="mammal">Mammal</option>
+                                <option value="bird">Bird</option>
+                                <option value="reptile">Reptile</option>
+                                <option value="amphibian">Amphibian</option>
+                                <option value="fish">Fish</option>
+                                <option value="insect">Insect</option>
+                                <option value="arachnid">Arachnid</option>
+                                <option value="mollusk">Mollusk</option>
+                                <option value="crustacean">Crustacean</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Rarity Filter</label>
+                            <select class="form-control" id="species-rarity">
+                                <option value="">All Rarities</option>
+                                <option value="common">Common</option>
+                                <option value="uncommon">Uncommon</option>
+                                <option value="rare">Rare</option>
+                                <option value="epic">Epic</option>
+                                <option value="legendary">Legendary</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Page</label>
+                            <input type="number" class="form-control" id="species-page" value="1" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Limit</label>
+                            <input type="number" class="form-control" id="species-limit" value="20" min="1" max="100">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="getAllSpecies()">Get Species</button>
+                    <div id="species-response" class="response-container" style="display: none;">
+                        <div class="response-header">Response</div>
+                        <div class="response-body" id="species-response-body"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Species -->
+            <div class="endpoint-section">
+                <div class="endpoint-header">
+                    <div class="endpoint-title">
+                        <span class="endpoint-method method-get">GET</span>
+                        Search Species
+                    </div>
+                    <div class="endpoint-url">/api/species/search</div>
+                </div>
+                <div class="endpoint-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Search Query</label>
+                            <input type="text" class="form-control" id="search-query" placeholder="e.g., Lion, Panthera leo">
+                        </div>
+                        <div class="form-group">
+                            <label>Limit</label>
+                            <input type="number" class="form-control" id="search-limit" value="10" min="1" max="50">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="searchSpecies()">Search</button>
+                    <div id="search-response" class="response-container" style="display: none;">
+                        <div class="response-header">Response</div>
+                        <div class="response-body" id="search-response-body"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Species by ID -->
+            <div class="endpoint-section">
+                <div class="endpoint-header">
+                    <div class="endpoint-title">
+                        <span class="endpoint-method method-get">GET</span>
+                        Get Species by ID
+                    </div>
+                    <div class="endpoint-url">/api/species/{id}</div>
+                </div>
+                <div class="endpoint-body">
+                    <div class="form-group">
+                        <label>Species ID (UUID)</label>
+                        <input type="text" class="form-control" id="species-id" placeholder="e.g., 123e4567-e89b-12d3-a456-426614174000">
+                    </div>
+                    <button class="btn btn-primary" onclick="getSpeciesById()">Get Species</button>
+                    <div id="species-by-id-response" class="response-container" style="display: none;">
+                        <div class="response-header">Response</div>
+                        <div class="response-body" id="species-by-id-response-body"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery Tab -->
+        <div id="gallery" class="tab-content">
+            <div class="endpoint-section">
+                <div class="endpoint-header">
+                    <div class="endpoint-title">
+                        🖼️ Animal Image Gallery
+                    </div>
+                    <div class="endpoint-url"></div>
+                </div>
+                <div class="endpoint-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category Filter</label>
+                            <select class="form-control" id="gallery-category">
+                                <option value="">All Categories</option>
+                                <option value="mammal">Mammal</option>
+                                <option value="bird">Bird</option>
+                                <option value="reptile">Reptile</option>
+                                <option value="amphibian">Amphibian</option>
+                                <option value="fish">Fish</option>
+                                <option value="insect">Insect</option>
+                                <option value="arachnid">Arachnid</option>
+                                <option value="mollusk">Mollusk</option>
+                                <option value="crustacean">Crustacean</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Rarity Filter</label>
+                            <select class="form-control" id="gallery-rarity">
+                                <option value="">All Rarities</option>
+                                <option value="common">Common</option>
+                                <option value="uncommon">Uncommon</option>
+                                <option value="rare">Rare</option>
+                                <option value="epic">Epic</option>
+                                <option value="legendary">Legendary</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Images per Page</label>
+                            <select class="form-control" id="gallery-limit">
+                                <option value="12">12 Images</option>
+                                <option value="24">24 Images</option>
+                                <option value="48">48 Images</option>
+                                <option value="100">100 Images</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Page</label>
+                            <input type="number" class="form-control" id="gallery-page" value="1" min="1">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="loadGallery()">Load Gallery</button>
+                    <button class="btn btn-secondary" onclick="refreshGallery()" style="margin-left: 10px;">Refresh All</button>
+                    
+                    <div id="gallery-stats" style="display: none; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span id="gallery-info"></span>
+                            <span id="gallery-pagination"></span>
+                        </div>
+                    </div>
+                    
+                    <div id="gallery-container" style="display: none; margin-top: 25px;">
+                        <div id="gallery-grid" class="gallery-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Catches Tab -->
+        <div id="catches" class="tab-content">
+            <div class="auth-section">
+                <h3>🔐 Authentication Required</h3>
+                <p>Some endpoints require authentication. Please login first using the Auth tab or provide a Bearer token.</p>
+                <div class="form-group">
+                    <label>Bearer Token (Optional)</label>
+                    <input type="text" class="form-control" id="auth-token" placeholder="Your JWT token here">
+                </div>
+            </div>
+
+            <!-- Create Catch -->
+            <div class="endpoint-section">
+                <div class="endpoint-header">
+                    <div class="endpoint-title">
+                        <span class="endpoint-method method-post">POST</span>
+                        Create Animal Catch
+                    </div>
+                    <div class="endpoint-url">/api/catches</div>
+                </div>
+                <div class="endpoint-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Species ID (UUID)</label>
+                            <input type="text" class="form-control" id="catch-species-id" placeholder="Species UUID">
+                        </div>
+                        <div class="form-group">
+                            <label>Photo URL</label>
+                            <input type="url" class="form-control" id="catch-photo-url" placeholder="https://example.com/photo.jpg">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Latitude</label>
+                            <input type="number" class="form-control" id="catch-latitude" step="0.000001" placeholder="e.g., 40.7128">
+                        </div>
+                        <div class="form-group">
+                            <label>Longitude</label>
+                            <input type="number" class="form-control" id="catch-longitude" step="0.000001" placeholder="e.g., -74.0060">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Weather</label>
+                            <select class="form-control" id="catch-weather">
+                                <option value="">Select Weather</option>
+                                <option value="sunny">Sunny</option>
+                                <option value="cloudy">Cloudy</option>
+                                <option value="rainy">Rainy</option>
+                                <option value="snowy">Snowy</option>
+                                <option value="foggy">Foggy</option>
+                                <option value="storm">Storm</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Temperature (°C)</label>
+                            <input type="number" class="form-control" id="catch-temperature" step="0.1" placeholder="e.g., 25.5">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>User Rating (1-5)</label>
+                            <input type="number" class="form-control" id="catch-rating" min="1" max="5" placeholder="Rate your experience">
+                        </div>
+                        <div class="form-group">
+                            <label>Notes</label>
+                            <input type="text" class="form-control" id="catch-notes" placeholder="Optional notes about the catch">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="createCatch()">Create Catch</button>
+                    <div id="create-catch-response" class="response-container" style="display: none;">
+                        <div class="response-header">Response</div>
+                        <div class="response-body" id="create-catch-response-body"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Catch by ID -->
+            <div class="endpoint-section">
+                <div class="endpoint-header">
+                    <div class="endpoint-title">
+                        <span class="endpoint-method method-get">GET</span>
+                        Get Catch by ID
+                    </div>
+                    <div class="endpoint-url">/api/catches/{id}</div>
+                </div>
+                <div class="endpoint-body">
+                    <div class="form-group">
+                        <label>Catch ID (UUID)</label>
+                        <input type="text" class="form-control" id="get-catch-id" placeholder="Catch UUID">
+                    </div>
+                    <button class="btn btn-primary" onclick="getCatchById()">Get Catch</button>
+                    <div id="get-catch-response" class="response-container" style="display: none;">
+                        <div class="response-header">Response</div>
+                        <div class="response-body" id="get-catch-response-body"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get User Catches -->
+            <div class="endpoint-section">
+                <div class="endpoint-header">
+                    <div class="endpoint-title">
+                        <span class="endpoint-method method-get">GET</span>
+                        Get My Catches
+                    </div>
+                    <div class="endpoint-url">/api/catches/my</div>
+                </div>
+                <div class="endpoint-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Page</label>
+                            <input type="number" class="form-control" id="my-catches-page" value="1" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Limit</label>
+                            <input type="number" class="form-control" id="my-catches-limit" value="20" min="1" max="100">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="getMyCatches()">Get My Catches</button>
+                    <div id="my-catches-response" class="response-container" style="display: none;">
+                        <div class="response-header">Response</div>
+                        <div class="response-body" id="my-catches-response-body"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Locations Tab -->
+        <div id="locations" class="tab-content">
+            <!-- Get Nearby Locations -->
+            <div class="endpoint-section">
+                <div class="endpoint-header">
+                    <div class="endpoint-title">
+                        <span class="endpoint-method method-get">GET</span>
+                        Get Nearby Locations
+                    </div>
+                    <div class="endpoint-url">/api/locations/nearby</div>
+                </div>
+                <div class="endpoint-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Latitude</label>
+                            <input type="number" class="form-control" id="nearby-latitude" step="0.000001" placeholder="e.g., 40.7128" value="40.7128">
+                        </div>
+                        <div class="form-group">
+                            <label>Longitude</label>
+                            <input type="number" class="form-control" id="nearby-longitude" step="0.000001" placeholder="e.g., -74.0060" value="-74.0060">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Radius (km)</label>
+                        <input type="number" class="form-control" id="nearby-radius" min="1" max="100" value="10" placeholder="Search radius in kilometers">
+                    </div>
+                    <button class="btn btn-primary" onclick="getNearbyLocations()">Get Nearby Locations</button>
+                    <div id="nearby-locations-response" class="response-container" style="display: none;">
+                        <div class="response-header">Response</div>
+                        <div class="response-body" id="nearby-locations-response-body"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Location Catches -->
+            <div class="endpoint-section">
+                <div class="endpoint-header">
+                    <div class="endpoint-title">
+                        <span class="endpoint-method method-get">GET</span>
+                        Get Catches at Location
+                    </div>
+                    <div class="endpoint-url">/api/locations/catches</div>
+                </div>
+                <div class="endpoint-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Latitude</label>
+                            <input type="number" class="form-control" id="location-catches-lat" step="0.000001" placeholder="e.g., 40.7128">
+                        </div>
+                        <div class="form-group">
+                            <label>Longitude</label>
+                            <input type="number" class="form-control" id="location-catches-lng" step="0.000001" placeholder="e.g., -74.0060">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Page</label>
+                            <input type="number" class="form-control" id="location-catches-page" value="1" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Limit</label>
+                            <input type="number" class="form-control" id="location-catches-limit" value="20" min="1" max="100">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="getLocationCatches()">Get Location Catches</button>
+                    <div id="location-catches-response" class="response-container" style="display: none;">
+                        <div class="response-header">Response</div>
+                        <div class="response-body" id="location-catches-response-body"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Tab -->
+        <div id="auth" class="tab-content">
+            <!-- Login -->
+            <div class="endpoint-section">
+                <div class="endpoint-header">
+                    <div class="endpoint-title">
+                        <span class="endpoint-method method-post">POST</span>
+                        Login
+                    </div>
+                    <div class="endpoint-url">/api/auth/login</div>
+                </div>
+                <div class="endpoint-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" class="form-control" id="login-email" placeholder="user@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" class="form-control" id="login-password" placeholder="Your password">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="login()">Login</button>
+                    <div id="login-response" class="response-container" style="display: none;">
+                        <div class="response-header">Response</div>
+                        <div class="response-body" id="login-response-body"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Register -->
+            <div class="endpoint-section">
+                <div class="endpoint-header">
+                    <div class="endpoint-title">
+                        <span class="endpoint-method method-post">POST</span>
+                        Register
+                    </div>
+                    <div class="endpoint-url">/api/auth/register</div>
+                </div>
+                <div class="endpoint-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" class="form-control" id="register-email" placeholder="user@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" class="form-control" id="register-password" placeholder="Choose a password">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" class="form-control" id="register-first-name" placeholder="John">
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" class="form-control" id="register-last-name" placeholder="Doe">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="register()">Register</button>
+                    <div id="register-response" class="response-container" style="display: none;">
+                        <div class="response-header">Response</div>
+                        <div class="response-body" id="register-response-body"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Get Profile -->
+            <div class="endpoint-section">
+                <div class="endpoint-header">
+                    <div class="endpoint-title">
+                        <span class="endpoint-method method-get">GET</span>
+                        Get Profile
+                    </div>
+                    <div class="endpoint-url">/api/auth/profile</div>
+                </div>
+                <div class="endpoint-body">
+                    <p>Requires authentication token</p>
+                    <button class="btn btn-primary" onclick="getProfile()">Get Profile</button>
+                    <div id="profile-response" class="response-container" style="display: none;">
+                        <div class="response-header">Response</div>
+                        <div class="response-body" id="profile-response-body"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal">
+        <span class="close-modal" onclick="closeImageModal()">&times;</span>
+        <div class="modal-content">
+            <img id="modalImage" class="modal-image" src="" alt="">
+            <div class="modal-info">
+                <div id="modalInfo"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/api';
+        let authToken = '';
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function getAuthHeaders() {
+            const token = document.getElementById('auth-token')?.value || authToken;
+            return token ? { 'Authorization': `Bearer ${token}` } : {};
+        }
+
+        async function makeRequest(url, options = {}) {
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...getAuthHeaders(),
+                        ...options.headers
+                    }
+                });
+                
+                const data = await response.json();
+                return { response, data };
+            } catch (error) {
+                return { error };
+            }
+        }
+
+        function showResponse(containerId, bodyId, response, data, error) {
+            const container = document.getElementById(containerId);
+            const body = document.getElementById(bodyId);
+            
+            container.style.display = 'block';
+            
+            if (error) {
+                body.innerHTML = `<div class="error-message">Network Error: ${error.message}</div>`;
+                return;
+            }
+
+            if (data.success && data.data) {
+                body.innerHTML = renderSpecialResponse(data) + `<div class="response-json">${JSON.stringify(data, null, 2)}</div>`;
+            } else {
+                const messageClass = response.ok ? 'success-message' : 'error-message';
+                body.innerHTML = `<div class="${messageClass}">Status: ${response.status} ${response.statusText}</div><div class="response-json">${JSON.stringify(data, null, 2)}</div>`;
+            }
+        }
+
+        function renderSpecialResponse(data) {
+            // Render species data in a special format
+            if (data.data && Array.isArray(data.data) && data.data.length > 0 && data.data[0].scientific_name) {
+                return renderSpeciesCards(data.data);
+            }
+            
+            // Render single species
+            if (data.data && data.data.scientific_name) {
+                return renderSpeciesCards([data.data]);
+            }
+            
+            // Render catches
+            if (data.data && Array.isArray(data.data) && data.data.length > 0 && data.data[0].user_photo_url) {
+                return renderCatchCards(data.data);
+            }
+            
+            // Render single catch
+            if (data.data && data.data.user_photo_url) {
+                return renderCatchCards([data.data]);
+            }
+            
+            return '';
+        }
+
+        function renderSpeciesCards(species) {
+            return species.map(animal => `
+                <div class="animal-card">
+                    <div class="animal-card-header">
+                        <div class="animal-name">${animal.common_name}</div>
+                        <div class="scientific-name">${animal.scientific_name}</div>
+                        <div class="animal-badges">
+                            <span class="badge badge-category">${animal.category}</span>
+                            <span class="badge badge-rarity">${animal.rarity}</span>
+                            <span class="badge badge-conservation">${animal.conservation_status}</span>
+                        </div>
+                    </div>
+                    <div class="animal-card-body">
+                        <div class="animal-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">${animal.base_points}</div>
+                                <div class="stat-label">Base Points</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${animal.difficulty_level}/10</div>
+                                <div class="stat-label">Difficulty</div>
+                            </div>
+                            ${animal.average_weight ? `
+                            <div class="stat-item">
+                                <div class="stat-value">${animal.average_weight}kg</div>
+                                <div class="stat-label">Avg Weight</div>
+                            </div>
+                            ` : ''}
+                            ${animal.average_lifespan ? `
+                            <div class="stat-item">
+                                <div class="stat-value">${animal.average_lifespan}y</div>
+                                <div class="stat-label">Lifespan</div>
+                            </div>
+                            ` : ''}
+                        </div>
+                        ${animal.description ? `<p><strong>Description:</strong> ${animal.description}</p>` : ''}
+                        ${animal.habitat ? `<p><strong>Habitat:</strong> ${animal.habitat}</p>` : ''}
+                        ${animal.diet ? `<p><strong>Diet:</strong> ${animal.diet}</p>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCatchCards(catches) {
+            return catches.map(catch_ => `
+                <div class="animal-card">
+                    <div class="animal-card-header">
+                        <div class="animal-name">Catch #${catch_.id.substr(0, 8)}</div>
+                        ${catch_.species ? `<div class="scientific-name">${catch_.species.common_name} (${catch_.species.scientific_name})</div>` : ''}
+                        <div class="animal-badges">
+                            <span class="badge badge-category">${catch_.verification_status}</span>
+                            ${catch_.weather ? `<span class="badge badge-rarity">${catch_.weather}</span>` : ''}
+                            ${catch_.time_of_day ? `<span class="badge badge-conservation">${catch_.time_of_day}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="animal-card-body">
+                        ${catch_.user_photo_url ? `<img src="${catch_.user_photo_url}" alt="Animal Photo" style="width: 100%; max-width: 300px; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px;">` : ''}
+                        <div class="animal-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">${catch_.points_awarded}</div>
+                                <div class="stat-label">Points</div>
+                            </div>
+                            ${catch_.user_rating ? `
+                            <div class="stat-item">
+                                <div class="stat-value">${catch_.user_rating}/5</div>
+                                <div class="stat-label">Rating</div>
+                            </div>
+                            ` : ''}
+                            ${catch_.temperature ? `
+                            <div class="stat-item">
+                                <div class="stat-value">${catch_.temperature}°C</div>
+                                <div class="stat-label">Temperature</div>
+                            </div>
+                            ` : ''}
+                        </div>
+                        ${catch_.user_notes ? `<p><strong>Notes:</strong> ${catch_.user_notes}</p>` : ''}
+                        ${catch_.location ? `<p><strong>Location:</strong> ${catch_.location.latitude}, ${catch_.location.longitude}</p>` : ''}
+                        <p><strong>Caught:</strong> ${new Date(catch_.caught_at).toLocaleString()}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showLoading(bodyId) {
+            const body = document.getElementById(bodyId);
+            body.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Loading...
+                </div>
+            `;
+        }
+
+        // Species functions
+        async function getAllSpecies() {
+            showLoading('species-response-body');
+            document.getElementById('species-response').style.display = 'block';
+            
+            const category = document.getElementById('species-category').value;
+            const rarity = document.getElementById('species-rarity').value;
+            const page = document.getElementById('species-page').value;
+            const limit = document.getElementById('species-limit').value;
+            
+            const params = new URLSearchParams();
+            if (category) params.append('category', category);
+            if (rarity) params.append('rarity', rarity);
+            params.append('page', page);
+            params.append('limit', limit);
+            
+            const { response, data, error } = await makeRequest(`${API_BASE}/species?${params}`);
+            showResponse('species-response', 'species-response-body', response, data, error);
+        }
+
+        async function searchSpecies() {
+            showLoading('search-response-body');
+            document.getElementById('search-response').style.display = 'block';
+            
+            const query = document.getElementById('search-query').value;
+            const limit = document.getElementById('search-limit').value;
+            
+            if (!query) {
+                showResponse('search-response', 'search-response-body', null, { error: 'Search query is required' }, null);
+                return;
+            }
+            
+            const params = new URLSearchParams({ q: query, limit });
+            const { response, data, error } = await makeRequest(`${API_BASE}/species/search?${params}`);
+            showResponse('search-response', 'search-response-body', response, data, error);
+        }
+
+        async function getSpeciesById() {
+            showLoading('species-by-id-response-body');
+            document.getElementById('species-by-id-response').style.display = 'block';
+            
+            const id = document.getElementById('species-id').value;
+            
+            if (!id) {
+                showResponse('species-by-id-response', 'species-by-id-response-body', null, { error: 'Species ID is required' }, null);
+                return;
+            }
+            
+            const { response, data, error } = await makeRequest(`${API_BASE}/species/${id}`);
+            showResponse('species-by-id-response', 'species-by-id-response-body', response, data, error);
+        }
+
+        // Catch functions
+        async function createCatch() {
+            showLoading('create-catch-response-body');
+            document.getElementById('create-catch-response').style.display = 'block';
+            
+            const requestBody = {
+                species_id: document.getElementById('catch-species-id').value,
+                latitude: parseFloat(document.getElementById('catch-latitude').value),
+                longitude: parseFloat(document.getElementById('catch-longitude').value),
+                user_photo_url: document.getElementById('catch-photo-url').value,
+                weather: document.getElementById('catch-weather').value,
+                temperature: document.getElementById('catch-temperature').value ? parseFloat(document.getElementById('catch-temperature').value) : null,
+                user_rating: document.getElementById('catch-rating').value ? parseInt(document.getElementById('catch-rating').value) : null,
+                user_notes: document.getElementById('catch-notes').value
+            };
+            
+            const { response, data, error } = await makeRequest(`${API_BASE}/catches`, {
+                method: 'POST',
+                body: JSON.stringify(requestBody)
+            });
+            showResponse('create-catch-response', 'create-catch-response-body', response, data, error);
+        }
+
+        async function getCatchById() {
+            showLoading('get-catch-response-body');
+            document.getElementById('get-catch-response').style.display = 'block';
+            
+            const id = document.getElementById('get-catch-id').value;
+            
+            if (!id) {
+                showResponse('get-catch-response', 'get-catch-response-body', null, { error: 'Catch ID is required' }, null);
+                return;
+            }
+            
+            const { response, data, error } = await makeRequest(`${API_BASE}/catches/${id}`);
+            showResponse('get-catch-response', 'get-catch-response-body', response, data, error);
+        }
+
+        async function getMyCatches() {
+            showLoading('my-catches-response-body');
+            document.getElementById('my-catches-response').style.display = 'block';
+            
+            const page = document.getElementById('my-catches-page').value;
+            const limit = document.getElementById('my-catches-limit').value;
+            
+            const params = new URLSearchParams({ page, limit });
+            const { response, data, error } = await makeRequest(`${API_BASE}/catches/my?${params}`);
+            showResponse('my-catches-response', 'my-catches-response-body', response, data, error);
+        }
+
+        // Location functions
+        async function getNearbyLocations() {
+            showLoading('nearby-locations-response-body');
+            document.getElementById('nearby-locations-response').style.display = 'block';
+            
+            const lat = document.getElementById('nearby-latitude').value;
+            const lng = document.getElementById('nearby-longitude').value;
+            const radius = document.getElementById('nearby-radius').value;
+            
+            if (!lat || !lng) {
+                showResponse('nearby-locations-response', 'nearby-locations-response-body', null, { error: 'Latitude and longitude are required' }, null);
+                return;
+            }
+            
+            const params = new URLSearchParams({ lat, lng, radius });
+            const { response, data, error } = await makeRequest(`${API_BASE}/locations/nearby?${params}`);
+            showResponse('nearby-locations-response', 'nearby-locations-response-body', response, data, error);
+        }
+
+        async function getLocationCatches() {
+            showLoading('location-catches-response-body');
+            document.getElementById('location-catches-response').style.display = 'block';
+            
+            const lat = document.getElementById('location-catches-lat').value;
+            const lng = document.getElementById('location-catches-lng').value;
+            const page = document.getElementById('location-catches-page').value;
+            const limit = document.getElementById('location-catches-limit').value;
+            
+            if (!lat || !lng) {
+                showResponse('location-catches-response', 'location-catches-response-body', null, { error: 'Latitude and longitude are required' }, null);
+                return;
+            }
+            
+            const params = new URLSearchParams({ lat, lng, page, limit });
+            const { response, data, error } = await makeRequest(`${API_BASE}/locations/catches?${params}`);
+            showResponse('location-catches-response', 'location-catches-response-body', response, data, error);
+        }
+
+        // Auth functions
+        async function login() {
+            showLoading('login-response-body');
+            document.getElementById('login-response').style.display = 'block';
+            
+            const requestBody = {
+                email: document.getElementById('login-email').value,
+                password: document.getElementById('login-password').value
+            };
+            
+            const { response, data, error } = await makeRequest(`${API_BASE}/auth/login`, {
+                method: 'POST',
+                body: JSON.stringify(requestBody)
+            });
+            
+            if (data.success && data.data.access_token) {
+                authToken = data.data.access_token;
+                document.getElementById('auth-token').value = authToken;
+            }
+            
+            showResponse('login-response', 'login-response-body', response, data, error);
+        }
+
+        async function register() {
+            showLoading('register-response-body');
+            document.getElementById('register-response').style.display = 'block';
+            
+            const requestBody = {
+                email: document.getElementById('register-email').value,
+                password: document.getElementById('register-password').value,
+                first_name: document.getElementById('register-first-name').value,
+                last_name: document.getElementById('register-last-name').value
+            };
+            
+            const { response, data, error } = await makeRequest(`${API_BASE}/auth/register`, {
+                method: 'POST',
+                body: JSON.stringify(requestBody)
+            });
+            showResponse('register-response', 'register-response-body', response, data, error);
+        }
+
+        async function getProfile() {
+            showLoading('profile-response-body');
+            document.getElementById('profile-response').style.display = 'block';
+            
+            const { response, data, error } = await makeRequest(`${API_BASE}/auth/profile`);
+            showResponse('profile-response', 'profile-response-body', response, data, error);
+        }
+
+        // Gallery functions
+        async function loadGallery() {
+            const category = document.getElementById('gallery-category').value;
+            const rarity = document.getElementById('gallery-rarity').value;
+            const page = parseInt(document.getElementById('gallery-page').value);
+            const limit = parseInt(document.getElementById('gallery-limit').value);
+            
+            const params = new URLSearchParams();
+            if (category) params.append('category', category);
+            if (rarity) params.append('rarity', rarity);
+            params.append('page', page);
+            params.append('limit', limit);
+            
+            // Show loading
+            const container = document.getElementById('gallery-container');
+            const grid = document.getElementById('gallery-grid');
+            const stats = document.getElementById('gallery-stats');
+            
+            container.style.display = 'block';
+            stats.style.display = 'block';
+            
+            // Show loading skeletons
+            grid.innerHTML = Array(limit).fill(0).map(() => `
+                <div class="gallery-item">
+                    <div class="gallery-image loading"></div>
+                    <div class="gallery-info">
+                        <div style="height: 20px; background: #f0f0f0; margin-bottom: 8px; border-radius: 4px;"></div>
+                        <div style="height: 16px; background: #f0f0f0; margin-bottom: 10px; border-radius: 4px; width: 70%;"></div>
+                        <div style="height: 12px; background: #f0f0f0; border-radius: 4px; width: 50%;"></div>
+                    </div>
+                </div>
+            `).join('');
+            
+            try {
+                const { response, data, error } = await makeRequest(`${API_BASE}/species?${params}`);
+                
+                if (error || !response.ok) {
+                    grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px;"><div class="error-message">Failed to load gallery: ${error?.message || 'Unknown error'}</div></div>`;
+                    return;
+                }
+                
+                if (!data.success || !data.data || data.data.length === 0) {
+                    grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #6c757d;">No animals found with current filters</div>`;
+                    return;
+                }
+                
+                // Update stats
+                document.getElementById('gallery-info').textContent = `Showing ${data.data.length} of ${data.pagination.total} animals`;
+                document.getElementById('gallery-pagination').textContent = `Page ${data.pagination.page} of ${data.pagination.total_pages}`;
+                
+                // Render gallery items
+                grid.innerHTML = data.data.map(animal => createGalleryItem(animal)).join('');
+                
+            } catch (err) {
+                grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 40px;"><div class="error-message">Error loading gallery: ${err.message}</div></div>`;
+            }
+        }
+        
+        function createGalleryItem(animal) {
+            const hasImage = animal.default_image_url && animal.default_image_url.trim() !== '';
+            
+            return `
+                <div class="gallery-item" onclick="openImageModal('${animal.id}', '${encodeURIComponent(JSON.stringify(animal))}')">
+                    ${hasImage ? 
+                        `<img class="gallery-image" src="${animal.default_image_url}" alt="${animal.common_name}" 
+                             onerror="this.className='gallery-image error'; this.innerHTML='🖼️<br>Image not available';"
+                             onload="this.style.background='none';">` :
+                        `<div class="gallery-image error">🖼️<br>No image available</div>`
+                    }
+                    <div class="gallery-info">
+                        <div class="gallery-name">${animal.common_name}</div>
+                        <div class="gallery-scientific">${animal.scientific_name}</div>
+                        <div class="gallery-badges">
+                            <span class="gallery-badge badge-category">${animal.category}</span>
+                            <span class="gallery-badge badge-rarity">${animal.rarity}</span>
+                            ${animal.conservation_status !== 'LC' ? `<span class="gallery-badge badge-conservation">${animal.conservation_status}</span>` : ''}
+                        </div>
+                        <div class="gallery-stats">
+                            <span>${animal.base_points} pts</span>
+                            <span>Level ${animal.difficulty_level}</span>
+                            ${animal.average_weight ? `<span>${animal.average_weight}kg</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function openImageModal(animalId, encodedAnimal) {
+            try {
+                const animal = JSON.parse(decodeURIComponent(encodedAnimal));
+                const modal = document.getElementById('imageModal');
+                const modalImage = document.getElementById('modalImage');
+                const modalInfo = document.getElementById('modalInfo');
+                
+                // Set image
+                if (animal.default_image_url && animal.default_image_url.trim() !== '') {
+                    modalImage.src = animal.default_image_url;
+                    modalImage.alt = animal.common_name;
+                    modalImage.style.display = 'block';
+                    modalImage.onerror = function() {
+                        this.style.display = 'none';
+                        modalInfo.innerHTML = `<div class="error-message">Image could not be loaded</div>` + modalInfo.innerHTML;
+                    };
+                } else {
+                    modalImage.style.display = 'none';
+                }
+                
+                // Set info
+                modalInfo.innerHTML = `
+                    <div class="animal-name" style="font-size: 1.5rem; margin-bottom: 10px;">${animal.common_name}</div>
+                    <div class="scientific-name" style="font-size: 1.1rem; margin-bottom: 15px;">${animal.scientific_name}</div>
+                    <div class="animal-badges" style="margin-bottom: 20px;">
+                        <span class="badge badge-category">${animal.category}</span>
+                        <span class="badge badge-rarity">${animal.rarity}</span>
+                        <span class="badge badge-conservation">${animal.conservation_status}</span>
+                    </div>
+                    <div class="animal-stats" style="margin-bottom: 20px;">
+                        <div class="stat-item">
+                            <div class="stat-value">${animal.base_points}</div>
+                            <div class="stat-label">Base Points</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${animal.difficulty_level}/10</div>
+                            <div class="stat-label">Difficulty</div>
+                        </div>
+                        ${animal.average_weight ? `
+                        <div class="stat-item">
+                            <div class="stat-value">${animal.average_weight}kg</div>
+                            <div class="stat-label">Avg Weight</div>
+                        </div>
+                        ` : ''}
+                        ${animal.average_lifespan ? `
+                        <div class="stat-item">
+                            <div class="stat-value">${animal.average_lifespan}y</div>
+                            <div class="stat-label">Lifespan</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    ${animal.description ? `<p><strong>Description:</strong> ${animal.description}</p>` : ''}
+                    ${animal.habitat ? `<p><strong>Habitat:</strong> ${animal.habitat}</p>` : ''}
+                    ${animal.diet ? `<p><strong>Diet:</strong> ${animal.diet}</p>` : ''}
+                    ${animal.behavior ? `<p><strong>Behavior:</strong> ${animal.behavior}</p>` : ''}
+                    ${animal.geographic_range ? `<p><strong>Geographic Range:</strong> ${animal.geographic_range}</p>` : ''}
+                    ${animal.wikipedia_url ? `<p><a href="${animal.wikipedia_url}" target="_blank" style="color: #4a8bc2;">Learn more on Wikipedia →</a></p>` : ''}
+                `;
+                
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            } catch (error) {
+                console.error('Error opening modal:', error);
+            }
+        }
+        
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        function refreshGallery() {
+            document.getElementById('gallery-page').value = '1';
+            loadGallery();
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('imageModal');
+            if (event.target === modal) {
+                closeImageModal();
+            }
+        }
+        
+        // Keyboard navigation for modal
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+
+        // Auto-fill current location if geolocation is available
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                document.getElementById('nearby-latitude').value = position.coords.latitude.toFixed(6);
+                document.getElementById('nearby-longitude').value = position.coords.longitude.toFixed(6);
+                document.getElementById('catch-latitude').value = position.coords.latitude.toFixed(6);
+                document.getElementById('catch-longitude').value = position.coords.longitude.toFixed(6);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anidex API Testing - Choose Your Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .option-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .option-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .option-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .option-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2d5a87;
+            margin-bottom: 15px;
+        }
+
+        .option-description {
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .features-list {
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .features-list li {
+            color: #495057;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .features-list li:before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #4a8bc2 0%, #2d5a87 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(74, 139, 194, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        }
+
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .pros, .cons {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .pros h4 {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        .cons h4 {
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+
+        .recommendation {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .recommendation h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .option-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🦁 Choose Your API Testing Tool</h1>
+            <p>Both tools are available for testing your Animal Kingdom API. Pick the one that suits your needs!</p>
+        </div>
+
+        <div class="options-grid">
+            <!-- Swagger UI Option -->
+            <div class="option-card">
+                <div class="option-icon">📋</div>
+                <h2 class="option-title">Swagger UI</h2>
+                <p class="option-description">
+                    Official OpenAPI documentation with built-in testing capabilities
+                </p>
+                
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✅ Pros</h4>
+                        <ul>
+                            <li>Auto-generated from code</li>
+                            <li>Industry standard</li>
+                            <li>Always up-to-date</li>
+                            <li>Built-in authentication</li>
+                            <li>Raw JSON responses</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>❌ Cons</h4>
+                        <ul>
+                            <li>Basic UI design</li>
+                            <li>No visual data representation</li>
+                            <li>Generic interface</li>
+                            <li>Limited customization</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <a href="http://localhost:8080/swagger/index.html" class="btn" target="_blank">
+                    Open Swagger UI
+                </a>
+            </div>
+
+            <!-- Custom Dashboard Option -->
+            <div class="option-card">
+                <div class="option-icon">🎨</div>
+                <h2 class="option-title">Custom Dashboard</h2>
+                <p class="option-description">
+                    Pokemon Go-themed testing interface with beautiful visualizations
+                </p>
+                
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>✅ Pros</h4>
+                        <ul>
+                            <li>Pokemon Go visual design</li>
+                            <li>Animal cards like Pokemon</li>
+                            <li>Photo visualization</li>
+                            <li>Auto location detection</li>
+                            <li>Enhanced UX</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>❌ Cons</h4>
+                        <ul>
+                            <li>Manual maintenance</li>
+                            <li>Custom code needed</li>
+                            <li>May get out of sync</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <a href="./testing-ui.html" class="btn">
+                    Open Custom Dashboard
+                </a>
+            </div>
+        </div>
+
+        <div class="recommendation">
+            <h3>💡 Recommendation</h3>
+            <p><strong>Use Swagger UI for:</strong> API documentation, formal testing, sharing with developers</p>
+            <p><strong>Use Custom Dashboard for:</strong> Showcasing the Pokemon Go concept, visual demos, user experience testing</p>
+            <br>
+            <p>Both tools complement each other perfectly! Start with Swagger for technical testing, then use the custom dashboard to experience the Pokemon Go feel of your app.</p>
+        </div>
+    </div>
+</body>
+</html>
