@@ -1,6 +1,6 @@
 # 🧪 Testing the New API Endpoints
 
-Testing guide for the 6 basic API endpoints we just created in Phase 1.2.
+Testing guide for the 6 basic API endpoints.
 
 ## 🚀 Setup & Start Server
 

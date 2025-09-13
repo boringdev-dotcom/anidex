@@ -34,49 +34,57 @@ func (r *LocationRepository) GetByID(id uuid.UUID) (*models.Location, error) {
 
 // FindNearby finds a location within the specified radius (in km) of given coordinates
 func (r *LocationRepository) FindNearby(lat, lng, radiusKm float64) (*models.Location, error) {
-	var location models.Location
+	var locations []models.Location
 	
-	// Using Haversine formula in SQL to find nearby locations
-	// Earth's radius in kilometers = 6371
-	query := `
-		SELECT *, 
-		(6371 * acos(cos(radians(?)) * cos(radians(latitude)) * 
-		cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))) AS distance
-		FROM locations 
-		HAVING distance < ? 
-		ORDER BY distance 
-		LIMIT 1
-	`
-	
-	err := r.db.Raw(query, lat, lng, lat, radiusKm).Scan(&location).Error
+	// Get all locations
+	err := r.db.Find(&locations).Error
 	if err != nil {
 		return nil, err
 	}
 	
-	if location.ID == uuid.Nil {
+	// Find the closest location within radius using Go calculation
+	var closestLocation *models.Location
+	var closestDistance float64 = radiusKm + 1 // Start with distance greater than radius
+	
+	targetLocation := &models.Location{
+		Latitude:  lat,
+		Longitude: lng,
+	}
+	
+	for _, location := range locations {
+		distance := location.DistanceTo(targetLocation)
+		if distance <= radiusKm && distance < closestDistance {
+			closestDistance = distance
+			closestLocation = &location
+		}
+	}
+	
+	if closestLocation == nil {
 		return nil, gorm.ErrRecordNotFound
 	}
 	
-	return &location, nil
+	return closestLocation, nil
 }
 
 // GetNearbyWithCatches retrieves locations within radius that have animal catches
 func (r *LocationRepository) GetNearbyWithCatches(lat, lng, radiusKm float64) ([]models.Location, error) {
 	var locations []models.Location
 	
-	// For now, get all locations and filter by distance in Go
+	// Get all locations
 	err := r.db.Find(&locations).Error
 	if err != nil {
 		return nil, err
 	}
 	
-	// Filter by distance
+	// Filter by distance using Go calculation
 	var nearbyLocations []models.Location
+	targetLocation := &models.Location{
+		Latitude:  lat,
+		Longitude: lng,
+	}
+	
 	for _, location := range locations {
-		distance := location.DistanceTo(&models.Location{
-			Latitude:  lat,
-			Longitude: lng,
-		})
+		distance := location.DistanceTo(targetLocation)
 		if distance <= radiusKm {
 			nearbyLocations = append(nearbyLocations, location)
 		}
@@ -189,3 +197,4 @@ func (r *LocationRepository) Update(location *models.Location) error {
 func (r *LocationRepository) Delete(id uuid.UUID) error {
 	return r.db.Delete(&models.Location{}, id).Error
 }
+
