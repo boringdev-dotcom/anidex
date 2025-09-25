@@ -26,6 +26,9 @@ seed-clear:
 seed-stats:
 	go run cmd/seeder/main.go -stats
 
+enhance-data:
+	go run cmd/enhance-data/main.go
+
 docker-build:
 	docker build -t anidex-backend .
 
@@ -35,4 +38,4 @@ docker-run:
 docker-down:
 	docker-compose down
 
-.PHONY: swagger run build test deps migrate seed seed-clear seed-stats docker-build docker-run docker-run docker-down
+.PHONY: swagger run build test deps migrate seed seed-clear seed-stats enhance-data docker-build docker-run docker-run docker-down
