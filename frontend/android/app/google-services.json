@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "110862963180",
+    "project_id": "anidex-1470f",
+    "storage_bucket": "anidex-1470f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:110862963180:android:09f1921e21cd89c8b9b0c9",
+        "android_client_info": {
+          "package_name": "com.boringdev.anidex"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "110862963180-ja0emsgiboc4teg3g0m430hkehc1b6dm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCgd4Yd-U3lxdEQ_3TzpfvIUW5IOukBgg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "110862963180-ja0emsgiboc4teg3g0m430hkehc1b6dm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "110862963180-gbq5gl9chijje36afqorbes8b1p7da04.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.boringdev.anidex"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
