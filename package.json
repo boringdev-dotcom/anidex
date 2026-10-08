@@ -14,10 +14,12 @@
     "db:seed": "node --experimental-strip-types scripts/db/seed-deep.ts",
     "dev:site": "vite",
     "dev:api": "node --watch server/index.ts",
-    "ingest": "node --experimental-strip-types scripts/ingest/index.ts"
+    "ingest": "node --experimental-strip-types scripts/ingest/index.ts",
+    "research:backfill": "node --experimental-strip-types scripts/research/backfill-population.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.132.1",
+    "aws4fetch": "^1.0.20",
     "compression": "^1.8.2",
     "express": "^5.2.1",
     "pg": "^8.23.1"
