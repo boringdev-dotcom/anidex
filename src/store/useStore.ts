@@ -31,6 +31,8 @@ interface State {
   page: Page;
   /** Slug of the species page currently shown, if any. */
   slug: string | null;
+  /** A spot the reader tapped on the globe (species pages): where, and where on screen. */
+  globeTap: { lat: number; lon: number; x: number; y: number } | null;
   /** The two species on the compare page, if shown. */
   pair: [string, string] | null;
   /** Shape currently requested for the point cloud: 'ambient' or a species slug. */
@@ -64,6 +66,7 @@ export const useStore = create<State>((set) => ({
   page: 'landing',
   slug: null,
   pair: null,
+  globeTap: null,
   shape: 'ambient',
   previewShape: null,
   modelRev: 0,

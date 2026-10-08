@@ -5,6 +5,7 @@ import { live, useStore } from '../../store/useStore';
 import { useChapterTracking } from '../../scroll/useChapterTracking';
 import { ProgressRail } from '../ui/ProgressRail';
 import { MeasureOverlay } from './MeasureOverlay';
+import { GlobeTapCard } from './GlobeTapCard';
 import { Hero } from './chapters/Hero';
 import { About } from './chapters/About';
 import { Family } from './chapters/Family';
@@ -57,6 +58,7 @@ function Story({ sp }: { sp: SpeciesRecord }) {
     <main className="species" data-page style={{ ['--status' as string]: `var(--st-${sp.status.iucn})` }}>
       <ProgressRail chapters={chapters.map((c) => c.label)} />
       <MeasureOverlay sp={sp} />
+      <GlobeTapCard sp={sp} />
       {chapters.map((c, i) => (
         <div key={c.key} style={{ display: 'contents' }}>
           {c.render(sp, i + 1)}

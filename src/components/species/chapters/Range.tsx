@@ -30,7 +30,7 @@ export function Range({ sp, n }: { sp: Species; n: number }) {
         <StageSlot kind="globe" chapter="range" className="m-slot--range" reserve={30}>
           <span className="slot-tag">Wild range · GBIF</span>
           <span className="slot-tag">
-            <RotateIcon /> Drag to spin
+            <RotateIcon /> Drag to spin · tap a spot
           </span>
         </StageSlot>
         <div className="col-text">
@@ -42,6 +42,9 @@ export function Range({ sp, n }: { sp: Species; n: number }) {
           </Reveal>
           <Reveal as="p" className="lede" split="fade" delay={0.15}>
             {summary}
+          </Reveal>
+          <Reveal as="p" className="label range__tip" split="fade" delay={0.2}>
+            Tap anywhere on the globe to see how often they’ve been seen there
           </Reveal>
           <Reveal className="range__lists" split="fade" delay={0.25}>
             <div>

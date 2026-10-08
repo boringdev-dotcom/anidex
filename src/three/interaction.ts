@@ -25,6 +25,8 @@ const spin = (): Spin => ({ yaw: 0, pitch: 0, vYaw: 0, vPitch: 0, dYaw: 0, dPitc
 
 export const interaction = {
   active: null as DragTarget | null,
+  /** a tap (press and release without dragging) on the globe, in CSS px; the director consumes it */
+  tap: null as { x: number; y: number } | null,
   specimen: spin(),
   globe: spin(),
   /** screen-space circles in CSS px, written by the director */
@@ -52,6 +54,10 @@ export function attachInteraction(): () => void {
   let lastX = 0;
   let lastY = 0;
   let lastT = 0;
+  let downX = 0;
+  let downY = 0;
+  let downT = 0;
+  let travel = 0;
   let cursor = '';
 
   const setCursor = (c: string) => {
@@ -66,9 +72,10 @@ export function attachInteraction(): () => void {
     if (!t) return;
     interaction.active = t;
     pointerId = e.pointerId;
-    lastX = e.clientX;
-    lastY = e.clientY;
-    lastT = performance.now();
+    lastX = downX = e.clientX;
+    lastY = downY = e.clientY;
+    lastT = downT = performance.now();
+    travel = 0;
     const s = interaction[t];
     s.vYaw = s.vPitch = 0;
     s.last = lastT;
@@ -81,6 +88,7 @@ export function attachInteraction(): () => void {
     if (interaction.active && e.pointerId === pointerId) {
       const now = performance.now();
       const dt = Math.max(1, now - lastT) / 1000;
+      travel = Math.max(travel, Math.hypot(e.clientX - downX, e.clientY - downY));
       const dx = (e.clientX - lastX) * SPEED;
       const dy = (e.clientY - lastY) * SPEED;
       const s = interaction[interaction.active];
@@ -100,6 +108,8 @@ export function attachInteraction(): () => void {
 
   const up = (e: PointerEvent) => {
     if (!interaction.active || e.pointerId !== pointerId) return;
+    // a short press that barely moved is a tap: on the globe it asks "what's here?"
+    if (interaction.active === 'globe' && travel < 8 && performance.now() - downT < 450) interaction.tap = { x: downX, y: downY };
     const s = interaction[interaction.active];
     // a pause before release means no throw
     if (performance.now() - lastT > 80) s.vYaw = s.vPitch = 0;

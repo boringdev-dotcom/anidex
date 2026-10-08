@@ -24,6 +24,8 @@ uniform float uHasRange2;
 uniform vec4 uBbox2;
 uniform vec2 uCentroid2;
 uniform float uPair;
+uniform vec2 uTap;
+uniform float uTapOn;
 uniform float uOpacity;
 uniform float uReveal;
 uniform float uRipple;
@@ -178,6 +180,14 @@ void main() {
     float ring = 1.0 - smoothstep(0.0, 0.3 + fwidth(d), abs(d - pr));
     float dotC = 1.0 - smoothstep(0.5, 0.5 + fwidth(d) * 1.5, d);
     ink = max(ink, (ring * (0.55 + 0.45 * isActive) + dotC) * uPinOpacity);
+  }
+
+  // the spot the reader tapped: a ring with a centre dot
+  if (uTapOn > 0.01 && nearSide) {
+    float d = greatCircle(ll, uTap);
+    float ring = 1.0 - smoothstep(0.0, 0.35 + fwidth(d), abs(d - (2.6 + 0.4 * sin(uTime * 3.0))));
+    float dotC = 1.0 - smoothstep(0.55, 0.55 + fwidth(d) * 1.5, d);
+    ink = max(ink, max(ring, dotC) * uTapOn);
   }
 
   vec3 bg = toDisplay(uBg);
