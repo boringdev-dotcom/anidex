@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { searchSpecies } from '../../data';
 import type { SpeciesSummary } from '../../data/api';
 
@@ -22,10 +23,20 @@ export function SpeciesPicker({ label, suggestions = [], exclude = [], onPick, o
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listId = useId();
+  // phones show the picker as a full-screen sheet, rendered at the top of the document so no animated
+  // or stacked ancestor can confine it (or slide the header over it)
+  const [sheet] = useState(() => window.matchMedia('(max-width: 768px)').matches);
 
   useEffect(() => {
     if (autoFocus) inputRef.current?.focus({ preventScroll: true });
   }, [autoFocus]);
+
+  // phones: the picker is a full-screen sheet; keep the page behind it from scrolling
+  useEffect(() => {
+    if (!sheet) return;
+    document.documentElement.classList.add('picker-open');
+    return () => document.documentElement.classList.remove('picker-open');
+  }, [sheet]);
 
   useEffect(() => {
     const term = q.trim();
@@ -69,11 +80,18 @@ export function SpeciesPicker({ label, suggestions = [], exclude = [], onPick, o
     }
   };
 
-  return (
-    <div className="picker">
-      <label className="label picker__label" htmlFor={`${listId}-in`}>
-        {label}
-      </label>
+  const content = (
+    <div className="picker" role="dialog" aria-label={label}>
+      <div className="picker__head">
+        <label className="label picker__label" htmlFor={`${listId}-in`}>
+          {label}
+        </label>
+        {onClose && (
+          <button type="button" className="picker__cancel label label--ink" onClick={onClose}>
+            Cancel
+          </button>
+        )}
+      </div>
       <input
         ref={inputRef}
         id={`${listId}-in`}
@@ -115,4 +133,5 @@ export function SpeciesPicker({ label, suggestions = [], exclude = [], onPick, o
       )}
     </div>
   );
+  return sheet ? createPortal(content, document.body) : content;
 }
