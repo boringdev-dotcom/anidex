@@ -36,6 +36,30 @@
       "dark": 0.16
     }
   },
+  "physical": {
+    "weightKg": [
+      80000,
+      150000
+    ],
+    "weightNote": "heaviest recorded about 190 t",
+    "heightM": null,
+    "heightLabel": null,
+    "lengthM": [
+      21,
+      30
+    ],
+    "lengthLabel": "total length",
+    "lifespanYrs": [
+      80,
+      90
+    ],
+    "fact": "The largest animal known to have lived, it can eat about 6 tons of krill in a single day.",
+    "compare": "human",
+    "source": {
+      "label": "NOAA Fisheries",
+      "url": "https://www.fisheries.noaa.gov/species/blue-whale"
+    }
+  },
   "range": {
     "summary": "All the major oceans, from polar feeding grounds to tropical waters, with resident groups off Sri Lanka and in the Gulf of California.",
     "centroid": {

@@ -48,14 +48,19 @@ function readPixels(tex: THREE.Texture | null | undefined): TexturedPart['pixels
 }
 
 async function fromModel(sp: SpecimenSource): Promise<Shape> {
+  return loadModelShape(sp.specimen.model!.url, sp.specimen.model?.yaw ?? 0, POINT_COUNT, hashString(sp.key));
+}
+
+/** Load any GLB and sample it into a stipple shape with N points. */
+export async function loadModelShape(url: string, yawRad: number, N: number, seed: number): Promise<Shape> {
   const [{ GLTFLoader }, { MeshoptDecoder }] = await Promise.all([
     import('three/examples/jsm/loaders/GLTFLoader.js'),
     import('three/examples/jsm/libs/meshopt_decoder.module.js'),
   ]);
   const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
-  const gltf = await loader.loadAsync(sp.specimen.model!.url);
+  const gltf = await loader.loadAsync(url);
   gltf.scene.updateMatrixWorld(true);
-  const yaw = new THREE.Matrix4().makeRotationY(sp.specimen.model?.yaw ?? 0);
+  const yaw = new THREE.Matrix4().makeRotationY(yawRad);
   const parts: TexturedPart[] = [];
   gltf.scene.traverse((o) => {
     const m = o as THREE.Mesh;
@@ -71,7 +76,25 @@ async function fromModel(sp: SpecimenSource): Promise<Shape> {
     parts.push({ geometry: g, pixels: readPixels(mat?.map) });
   });
   if (!parts.length) throw new Error('GLB has no meshes');
-  return sampleTextured(parts, POINT_COUNT, hashString(sp.key));
+  return sampleTextured(parts, N, seed);
+}
+
+/** Scale references for "Compare to you": real size in metres along the model's largest dimension. */
+export const REFERENCES = {
+  human: { url: '/models/ref-human.glb', yaw: 0, sizeM: 1.7, label: '1.7 m person' },
+  hand: { url: '/models/ref-hand.glb', yaw: 0, sizeM: 0.19, label: 'Adult hand, 19 cm' },
+} as const;
+export type ReferenceKind = keyof typeof REFERENCES;
+
+const refCache = new Map<ReferenceKind, Promise<Shape>>();
+export function loadReferenceShape(kind: ReferenceKind): Promise<Shape> {
+  let p = refCache.get(kind);
+  if (!p) {
+    const r = REFERENCES[kind];
+    p = loadModelShape(r.url, r.yaw, POINT_COUNT > 20000 ? 9000 : 5000, hashString(kind));
+    refCache.set(kind, p);
+  }
+  return p;
 }
 
 export function loadSpecimenShape(sp: SpecimenSource): Promise<Shape> {

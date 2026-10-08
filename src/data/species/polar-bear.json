@@ -34,6 +34,33 @@
       "yaw": 1.5707963267948966
     }
   },
+  "physical": {
+    "weightKg": [
+      150,
+      600
+    ],
+    "weightNote": "males 350 to 600 kg, twice females",
+    "heightM": [
+      1,
+      1.6
+    ],
+    "heightLabel": "at shoulder",
+    "lengthM": [
+      1.8,
+      2.5
+    ],
+    "lengthLabel": "nose to tail tip",
+    "lifespanYrs": [
+      15,
+      30
+    ],
+    "fact": "Its fur is not white: each hair is clear and unpigmented, and the skin beneath is black.",
+    "compare": "human",
+    "source": {
+      "label": "Animal Diversity Web",
+      "url": "https://animaldiversity.org/accounts/Ursus_maritimus/"
+    }
+  },
   "range": {
     "summary": "Circumpolar across the Arctic sea ice in 20 subpopulations, from Hudson Bay and the Canadian archipelago to Alaska, Russia, Greenland and Svalbard.",
     "centroid": {

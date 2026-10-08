@@ -2,7 +2,7 @@
 
 A field guide to the animals we might lose. Search a species and scroll through its story:
 
-1. **Specimen.** A 3D stipple study of the animal.
+1. **Specimen.** A 3D stipple study of the animal, with measurement lines, key body measurements, a field note, and "Compare to you", which stands a person (or a hand, for small animals) beside it at true scale.
 2. **Where they live.** A dotted globe with the wild range from live GBIF data.
 3. **Population over time.** A draggable timeline. As you scrub, the globe shows where the species was lost and where it came back, with a caption for each event.
 4. **Vulnerability.** The IUCN Red List category, trend and main threats.
@@ -88,6 +88,7 @@ Then add `"model": { "url": "/models/<slug>.glb", "yaw": 1.5708 }` to the specie
 - **Ranges:** [GBIF](https://www.gbif.org) occurrence density maps, fetched live.
 - **Status:** the [IUCN Red List](https://www.iucnredlist.org). Each species links to its assessment.
 - **Populations:** sourced per species. The source and any caveats appear under each chart.
+- **Body measurements:** curated per species (`physical` in each JSON) from Smithsonian, San Diego Zoo Wildlife Alliance, Animal Diversity Web, NOAA and similar. The 3D scale comes from the measured length (or standing height); apes are modelled on all fours, so their posed height is taken as about three quarters of standing height.
 - **Range history:** curated per species from the IUCN Red List, specialist group reports and peer-reviewed papers. Circles are approximate areas, not exact boundaries.
 - **Land outlines:** [Natural Earth](https://www.naturalearthdata.com), public domain.
 

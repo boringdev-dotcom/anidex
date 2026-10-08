@@ -34,6 +34,33 @@
       "yaw": 1.5707963267948966
     }
   },
+  "physical": {
+    "weightKg": [
+      70,
+      125
+    ],
+    "weightNote": "males about 10 to 20% heavier",
+    "heightM": [
+      0.6,
+      0.9
+    ],
+    "heightLabel": "at shoulder",
+    "lengthM": [
+      1.2,
+      1.8
+    ],
+    "lengthLabel": "head and body",
+    "lifespanYrs": [
+      15,
+      20
+    ],
+    "fact": "Its 'pseudo thumb' is an enlarged wrist bone that lets it grip bamboo stems while eating.",
+    "compare": "human",
+    "source": {
+      "label": "Smithsonian's National Zoo",
+      "url": "https://nationalzoo.si.edu/animals/giant-panda"
+    }
+  },
   "range": {
     "summary": "Temperate bamboo forests between about 1,200 and 3,500 m in six mountain ranges of Sichuan, Shaanxi and Gansu.",
     "centroid": {

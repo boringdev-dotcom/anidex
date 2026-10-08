@@ -34,6 +34,33 @@
       "yaw": 1.5707963267948966
     }
   },
+  "physical": {
+    "weightKg": [
+      23,
+      60
+    ],
+    "weightNote": "males larger, northern wolves heavier",
+    "heightM": [
+      0.66,
+      0.81
+    ],
+    "heightLabel": "at shoulder",
+    "lengthM": [
+      1.4,
+      1.8
+    ],
+    "lengthLabel": "nose to tail tip",
+    "lifespanYrs": [
+      4,
+      8
+    ],
+    "fact": "Its jaws hold 42 teeth, and it can sprint at up to about 56 km/h.",
+    "compare": "human",
+    "source": {
+      "label": "PBS Nature",
+      "url": "https://www.pbs.org/wnet/nature/river-of-no-return-gray-wolf-fact-sheet/7659/"
+    }
+  },
   "range": {
     "summary": "Across much of North America, Europe and Asia, from Arctic tundra to deserts. Wolves are recolonising western Europe and parts of the United States after near extermination.",
     "centroid": {

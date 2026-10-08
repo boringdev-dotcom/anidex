@@ -78,6 +78,20 @@ export interface Variant {
   };
 }
 
+/** Body measurements for the hero's stats row, measurement lines and size comparison. */
+export interface Physical {
+  weightKg: [number, number];
+  weightNote?: string;
+  heightM: [number, number] | null;
+  heightLabel: 'at shoulder' | 'standing' | null;
+  lengthM: [number, number];
+  lengthLabel: string;
+  lifespanYrs: [number, number];
+  fact: string;
+  compare: 'human' | 'hand';
+  source: Source;
+}
+
 export interface Species {
   slug: string;
   commonName: string;
@@ -153,6 +167,8 @@ export interface Species {
     actions: { title: string; detail: string; url?: string }[];
     orgs: { name: string; url: string }[];
   };
+
+  physical?: Physical;
 
   /** Subspecies or populations, shown in their own chapter when present. */
   variants?: Variant[];

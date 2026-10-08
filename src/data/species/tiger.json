@@ -39,6 +39,33 @@
       "yaw": 1.5707963267948966
     }
   },
+  "physical": {
+    "weightKg": [
+      75,
+      325
+    ],
+    "weightNote": "Amur males heaviest, Sumatran smallest",
+    "heightM": [
+      0.8,
+      1.1
+    ],
+    "heightLabel": "at shoulder",
+    "lengthM": [
+      2.2,
+      3.9
+    ],
+    "lengthLabel": "nose to tail tip",
+    "lifespanYrs": [
+      8,
+      15
+    ],
+    "fact": "Each tiger's stripe pattern is unique, and the stripes are marked on its skin as well as its fur.",
+    "compare": "human",
+    "source": {
+      "label": "San Diego Zoo Wildlife Alliance",
+      "url": "https://animals.sandiegozoo.org/animals/tiger"
+    }
+  },
   "range": {
     "summary": "Wild tigers now occupy less than 7% of their historical range, about 978,000 km² in 2020, in scattered pockets from India to the Russian Far East and Sumatra. A century ago they ranged from eastern Turkey to the Pacific coast and south to Java and Bali.",
     "centroid": {

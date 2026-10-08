@@ -39,7 +39,7 @@ function resolveShape(key: string): Promise<Shape> {
 }
 
 /** Bounds of the current target shape, used to seat the plinth ring under the specimen. */
-export const specimenInfo = { minY: -0.5, maxY: 0.5, radius: 0.6 };
+export const specimenInfo = { minY: -0.5, maxY: 0.5, minX: -0.5, maxX: 0.5, minZ: -0.5, maxZ: 0.5, radius: 0.6, key: '' };
 
 const ease = (t: number) => t * t * (3 - 2 * t);
 
@@ -106,6 +106,10 @@ export function StipplePoints() {
       }
       let minY = Infinity;
       let maxY = -Infinity;
+      let minX = Infinity;
+      let maxX = -Infinity;
+      let minZ = Infinity;
+      let maxZ = -Infinity;
       let maxR = 0;
       for (let i = 0; i < POINT_COUNT; i++) {
         const x = shape.positions[i * 3];
@@ -113,10 +117,13 @@ export function StipplePoints() {
         const z = shape.positions[i * 3 + 2];
         if (y < minY) minY = y;
         if (y > maxY) maxY = y;
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (z < minZ) minZ = z;
+        if (z > maxZ) maxZ = z;
         maxR = Math.max(maxR, Math.hypot(x, z));
       }
-      specimenInfo.minY = minY;
-      specimenInfo.maxY = maxY;
+      Object.assign(specimenInfo, { minY, maxY, minX, maxX, minZ, maxZ, key: shapeKey });
       specimenInfo.radius = maxR;
       ta.set(shape.positions);
       nta.set(shape.normals);

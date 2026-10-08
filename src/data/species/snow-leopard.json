@@ -35,6 +35,33 @@
       "yaw": 1.5707963267948966
     }
   },
+  "physical": {
+    "weightKg": [
+      25,
+      55
+    ],
+    "weightNote": "males larger than females",
+    "heightM": [
+      0.55,
+      0.65
+    ],
+    "heightLabel": "at shoulder",
+    "lengthM": [
+      1.8,
+      2.3
+    ],
+    "lengthLabel": "nose to tail tip",
+    "lifespanYrs": [
+      10,
+      13
+    ],
+    "fact": "Its thick tail can be nearly as long as its body and helps it balance on steep, rocky slopes.",
+    "compare": "human",
+    "source": {
+      "label": "San Diego Zoo Wildlife Alliance",
+      "url": "https://animals.sandiegozoo.org/animals/snow-leopard"
+    }
+  },
   "range": {
     "summary": "Rugged mountains of 12 Central and South Asian countries, mostly between 3,000 and 5,500 m, with about 60% of the range in China.",
     "centroid": {

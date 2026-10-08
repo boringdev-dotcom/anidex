@@ -18,6 +18,8 @@ interface State {
   activePlace: number;
   /** Where the globe's range layer came from, for the caption. */
   rangeSource: string | null;
+  /** "Compare to you": show a person or hand at true scale beside the hero specimen. */
+  compare: boolean;
   /** True while a page transition is running. */
   transitioning: boolean;
 
@@ -36,6 +38,7 @@ export const useStore = create<State>((set) => ({
   chapter: 0,
   activePlace: -1,
   transitioning: false,
+  compare: false,
   rangeSource: null,
   setTheme: (theme) => set({ theme }),
   set: (p) => set(p),
@@ -56,6 +59,14 @@ export const live = {
   /** Relative size of the selected subspecies (1 = largest) and whether it is extinct. */
   variantScale: 1,
   variantGhost: 0,
+  /** Screen anchors (css px) for the hero's measurement labels, written by the director. */
+  measure: {
+    opacity: 0,
+    compare: 0,
+    len: { x: 0, y: 0, on: false },
+    ht: { x: 0, y: 0, on: false },
+    ref: { x: 0, y: 0, on: false },
+  },
   /** Normalised pointer position -1..1. */
   pointer: { x: 0, y: 0 },
   /** Year currently shown by the population scrubber, or null outside that chapter. */

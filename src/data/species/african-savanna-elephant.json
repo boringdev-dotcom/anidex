@@ -39,6 +39,33 @@
       "light": 0.08
     }
   },
+  "physical": {
+    "weightKg": [
+      2000,
+      6800
+    ],
+    "weightNote": "females 2 to 3.5 t, males 4.5 to 6.8 t",
+    "heightM": [
+      2.2,
+      4
+    ],
+    "heightLabel": "at shoulder",
+    "lengthM": [
+      6,
+      7.5
+    ],
+    "lengthLabel": "total length",
+    "lifespanYrs": [
+      50,
+      70
+    ],
+    "fact": "Its trunk has eight major muscles on each side and about 150,000 muscle fascicles in all.",
+    "compare": "human",
+    "source": {
+      "label": "San Diego Zoo Wildlife Alliance",
+      "url": "https://animals.sandiegozoo.org/animals/elephant"
+    }
+  },
   "range": {
     "summary": "Savannas, woodlands, floodplains and semi-deserts across sub-Saharan Africa, with most elephants now in southern and eastern Africa.",
     "centroid": {
