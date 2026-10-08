@@ -24,6 +24,8 @@ const PRICES: Record<string, { tiers: { upTo: number; input: number; output: num
   'claude-opus-5-5': { tiers: [{ upTo: Infinity, input: 4, output: 20, cacheRead: 0.2 }] },
 };
 const SEARCH_PRICE = 10 / 1000;
+/** Web searches per species (main call; the population call gets half). Searches are most of the cost. */
+const MAX_SEARCHES = Math.max(1, Number(process.env.RESEARCH_MAX_SEARCHES ?? 6));
 
 function requestCost(model: string, u: Anthropic.Beta.BetaUsage): number {
   const table = PRICES[model] ?? PRICES['claude-opus-5-5'];
@@ -301,10 +303,10 @@ export async function researchSpecies(sp: ResearchInput): Promise<ResearchResult
     ask<ResearchOutput>(
       `Research this species and fill every field. Leave population and range history aside; they are researched separately.\n\n${describe(sp)}`,
       SCHEMA,
-      12,
+      MAX_SEARCHES,
     ),
     // the page is still useful without a population chart, so this one may fail on its own
-    ask<HistoryOutput>(historyPrompt(sp), POPULATION_SCHEMA, 6).catch((err) => {
+    ask<HistoryOutput>(historyPrompt(sp), POPULATION_SCHEMA, Math.ceil(MAX_SEARCHES / 2)).catch((err) => {
       console.warn(`[research] population for ${sp.slug} failed: ${(err as Error).message}`);
       return null;
     }),
@@ -329,7 +331,7 @@ const historyPrompt = (sp: ResearchInput) =>
 
 /** Population and range history only, for species researched before those fields existed. */
 export async function researchPopulation(sp: ResearchInput) {
-  const { out, costUsd, model } = await ask<HistoryOutput>(historyPrompt(sp), POPULATION_SCHEMA, 6);
+  const { out, costUsd, model } = await ask<HistoryOutput>(historyPrompt(sp), POPULATION_SCHEMA, Math.ceil(MAX_SEARCHES / 2));
   return { at: new Date().toISOString(), model, costUsd, fields: historyFields(out), sources: cleanSources(out.sources) };
 }
 
