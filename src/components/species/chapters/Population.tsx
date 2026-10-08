@@ -152,19 +152,20 @@ export function Population({ sp, n }: { sp: Species; n: number }) {
                   <p className="label">Drag through time to see where they vanished and where they came back</p>
                 </div>
               )}
-              <ul className="legend label" aria-label="Map legend">
+              {/* counts of the areas circled on the globe, not of animals */}
+              <ul className="legend label" aria-label="Areas circled on the globe">
                 <li>
                   <i className="lg lg--present" aria-hidden="true" />
-                  Present <span className="num label--ink">{counts.present}</span>
+                  <span className="num label--ink">{counts.present}</span> {counts.present === 1 ? 'area' : 'areas'} still home
                 </li>
                 <li>
                   <i className="lg lg--lost" aria-hidden="true" />
-                  Lost <span className="num label--ink">{counts.lost}</span>
+                  <span className="num label--ink">{counts.lost}</span> {counts.lost === 1 ? 'area' : 'areas'} lost
                 </li>
                 {events.some((e) => e.kind === 'gained') && (
                   <li>
                     <i className="lg lg--new" aria-hidden="true" />
-                    Returned
+                    Came back
                   </li>
                 )}
               </ul>
