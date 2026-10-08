@@ -19,6 +19,11 @@ export const globeFragment = /* glsl */ `
 uniform sampler2D uLand;
 uniform sampler2D uRange;
 uniform float uHasRange;
+uniform sampler2D uRange2;
+uniform float uHasRange2;
+uniform vec4 uBbox2;
+uniform vec2 uCentroid2;
+uniform float uPair;
 uniform float uOpacity;
 uniform float uReveal;
 uniform float uRipple;
@@ -96,8 +101,19 @@ void main() {
 
   float ink = disc(dist, stepDeg * 0.2 * sizeK, aa) * land * 0.24;
   float pulse = 0.85 + 0.15 * sin(uTime * 1.6 - gc * 0.25);
-  float rr = stepDeg * mix(0.3, 0.46, density) * sizeK;
+  // compare page: the first species' dots shrink to sit inside the second species' rings
+  float rr = stepDeg * mix(0.3, 0.46, density) * sizeK * (1.0 - uPair * 0.4);
   ink = max(ink, disc(dist, rr, aa) * isRange * pulse);
+  if (uPair > 0.5) {
+    vec4 rt2 = texture2D(uRange2, cuv);
+    float inB2 = smoothstep(uBbox2.x - m, uBbox2.x + 1.0, c.x) * (1.0 - smoothstep(uBbox2.z - 1.0, uBbox2.z + m, c.x))
+               * smoothstep(uBbox2.y - m, uBbox2.y + 1.0, c.y) * (1.0 - smoothstep(uBbox2.w - 1.0, uBbox2.w + m, c.y));
+    float gc2 = greatCircle(c, uCentroid2);
+    float range2 = rt2.a * uHasRange2 * inB2 * smoothstep(front, front - 25.0, gc2);
+    float isRange2 = smoothstep(0.08, 0.3, range2);
+    float ring = disc(dist, stepDeg * 0.46 * sizeK, aa) - disc(dist, stepDeg * 0.32 * sizeK, aa);
+    ink = max(ink, ring * isRange2 * (0.85 + 0.15 * sin(uTime * 1.6 - gc2 * 0.25)));
+  }
   // soft halo around range cells
   ink = max(ink, (1.0 - smoothstep(0.0, stepDeg * 0.9, dist)) * isRange * 0.12);
 

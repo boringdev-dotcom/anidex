@@ -15,7 +15,7 @@ import { bestSlot } from './slots';
 import { specimenInfo } from './stipple/StipplePoints';
 import { measureLocal, measureUniforms } from './MeasureLines';
 import { figureInfo, figureUniforms } from './ScaleFigure';
-import { REFERENCES, type ReferenceKind } from './specimen/Specimen';
+import { pairInfo, REFERENCES, type ReferenceKind } from './specimen/Specimen';
 
 /** Default camera tilt by body plan: low, flat animals read better seen partly from above. */
 const PLAN_TILT: Record<string, number> = { serpentine: 0.62, amphibian: 0.45, arthropod: 0.7, aquatic: 0.3 };
@@ -60,6 +60,14 @@ const SPECIES: Record<string, Pose> = {
   sightings: P({ sx: 0.3, sy: 0.03, ss: 0.4, so: 0, coll: 1, gx: 0.2, gs: 0.66, go: 1, reveal: 1, pins: 1 }),
   help: P({ sx: 0.25, sy: 0.0, ss: 0.56, so: 0.55, spin: 0.1 }),
   next: P({ sx: 0, sy: 0.14, ss: 0.4, so: 0.85, spin: 0.22 }),
+};
+
+/** Compare page: the pair centre stage, then aside for the stats, then the globe with both ranges. */
+const COMPARE: Record<string, Pose> = {
+  'cmp-hero': P({ sx: 0.02, sy: 0.1, ss: 0.66, so: 1, spin: 0 }),
+  'cmp-stats': P({ sx: 0.29, sy: 0.04, ss: 0.42, so: 0.9, spin: 0 }),
+  'cmp-range': P({ sx: 0.25, sy: 0.04, ss: 0.5, so: 0, gx: 0.2, gs: 0.7, go: 1, reveal: 1, spin: 0 }),
+  'cmp-more': P({ sx: 0.2, sy: 0.06, ss: 0.5, so: 0.5, spin: 0 }),
 };
 
 /**
@@ -134,7 +142,7 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     palette.uTime.value = state.clock.elapsedTime;
     const { page, slug, activePlace } = useStore.getState();
     const mobile = size.width <= 768; // matches the CSS breakpoint for the phone stage band
-    const poseMap = page === 'species' ? (mobile ? MOBILE_SPECIES : SPECIES) : mobile ? MOBILE_LANDING : LANDING;
+    const poseMap = page === 'species' ? (mobile ? MOBILE_SPECIES : SPECIES) : page === 'compare' ? COMPARE : mobile ? MOBILE_LANDING : LANDING;
     samplePoses(posesFor(poseMap, live.chapterKeys), live.pos, tgt.current);
     // subspecies chapter: the specimen is scaled to the selected tiger's real size, extinct ones fade to a ghost
     const familyIdx = live.chapterKeys.indexOf('family');
@@ -143,7 +151,7 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     tgt.current.so *= 1 - 0.68 * live.variantGhost * wFamily;
     const T = tgt.current;
     // browse pages keep the planet faint behind the list; a hovered row's animal comes forward
-    if (page !== 'species' && useStore.getState().previewShape) T.so = Math.max(T.so, mobile ? 0.5 : 0.9);
+    if (page === 'landing' && useStore.getState().previewShape) T.so = Math.max(T.so, mobile ? 0.5 : 0.9);
 
     // damp everything toward the target pose
     const c = cur.current;
@@ -162,7 +170,7 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     if (!sp || !gl || !spin) return;
 
     // Phones: the 3D lives in per-chapter slots in the page (see three/slots.ts) instead of poses.
-    const slotMode = page === 'species' && mobile;
+    const slotMode = (page === 'species' || page === 'compare') && mobile;
     const sSlot = slotMode ? bestSlot('specimen', size.height, 60) : null;
     const gSlot = slotMode ? bestSlot('globe', size.height, 60) : null;
     const eff = { so: c.so, coll: c.coll, go: c.go, reveal: c.reveal, pins: c.pins, hist: c.hist, ripple: c.ripple };
@@ -216,6 +224,8 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
         // leave room at the front for the height line and its label
         const fill = measureLocal.hasHt ? lerp(0.7, 0.6, cmp) : 0.84;
         let px = Math.min((sSlot.w * fill) / lerp(1, Math.max(tw, 1), cmp), (sSlot.h * 0.8) / lerp(shapeH, th, cmp));
+        // the compare page's pair is wider than one animal: fit its actual width
+        if (page === 'compare') px = Math.min((sSlot.w * 0.9) / Math.max(0.3, specimenInfo.maxX - specimenInfo.minX), (sSlot.h * 0.72) / shapeH);
         if (sSlot.slot.chapter === 'family') px *= live.variantScale;
         sScale = px * pxToWorld;
         sp.position.set((sSlot.x / size.width - 0.5) * vw, (0.5 - sSlot.y / size.height) * vh, 0);
@@ -276,6 +286,11 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
       si.vPitch *= Math.exp(-5 * dt);
       const settled = Math.abs(si.vYaw) < 0.25;
       if (!reduced && settled) sp.rotation.y += dt * c.spin * clamp((now - si.last - 600) / 1200) * (1 - cmp);
+      // the compare page's pair is laid out along X: settle back to a slight three-quarter view
+      if (page === 'compare' && now - si.last > 1500) {
+        const diff = wrap(-0.28 - sp.rotation.y);
+        sp.rotation.y += diff * (1 - Math.exp(-2.5 * dt));
+      }
       // compare: turn to a near-profile view so the sizes read side by side
       if (cmp > 0.02 && now - si.last > 1500) {
         const axisX = specimenInfo.maxX - specimenInfo.minX >= (specimenInfo.maxZ - specimenInfo.minZ) * 0.9;
@@ -312,7 +327,12 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     // where should the globe face?
     const species = getSpecies(slug ?? undefined);
     let focus = { lat: 20, lon: 0 };
-    if (species) {
+    const pair = page === 'compare' ? useStore.getState().pair : null;
+    if (pair) {
+      const pa = getSpecies(pair[0]);
+      const pb = getSpecies(pair[1]);
+      if (pa && pb) focus = meanLatLon([pa.range.centroid, pb.range.centroid]);
+    } else if (species) {
       focus = species.range.centroid;
       const regions = species.rangeHistory?.regions;
       if (eff.hist > 0.5 && regions?.length) {
@@ -412,6 +432,16 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
       project(tmpV.set(fig.position.x, top, 0).applyMatrix4(root.current!.matrixWorld), lm.ref);
     } else lm.ref.on = false;
 
+    // compare page: name labels above each animal, while the pair is in front
+    const pl = live.pairLabels;
+    const pairShown = page === 'compare' && !pv && pairInfo.key === shapeNow && stippleUniforms.uMorph.value > 0.85;
+    const pairW = slotMode ? (sSlot?.slot.chapter === 'cmp-hero' ? sSlot.visible : 0) : clamp(1 - live.pos * 1.4);
+    pl.opacity = damp(pl.opacity, pairShown ? pairW * eff.so : 0, reduced ? 60 : 5, dt);
+    if (pl.opacity > 0.01) {
+      project(sp.localToWorld(tmpV.set(pairInfo.a.x, pairInfo.a.top + 0.06, 0)), pl.a);
+      project(sp.localToWorld(tmpV.set(pairInfo.b.x, pairInfo.b.top + 0.06, 0)), pl.b);
+    }
+
     // collapse target: the focus point on the globe surface, in specimen-local space
     root.current?.updateMatrixWorld(true);
     latLonToVec3(focus.lat, focus.lon, 1.0, v.current);
@@ -430,7 +460,7 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     const invert = themeNow === 'light' ? 1 : 0;
     stippleUniforms.uExposure.value = damp(stippleUniforms.uExposure.value, shown?.specimen.tone?.[themeNow] ?? 0, 4, dt);
     stippleUniforms.uToneInvert.value = damp(stippleUniforms.uToneInvert.value, invert, reduced ? 60 : 5, dt);
-    plinthUniforms.uOpacity.value = eff.so * (1 - eff.coll) * (page === 'species' ? 0.28 : 0) * (1 - 0.7 * meas.current.cmp);
+    plinthUniforms.uOpacity.value = eff.so * (1 - eff.coll) * (page === 'species' || page === 'compare' ? 0.28 : 0) * (1 - 0.7 * meas.current.cmp);
 
     globeUniforms.uOpacity.value = eff.go;
     globeUniforms.uReveal.value = eff.reveal;

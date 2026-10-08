@@ -5,6 +5,7 @@ import { Reveal } from '../../ui/Reveal';
 import { RotateIcon, StageSlot } from '../../ui/StageSlot';
 import { Vitals } from '../Vitals';
 import { SpecimenStatus } from '../SpecimenStatus';
+import { CompareWith } from '../CompareWith';
 import type { SpeciesRecord } from '../../../data/api';
 import { useStore } from '../../../store/useStore';
 
@@ -50,6 +51,9 @@ export function Hero({ sp }: { sp: Species | SpeciesRecord }) {
             </Reveal>
             <Reveal split="fade" immediate delay={1.15}>
               <Vitals sp={sp} />
+            </Reveal>
+            <Reveal split="fade" immediate delay={1.25}>
+              <CompareWith sp={sp} />
             </Reveal>
           </div>
         </div>

@@ -24,13 +24,15 @@ export function savePrefs(p: { units: Units; userHeightM: number }) {
 const prefs = loadPrefs();
 
 export type Theme = 'light' | 'dark';
-export type Page = 'landing' | 'species';
+export type Page = 'landing' | 'species' | 'compare';
 
 interface State {
   theme: Theme;
   page: Page;
   /** Slug of the species page currently shown, if any. */
   slug: string | null;
+  /** The two species on the compare page, if shown. */
+  pair: [string, string] | null;
   /** Shape currently requested for the point cloud: 'ambient' or a species slug. */
   shape: string;
   /** Hover preview on the landing page overrides `shape` while set. */
@@ -61,6 +63,7 @@ export const useStore = create<State>((set) => ({
   theme: initialTheme,
   page: 'landing',
   slug: null,
+  pair: null,
   shape: 'ambient',
   previewShape: null,
   modelRev: 0,
@@ -97,6 +100,12 @@ export const live = {
     len: { x: 0, y: 0, on: false },
     ht: { x: 0, y: 0, on: false },
     ref: { x: 0, y: 0, on: false },
+  },
+  /** Screen anchors (css px) for the compare page's name labels above each animal. */
+  pairLabels: {
+    opacity: 0,
+    a: { x: 0, y: 0, on: false },
+    b: { x: 0, y: 0, on: false },
   },
   /** Normalised pointer position -1..1. */
   pointer: { x: 0, y: 0 },

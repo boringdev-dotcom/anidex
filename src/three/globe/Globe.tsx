@@ -20,6 +20,12 @@ export const globeUniforms = {
   uLand: { value: emptyTex as THREE.Texture },
   uRange: { value: emptyTex as THREE.Texture },
   uHasRange: { value: 0 },
+  /** compare page: the second species' range, drawn as rings */
+  uRange2: { value: emptyTex as THREE.Texture },
+  uHasRange2: { value: 0 },
+  uBbox2: { value: new THREE.Vector4(-180, -90, 180, 90) },
+  uCentroid2: { value: new THREE.Vector2() },
+  uPair: { value: 0 },
   uOpacity: { value: 0 },
   uReveal: { value: 0 },
   uRipple: { value: 0 },
@@ -93,8 +99,23 @@ const lineMaterial = (u: typeof orbitUniforms) =>
     depthWrite: false,
   });
 
+function rangeTexture(canvas: HTMLCanvasElement) {
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.NoColorSpace;
+  tex.minFilter = THREE.LinearFilter;
+  tex.generateMipmaps = false;
+  return tex;
+}
+
+function swapTexture(u: { value: THREE.Texture }, tex: THREE.Texture) {
+  const old = u.value;
+  u.value = tex;
+  if (old !== emptyTex && old !== tex) old.dispose();
+}
+
 export const Globe = forwardRef<THREE.Group>(function Globe(_, ref) {
   const slug = useStore((s) => s.slug);
+  const pair = useStore((s) => s.pair);
   const theme = useStore((s) => s.theme);
   const spinRef = useRef<THREE.Group>(null);
   const orbitRef = useRef<THREE.Group>(null);
@@ -130,6 +151,40 @@ export const Globe = forwardRef<THREE.Group>(function Globe(_, ref) {
     return () => cancelAnimationFrame(id);
   }, [slug, theme]);
 
+  // compare page: both species' ranges, the first as dots and the second as rings
+  useEffect(() => {
+    if (!pair) {
+      globeUniforms.uPair.value = 0;
+      globeUniforms.uHasRange2.value = 0;
+      return;
+    }
+    const [a, b] = pair.map((s) => getSpecies(s));
+    if (!a || !b) return;
+    let cancelled = false;
+    globeUniforms.uPair.value = 1;
+    globeUniforms.uHasRange.value = 0;
+    globeUniforms.uHasRange2.value = 0;
+    globeUniforms.uPinCount.value = 0;
+    globeUniforms.uRegCount.value = 0;
+    globeUniforms.uBbox.value.set(...a.range.bbox);
+    globeUniforms.uBbox2.value.set(...b.range.bbox);
+    globeUniforms.uCentroid.value.set(a.range.centroid.lon, a.range.centroid.lat);
+    globeUniforms.uCentroid2.value.set(b.range.centroid.lon, b.range.centroid.lat);
+    loadRange(a.gbifTaxonKey, a.range.bbox).then(({ canvas }) => {
+      if (cancelled) return;
+      swapTexture(globeUniforms.uRange, rangeTexture(canvas));
+      globeUniforms.uHasRange.value = 1;
+    });
+    loadRange(b.gbifTaxonKey, b.range.bbox).then(({ canvas }) => {
+      if (cancelled) return;
+      swapTexture(globeUniforms.uRange2, rangeTexture(canvas));
+      globeUniforms.uHasRange2.value = 1;
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [pair]);
+
   useEffect(() => {
     const sp = getSpecies(slug ?? undefined);
     if (!sp) return;
@@ -148,14 +203,8 @@ export const Globe = forwardRef<THREE.Group>(function Globe(_, ref) {
 
     loadRange(sp.gbifTaxonKey, sp.range.bbox).then(({ canvas, source }) => {
       if (cancelled) return;
-      const tex = new THREE.CanvasTexture(canvas);
-      tex.colorSpace = THREE.NoColorSpace;
-      tex.minFilter = THREE.LinearFilter;
-      tex.generateMipmaps = false;
-      const old = globeUniforms.uRange.value;
-      globeUniforms.uRange.value = tex;
+      swapTexture(globeUniforms.uRange, rangeTexture(canvas));
       globeUniforms.uHasRange.value = 1;
-      if (old !== emptyTex) old.dispose();
       useStore.setState({ rangeSource: source });
     });
     return () => {

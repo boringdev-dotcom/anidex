@@ -26,6 +26,9 @@ export interface Repo {
   list(q: ListQuery): Promise<ListResponse>;
   related(slug: string, limit?: number): Promise<SpeciesSummary[]>;
   stats(): Promise<Stats>;
+  /** every species' GBIF key and core range box, for the "near me" lookup */
+  ranges(): Promise<{ slug: string; gbifKey: number; cls: string | null; bbox: [number, number, number, number] }[]>;
+  summaries(slugs: string[]): Promise<SpeciesSummary[]>;
 }
 
 const THREATENED = ['VU', 'EN', 'CR'];
@@ -139,6 +142,17 @@ function pgRepo(): Repo {
       );
       return r.rows.map(toSummary);
     },
+    async ranges() {
+      const r = await db.query<{ slug: string; gbif_key: string; class: string | null; bbox: [number, number, number, number] }>(
+        `select slug, gbif_key, class, data->'range'->'bbox' as bbox from species where gbif_key is not null`,
+      );
+      return r.rows.map((x) => ({ slug: x.slug, gbifKey: Number(x.gbif_key), cls: x.class, bbox: x.bbox }));
+    },
+    async summaries(slugs) {
+      if (!slugs.length) return [];
+      const r = await db.query<Row>(`select ${SUMMARY_COLS} from species where slug = any($1)`, [slugs]);
+      return r.rows.map(toSummary);
+    },
     async stats() {
       const [t, c] = await Promise.all([
         db.query<{ total: string; threatened: string }>(`select count(*) as total, count(*) filter (where iucn = any($1)) as threatened from species`, [THREATENED]),
@@ -211,6 +225,12 @@ function jsonRepo(): Repo {
       if (!me) return [];
       const next = all.find((s) => s.slug === me.next);
       return [next, ...all.filter((s) => s.slug !== slug && s !== next)].filter(Boolean).slice(0, limit).map((s) => sum(s!));
+    },
+    async ranges() {
+      return all.map((s) => ({ slug: s.slug, gbifKey: s.gbifTaxonKey, cls: s.taxonomy.class, bbox: s.range.bbox }));
+    },
+    async summaries(slugs) {
+      return all.filter((s) => slugs.includes(s.slug)).map(sum);
     },
     async stats() {
       const by = new Map<string, number>();

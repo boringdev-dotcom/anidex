@@ -3,7 +3,7 @@
  * which fills an in-memory cache. Rendering and the 3D scene then read synchronously with `getSpecies`.
  */
 import type { Species, Variant } from './types';
-import type { ListResponse, ResearchStatusResponse, SpecimenStatusResponse, SpeciesRecord, SpeciesSummary, Stats } from './api';
+import type { ListResponse, NearResponse, ResearchStatusResponse, SpecimenStatusResponse, SpeciesRecord, SpeciesSummary, Stats } from './api';
 
 const full = new Map<string, SpeciesRecord>();
 const summaries = new Map<string, SpeciesSummary>();
@@ -64,6 +64,13 @@ export async function researchStatus(slug: string, start = false): Promise<Resea
 
 export async function specimenStatus(slug: string, start = false): Promise<SpecimenStatusResponse> {
   return getJSON<SpecimenStatusResponse>(`/api/species/${encodeURIComponent(slug)}/specimen`, start ? { method: 'POST' } : undefined);
+}
+
+/** Species recorded near a point. The point should already be rounded (it is sent in the body, not the URL). */
+export async function nearMe(lat: number, lon: number): Promise<NearResponse> {
+  const r = await getJSON<NearResponse>('/api/near', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ lat, lon }) });
+  rememberSummaries(r.items);
+  return r;
 }
 
 /** Warm the cache, e.g. on hover, so the page opens instantly. */

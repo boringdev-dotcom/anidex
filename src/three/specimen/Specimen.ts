@@ -180,3 +180,142 @@ export function loadEarthShape(): Promise<Shape> {
     img.src = '/textures/land-mask.png';
   }));
 }
+
+// ---------------- two animals side by side (compare page) ----------------
+
+export interface PairSize {
+  metres: number;
+  by: 'length' | 'height';
+  standing: boolean;
+}
+
+interface PairSide {
+  /** centre x and top y in shape space, and width, for labels */
+  x: number;
+  top: number;
+  w: number;
+  /** drawn larger than true scale so it stays visible next to a giant */
+  enlarged: number;
+}
+
+/** Layout of the current pair shape, for the name labels above each animal. */
+export const pairInfo: { key: string; a: PairSide; b: PairSide } = {
+  key: '',
+  a: { x: 0, top: 0, w: 0, enlarged: 1 },
+  b: { x: 0, top: 0, w: 0, enlarged: 1 },
+};
+const pairLayouts = new Map<string, typeof pairInfo>();
+
+/** Make the layout for a pair key current (when its shape is shown). */
+export function activatePairLayout(key: string) {
+  const l = pairLayouts.get(key);
+  if (l) Object.assign(pairInfo, { key, a: { ...l.a }, b: { ...l.b } });
+}
+
+/**
+ * Both animals in one point cloud, at true relative scale, standing on a shared floor along X.
+ * Each keeps its own sampled surface and tones; points are shared by visible area.
+ */
+export function loadPairShape(key: string, A: SpecimenSource, B: SpecimenSource, sa: PairSize, sb: PairSize): Promise<Shape> {
+  // keyed by size and model too: measurements or a model that arrive later rebuild the pair
+  const id = `${key}|${sa.metres}|${sb.metres}|${A.specimen.model?.url ?? ''}|${B.specimen.model?.url ?? ''}`;
+  let p = cache.get(id);
+  if (!p) {
+    p = Promise.all([loadSpecimenShape(A), loadSpecimenShape(B)]).then(([shA, shB]) => buildPair(key, shA, shB, sa, sb));
+    cache.set(id, p);
+  }
+  return p;
+}
+
+function extents(s: Shape) {
+  const e = { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity, minZ: Infinity, maxZ: -Infinity };
+  const P = s.positions;
+  for (let i = 0; i < P.length; i += 3) {
+    e.minX = Math.min(e.minX, P[i]);
+    e.maxX = Math.max(e.maxX, P[i]);
+    e.minY = Math.min(e.minY, P[i + 1]);
+    e.maxY = Math.max(e.maxY, P[i + 1]);
+    e.minZ = Math.min(e.minZ, P[i + 2]);
+    e.maxZ = Math.max(e.maxZ, P[i + 2]);
+  }
+  return e;
+}
+
+function buildPair(key: string, shA: Shape, shB: Shape, sa: PairSize, sb: PairSize): Shape {
+  const prep = (s: Shape, size: PairSize) => {
+    const e = extents(s);
+    // lay each animal's long axis along X so the pair is seen side-on together
+    const swap = e.maxZ - e.minZ > (e.maxX - e.minX) * 1.05;
+    const aw = swap ? e.maxZ - e.minZ : e.maxX - e.minX;
+    const ah = e.maxY - e.minY;
+    // apes are modelled on all fours but measured standing: posed height is about 3/4 of it
+    const crouched = size.standing && ah < aw * 1.1;
+    const k = size.by === 'height' ? (size.metres * (crouched ? 0.75 : 1)) / ah : size.metres / aw;
+    return { s, e, swap, aw, ah, k };
+  };
+  const pa = prep(shA, sa);
+  const pb = prep(shB, sb);
+  // tiny animals next to giants stay visible: at least 4% of the larger one's length
+  const big = Math.max(pa.aw * pa.k, pb.aw * pb.k, pa.ah * pa.k, pb.ah * pb.k);
+  const grow = (p: typeof pa) => Math.max(1, (big * 0.04) / (p.aw * p.k));
+  const ga = grow(pa);
+  const gb = grow(pb);
+  pa.k *= ga;
+  pb.k *= gb;
+  const wA = pa.aw * pa.k;
+  const hA = pa.ah * pa.k;
+  const wB = pb.aw * pb.k;
+  const hB = pb.ah * pb.k;
+  const gap = 0.16 * Math.max(wA, wB) + 0.02 * big;
+  const W = wA + gap + wB;
+  const H = Math.max(hA, hB);
+  // fit roughly the box a single specimen fills
+  const norm = 1.3 / Math.max(W, H * 1.5);
+  const cxA = -W / 2 + wA / 2;
+  const cxB = W / 2 - wB / 2;
+
+  const N = POINT_COUNT;
+  // points by visible area, so neither animal is a smudge or a solid blob
+  const areaA = wA * hA;
+  const areaB = wB * hB;
+  const nA = Math.round(N * Math.min(0.85, Math.max(0.15, areaA / (areaA + areaB))));
+  const positions = new Float32Array(N * 3);
+  const normals = new Float32Array(N * 3);
+  const tones = new Float32Array(N);
+  const place = (p: typeof pa, cx: number, from: number, count: number) => {
+    const { s, e, swap } = p;
+    const mx = (e.minX + e.maxX) / 2;
+    const mz = (e.minZ + e.maxZ) / 2;
+    const total = s.positions.length / 3;
+    for (let j = 0; j < count; j++) {
+      // stride through the source so every body part is represented (sampling order follows the parts)
+      const i = Math.min(total - 1, Math.floor(((j + 0.5) * total) / count));
+      let x = s.positions[i * 3] - mx;
+      const y = s.positions[i * 3 + 1] - e.minY;
+      let z = s.positions[i * 3 + 2] - mz;
+      let nx = s.normals[i * 3];
+      let nz = s.normals[i * 3 + 2];
+      if (swap) {
+        [x, z] = [z, -x];
+        [nx, nz] = [nz, -nx];
+      }
+      const o = (from + j) * 3;
+      positions[o] = (x * p.k + cx) * norm;
+      positions[o + 1] = (y * p.k - H / 2) * norm;
+      positions[o + 2] = z * p.k * norm;
+      normals[o] = nx;
+      normals[o + 1] = s.normals[i * 3 + 1];
+      normals[o + 2] = nz;
+      tones[from + j] = s.tones[i];
+    }
+  };
+  place(pa, cxA, 0, nA);
+  place(pb, cxB, nA, N - nA);
+  const layout = {
+    key,
+    a: { x: cxA * norm, top: (hA - H / 2) * norm, w: wA * norm, enlarged: ga },
+    b: { x: cxB * norm, top: (hB - H / 2) * norm, w: wB * norm, enlarged: gb },
+  };
+  pairLayouts.set(key, layout);
+  return { positions, normals, tones, toneMid: (shA.toneMid * nA + shB.toneMid * (N - nA)) / N };
+}
