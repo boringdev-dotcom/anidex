@@ -20,6 +20,11 @@ export const stippleUniforms = {
   uTarget: { value: new THREE.Vector3() },
   /** 0 in dark theme (light fur = bright points), 1 in light theme (dark fur = dark points). */
   uToneInvert: { value: 0 },
+  /** Median tone of the shape being left and the shape being formed (auto-exposure per animal). */
+  uMidFrom: { value: 0.5 },
+  uMidTo: { value: 0.5 },
+  /** Per-species, per-theme exposure tweak (specimen.tone in the JSON), damped by the director. */
+  uExposure: { value: 0 },
   uTime: palette.uTime,
   uInk: palette.uInk,
 };
@@ -114,6 +119,9 @@ export function StipplePoints() {
       from.needsUpdate = to.needsUpdate = nFrom.needsUpdate = nTo.needsUpdate = pos.needsUpdate = true;
       tFrom.needsUpdate = tTo.needsUpdate = true;
 
+      // carry the median tone across the morph the same way positions are carried
+      stippleUniforms.uMidFrom.value += (stippleUniforms.uMidTo.value - stippleUniforms.uMidFrom.value) * ease(Math.min(1, m));
+      stippleUniforms.uMidTo.value = shape.toneMid;
       gsap.killTweensOf(stippleUniforms.uMorph);
       stippleUniforms.uMorph.value = 0;
       gsap.to(stippleUniforms.uMorph, {

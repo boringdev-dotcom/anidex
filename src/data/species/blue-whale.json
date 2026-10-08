@@ -31,7 +31,10 @@
       "url": "/models/blue-whale.glb",
       "yaw": 1.5707963267948966
     },
-    "tilt": 0.38
+    "tilt": 0.38,
+    "tone": {
+      "dark": 0.16
+    }
   },
   "range": {
     "summary": "All the major oceans, from polar feeding grounds to tropical waters, with resident groups off Sri Lanka and in the Gulf of California.",

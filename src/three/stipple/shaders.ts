@@ -17,6 +17,9 @@ uniform float uOpacity;
 uniform float uDrift;
 uniform vec3 uTarget;
 uniform float uToneInvert;
+uniform float uMidFrom;
+uniform float uMidTo;
+uniform float uExposure;
 
 varying float vAlpha;
 
@@ -61,12 +64,22 @@ void main() {
   // softer light so surface markings carry the image; rim still traces the silhouette
   float shade = 0.5 + 0.38 * lambert + 0.18 * rim * rim;
 
-  // halftone: the surface's own markings set point size and strength (0.5 is neutral)
+  // halftone: the surface's own markings set point size and strength.
+  // k is "how much ink" a point gets: brightness in the dark theme, darkness in the light theme.
   float tone = mix(aToneFrom, aToneTo, st);
+  float toneMid = mix(uMidFrom, uMidTo, st);
   float k = mix(tone, 1.0 - tone, uToneInvert);
-  k = smoothstep(0.12, 0.88, k);
-  float toneSize = 1.0 + (k - 0.5) * 1.5;
-  float toneAlpha = clamp(0.04 + 1.92 * k, 0.0, 1.3);
+  float kMid = mix(toneMid, 1.0 - toneMid, uToneInvert);
+  // auto-exposure: the animal's typical tone sits at a solid, visible level in both themes,
+  // and markings read as deviations from it (so pale bears survive on cream, penguins on black)
+  k = clamp(0.58 + uExposure + (k - kMid) * 1.25, 0.0, 1.0);
+  k = smoothstep(0.04, 0.96, k);
+  float toneSize = 1.0 + (k - 0.5) * 1.3;
+  float toneAlpha = clamp(0.16 + 1.6 * k, 0.0, 1.25);
+  // the silhouette never dissolves: edge-on points keep a floor whatever the fur tone
+  float edge = smoothstep(0.55, 0.92, rim);
+  toneAlpha = max(toneAlpha, edge * 0.9);
+  toneSize = max(toneSize, 0.95 * edge);
 
   gl_PointSize = uSize * uDpr * (0.55 + 0.6 * shade) * toneSize * (6.0 / -mv.z);
   vAlpha = uOpacity * clamp(shade, 0.18, 1.0) * toneAlpha * (1.0 - dead * 0.92) * (1.0 - cs * 0.6);

@@ -34,6 +34,9 @@
     "model": {
       "url": "/models/african-savanna-elephant.glb",
       "yaw": 1.5707963267948966
+    },
+    "tone": {
+      "light": 0.08
     }
   },
   "range": {

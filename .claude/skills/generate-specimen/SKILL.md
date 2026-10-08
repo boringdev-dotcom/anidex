@@ -67,7 +67,7 @@ For a variant, the preview shows the species page's main specimen. Check variant
 This renders the specimen at four angles in dark (top row) and light (bottom row) themes, writes `scripts/.cache/<slug>/preview.png`, and prints any console errors. Read the image and check:
 - **Upright.** Feet on the plinth ring, not on its side or upside down. Hunyuan outputs are Y-up, so this is rare.
 - **Recognisable silhouette** in at least two of the four angles.
-- **Markings visible.** Light theme shows dark markings as dense dark dots; dark theme shows pale areas as bright dots.
+- **Reads in both themes.** Each specimen is auto-exposed around its own median fur tone, so the body should look solid on black and on cream, with markings as darker or lighter dots on top. If one theme still looks weak or blown out, set `specimen.tone` in the JSON, e.g. `{ "light": 0.12 }` or `{ "dark": -0.1 }`. Use roughly -0.3 to 0.3; positive means more ink. Current tweaks: gorilla light 0.14, blue whale dark 0.16, elephant light 0.08. Variants inherit their species' value.
 - **Flat animals.** Butterflies, whales, rays and lizards seen edge-on look like slivers. Set `specimen.tilt` in radians to view them from above. Current values are monarch 0.85, axolotl 0.5 and blue whale 0.38; the default is 0.08.
 - **`yaw`** only sets the starting heading, because specimens spin. `π/2` (1.5708) suits most Hunyuan outputs.
 

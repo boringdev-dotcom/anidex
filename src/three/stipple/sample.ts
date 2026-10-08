@@ -6,6 +6,8 @@ export interface Shape {
   normals: Float32Array; // N * 3
   /** Surface brightness 0..1 per point (0.5 = neutral). Drives halftone point size and alpha. */
   tones: Float32Array; // N
+  /** Median tone of the whole shape, so each theme can expose the animal around its own typical brightness. */
+  toneMid: number;
 }
 
 export interface TexturedPart {
@@ -88,7 +90,7 @@ export function sampleParts(parts: THREE.BufferGeometry[], N: number, seed = 1):
   });
   material.dispose();
   normalize(positions);
-  return { positions, normals, tones: new Float32Array(N).fill(0.5) };
+  return { positions, normals, tones: new Float32Array(N).fill(0.5), toneMid: 0.5 };
 }
 
 function luminanceAt(px: NonNullable<TexturedPart['pixels']>, u: number, v: number): number {
@@ -152,7 +154,8 @@ export function sampleTextured(parts: TexturedPart[], N: number, seed = 1): Shap
   const hi = sorted[Math.floor(N * 0.95)];
   const tones = new Float32Array(N);
   for (let i = 0; i < N; i++) tones[i] = hi - lo > 0.05 ? Math.min(1, Math.max(0, (raw[i] - lo) / (hi - lo))) : 0.5;
-  return { positions, normals, tones };
+  const toneMid = Float32Array.from(tones).sort()[Math.floor(N / 2)];
+  return { positions, normals, tones, toneMid };
 }
 
 /** Centre on the bounding box and scale so the largest dimension is 1. */
@@ -196,5 +199,5 @@ export function ambientShape(N: number): Shape {
       normals.set([0, 1, 0], i * 3);
     }
   }
-  return { positions, normals, tones: new Float32Array(N).fill(0.5) };
+  return { positions, normals, tones: new Float32Array(N).fill(0.5), toneMid: 0.5 };
 }

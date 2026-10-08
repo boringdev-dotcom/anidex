@@ -52,7 +52,7 @@ The index and search pick it up automatically.
 
 ## 3D specimens
 
-Each species has a textured GLB in `public/models/`, generated with fal.ai and sampled into the stipple point cloud. The texture sets each point's size and strength like a halftone, so stripes, patches and wing veins show through.
+Each species has a textured GLB in `public/models/`, generated with fal.ai and sampled into the stipple point cloud. The texture sets each point's size and strength like a halftone, so stripes, patches and wing veins show through. Each animal is auto-exposed around its own median tone in each theme, so pale and dark animals both read on black and on cream; `specimen.tone` fine-tunes one theme if needed.
 
 With Claude Code, the project skill in `.claude/skills/generate-specimen/` walks through this end to end, including a visual check. Ask it to "generate the specimen for <species>". By hand:
 

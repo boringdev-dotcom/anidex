@@ -99,6 +99,8 @@ export interface Species {
     features?: SpecimenFeature[];
     /** Extra visual detail for the model-generation prompt (scripts/generate-models.ts). */
     promptDetail?: string;
+    /** Exposure tweak per theme (about -0.3 to 0.3) on top of the automatic exposure. Positive = more ink. */
+    tone?: { dark?: number; light?: number };
     /** Camera tilt in radians so flat animals (butterflies, whales) are seen partly from above. Default 0.08. */
     tilt?: number;
     /** Drop a GLB at /public/models/<slug>.glb and reference it here. Nothing else changes. */

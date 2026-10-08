@@ -29,6 +29,9 @@
     "model": {
       "url": "/models/mountain-gorilla.glb",
       "yaw": 1.5707963267948966
+    },
+    "tone": {
+      "light": 0.14
     }
   },
   "range": {

@@ -240,7 +240,9 @@ export function SceneDirector({ specimen, globe, root }: Props) {
     stippleUniforms.uDpr.value = state.viewport.dpr;
     stippleUniforms.uSize.value = clamp(size.height / 900, 0.75, 1.3) * (mobile ? 1.35 : 1.35);
     stippleUniforms.uDrift.value = reduced ? 0 : 1;
-    const invert = useStore.getState().theme === 'light' ? 1 : 0;
+    const themeNow = useStore.getState().theme;
+    const invert = themeNow === 'light' ? 1 : 0;
+    stippleUniforms.uExposure.value = damp(stippleUniforms.uExposure.value, shown?.specimen.tone?.[themeNow] ?? 0, 4, dt);
     stippleUniforms.uToneInvert.value = damp(stippleUniforms.uToneInvert.value, invert, reduced ? 60 : 5, dt);
     plinthUniforms.uOpacity.value = c.so * (1 - c.coll) * (page === 'species' ? 0.28 : 0);
 
