@@ -39,7 +39,13 @@ docker build -t anidex .
 docker run -p 10000:10000 anidex
 ```
 
-It is deployed on Render as a Docker web service that auto-deploys from `master`.
+It is deployed on Render as a Docker web service (`anidex`) that auto-deploys every merge into `master`. Render needs its GitHub App to have access to this repo for that; without it, deploys only happen when triggered by hand.
+
+To see which commit is live:
+
+```bash
+curl https://anidex-4mnx.onrender.com/api/health
+```
 
 ## Stack
 
