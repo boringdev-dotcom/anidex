@@ -44,7 +44,7 @@ export async function requestResearch(db: pg.Pool, slug: string) {
   return researchState(db, slug);
 }
 
-async function runResearch(db: pg.Pool, slug: string) {
+export async function runResearch(db: pg.Pool, slug: string) {
   const r = await db.query(`select data from species where slug = $1`, [slug]);
   if (!r.rowCount) throw new Error('species not found');
   const result = await researchSpecies(r.rows[0].data);
