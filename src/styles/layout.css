@@ -636,6 +636,10 @@
   color: var(--ink-2);
 }
 
+.pop__scrub {
+  display: contents;
+}
+
 .pop__source {
   color: var(--ink-3);
   max-width: 110ch;
@@ -1851,8 +1855,14 @@
 
   /* ---- population: one unit (globe, number, story, timeline) stays in view while you scroll ---- */
   .species .ch-pop .stage {
-    min-height: 240svh;
     justify-content: flex-start;
+  }
+
+  /* the pinned unit's scrub area: the unit stays put while this scrolls past and the year runs; the
+     source note comes after it, so it only arrives once the unit lets go */
+  .pop__scrub {
+    display: block;
+    min-height: 190svh;
   }
 
   .pop__unit {
