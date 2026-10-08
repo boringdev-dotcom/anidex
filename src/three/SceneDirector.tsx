@@ -11,6 +11,8 @@ import { facingQuaternion, latLonToVec3, meanLatLon } from './globe/geo';
 import { palette } from './palette';
 import { prefersReducedMotion } from '../hooks/useMediaQuery';
 import { interaction } from './interaction';
+import { bestSlot } from './slots';
+import { specimenInfo } from './stipple/StipplePoints';
 
 const wrap = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
 const tmpV = new THREE.Vector3();
@@ -112,6 +114,8 @@ export function SceneDirector({ specimen, globe, root }: Props) {
   const baseTilt = useRef(0.08);
   const focusQ = useRef(new THREE.Quaternion());
   const userQ = useRef(new THREE.Quaternion());
+  /** phone slot mode: damped visibility and globe layers, in place of the pose table */
+  const slotState = useRef({ so: 0, go: 0, reveal: 0, hist: 0, pins: 0, ripple: 0 });
 
   useFrame((state, rawDt) => {
     const dt = Math.min(rawDt, 1 / 20);
@@ -145,10 +149,41 @@ export function SceneDirector({ specimen, globe, root }: Props) {
     const spin = globeSpin.current;
     if (!sp || !gl || !spin) return;
 
+    // Phones: the 3D lives in per-chapter slots in the page (see three/slots.ts) instead of poses.
+    const slotMode = page === 'species' && mobile;
+    const sSlot = slotMode ? bestSlot('specimen', size.height, 60) : null;
+    const gSlot = slotMode ? bestSlot('globe', size.height, 60) : null;
+    const eff = { so: c.so, coll: c.coll, go: c.go, reveal: c.reveal, pins: c.pins, hist: c.hist, ripple: c.ripple };
+    if (slotMode) {
+      const st = slotState.current;
+      const k = reduced ? 60 : 9;
+      const ghost = sSlot?.slot.chapter === 'family' ? 1 - 0.68 * live.variantGhost : 1;
+      st.so = damp(st.so, sSlot ? smoothstep(0.1, 0.5, sSlot.visible) * ghost : 0, k, dt);
+      st.go = damp(st.go, gSlot ? smoothstep(0.1, 0.5, gSlot.visible) : 0, k, dt);
+      const gCh = gSlot?.slot.chapter;
+      st.reveal = damp(st.reveal, gSlot ? 1 : 0, gSlot && st.reveal < 1 ? 1.1 : 4, dt);
+      st.hist = damp(st.hist, gCh === 'population' ? 1 : 0, 6, dt);
+      st.pins = damp(st.pins, gCh === 'sightings' ? 1 : 0, 6, dt);
+      st.ripple = damp(st.ripple, gCh === 'range' ? 1 : 0, 6, dt);
+      Object.assign(eff, { so: st.so, coll: 0, go: st.go, reveal: st.reveal, pins: st.pins, hist: st.hist, ripple: st.ripple });
+    }
+    const pxToWorld = vh / size.height;
+
     // specimen transform: fit by the smaller of height-based and width-based scale
     // desktop: fit by height, or by width on narrow windows. phones: fill ~90% of the width
-    const sScale = mobile ? Math.min(c.ss * vh, c.ss * vw * 2.5) : Math.min(c.ss * vh, c.ss * vw * 0.95);
-    sp.position.set(c.sx * vw, c.sy * vh, 0);
+    let sScale = mobile ? Math.min(c.ss * vh, c.ss * vw * 2.5) : Math.min(c.ss * vh, c.ss * vw * 0.95);
+    if (slotMode) {
+      if (sSlot) {
+        // fit the specimen inside its slot: by width, or by height using the shape's own proportions
+        const shapeH = Math.max(0.3, specimenInfo.maxY - specimenInfo.minY);
+        let px = Math.min(sSlot.w * 0.84, (sSlot.h * 0.82) / shapeH);
+        if (sSlot.slot.chapter === 'family') px *= live.variantScale;
+        sScale = px * pxToWorld;
+        sp.position.set((sSlot.x / size.width - 0.5) * vw, (0.5 - sSlot.y / size.height) * vh, 0);
+      }
+    } else {
+      sp.position.set(c.sx * vw, c.sy * vh, 0);
+    }
     sp.scale.setScalar(sScale);
     // specimen rotation: user drag with momentum, then the slow auto-spin takes over again
     const si = interaction.specimen;
@@ -174,13 +209,18 @@ export function SceneDirector({ specimen, globe, root }: Props) {
     sp.rotation.x = baseTilt.current + si.pitch;
 
     // globe transform
-    const gScale = (mobile ? Math.min(c.gs * vh, c.gs * vw * 2.3) : Math.min(c.gs * vh, c.gs * vw * 0.9)) / 2;
+    let gScale = (mobile ? Math.min(c.gs * vh, c.gs * vw * 2.3) : Math.min(c.gs * vh, c.gs * vw * 0.9)) / 2;
+    if (slotMode && gSlot) gScale = Math.min(gSlot.w, gSlot.h) * 0.44 * pxToWorld;
     // globe dot grid: keep cells ~6.5 css px apart so small globes stay crisp instead of grainy
     const globePx = (gScale / vh) * size.height;
     globeUniforms.uStep.value = clamp((360 * 6.5) / (2 * Math.PI * Math.max(globePx, 1)), 1.4, 3.2);
-    gl.position.set(c.gx * vw, c.gy * vh, -0.2);
-    gl.scale.setScalar(gScale * (0.92 + 0.08 * c.go));
-    gl.visible = c.go > 0.002;
+    if (slotMode) {
+      if (gSlot) gl.position.set((gSlot.x / size.width - 0.5) * vw, (0.5 - gSlot.y / size.height) * vh, 0);
+    } else {
+      gl.position.set(c.gx * vw, c.gy * vh, -0.2);
+    }
+    gl.scale.setScalar(gScale * (0.92 + 0.08 * eff.go));
+    gl.visible = eff.go > 0.002;
 
     // where should the globe face?
     const species = getSpecies(slug ?? undefined);
@@ -188,10 +228,10 @@ export function SceneDirector({ specimen, globe, root }: Props) {
     if (species) {
       focus = species.range.centroid;
       const regions = species.rangeHistory?.regions;
-      if (c.hist > 0.5 && regions?.length) {
+      if (eff.hist > 0.5 && regions?.length) {
         focus = live.historyFocus >= 0 && regions[live.historyFocus] ? regions[live.historyFocus] : meanLatLon(regions);
       }
-      if (c.pins > 0.5 && species.sightings.places.length) {
+      if (eff.pins > 0.5 && species.sightings.places.length) {
         focus = activePlace >= 0 ? species.sightings.places[activePlace] : meanLatLon(species.sightings.places);
       }
     }
@@ -224,8 +264,11 @@ export function SceneDirector({ specimen, globe, root }: Props) {
 
     // parallax on the whole rig
     if (root.current && !reduced) {
-      root.current.rotation.y = damp(root.current.rotation.y, live.pointer.x * 0.07, 3, dt);
-      root.current.rotation.x = damp(root.current.rotation.x, -live.pointer.y * 0.045, 3, dt);
+      // no parallax in slot mode: the 3D must stay registered to its slot in the page
+      const px = slotMode ? 0 : live.pointer.x * 0.07;
+      const py = slotMode ? 0 : -live.pointer.y * 0.045;
+      root.current.rotation.y = damp(root.current.rotation.y, px, slotMode ? 12 : 3, dt);
+      root.current.rotation.x = damp(root.current.rotation.x, py, slotMode ? 12 : 3, dt);
     }
 
     // publish on-screen hit circles for drag-to-rotate (CSS px)
@@ -237,8 +280,8 @@ export function SceneDirector({ specimen, globe, root }: Props) {
     };
     const hs = interaction.hit.specimen;
     const hg = interaction.hit.globe;
-    hs.on = c.so > 0.35 && c.coll < 0.4;
-    hg.on = c.go > 0.6;
+    hs.on = eff.so > 0.35 && eff.coll < 0.4;
+    hg.on = eff.go > 0.6;
     if (hs.on) toScreen(sp, sScale * 0.48, hs);
     if (hg.on) toScreen(gl, gScale * 1.02, hg);
 
@@ -251,8 +294,8 @@ export function SceneDirector({ specimen, globe, root }: Props) {
 
     // uniforms
     stippleUniforms.uAlive.value = 1;
-    stippleUniforms.uCollapse.value = c.coll;
-    stippleUniforms.uOpacity.value = c.so;
+    stippleUniforms.uCollapse.value = eff.coll;
+    stippleUniforms.uOpacity.value = eff.so;
     stippleUniforms.uDpr.value = state.viewport.dpr;
     stippleUniforms.uSize.value = clamp(size.height / 900, 0.75, 1.3) * (mobile ? 1.35 : 1.35);
     stippleUniforms.uDrift.value = reduced ? 0 : 1;
@@ -260,14 +303,14 @@ export function SceneDirector({ specimen, globe, root }: Props) {
     const invert = themeNow === 'light' ? 1 : 0;
     stippleUniforms.uExposure.value = damp(stippleUniforms.uExposure.value, shown?.specimen.tone?.[themeNow] ?? 0, 4, dt);
     stippleUniforms.uToneInvert.value = damp(stippleUniforms.uToneInvert.value, invert, reduced ? 60 : 5, dt);
-    plinthUniforms.uOpacity.value = c.so * (1 - c.coll) * (page === 'species' ? 0.28 : 0);
+    plinthUniforms.uOpacity.value = eff.so * (1 - eff.coll) * (page === 'species' ? 0.28 : 0);
 
-    globeUniforms.uOpacity.value = c.go;
-    globeUniforms.uReveal.value = c.reveal;
-    globeUniforms.uPinOpacity.value = c.pins;
+    globeUniforms.uOpacity.value = eff.go;
+    globeUniforms.uReveal.value = eff.reveal;
+    globeUniforms.uPinOpacity.value = eff.pins;
     globeUniforms.uPinActive.value = activePlace;
-    globeUniforms.uHistory.value = page === 'species' ? c.hist : 0;
-    globeUniforms.uRipple.value = page === 'species' ? c.ripple * c.go : 0;
+    globeUniforms.uHistory.value = page === 'species' ? eff.hist : 0;
+    globeUniforms.uRipple.value = page === 'species' ? eff.ripple * eff.go : 0;
   });
 
   return null;

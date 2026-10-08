@@ -2,12 +2,19 @@ import type { Species } from '../../../data/types';
 import { STATUS_LABEL } from '../../../data';
 import { ChapterLabel } from '../../ui/ChapterLabel';
 import { Reveal } from '../../ui/Reveal';
+import { RotateIcon, StageSlot } from '../../ui/StageSlot';
 
 export function Hero({ sp }: { sp: Species }) {
   const long = sp.commonName.length > 16;
   return (
     <section className="chapter ch-hero" aria-labelledby="sp-title">
       <div className="stage hero">
+        <StageSlot kind="specimen" chapter="hero" className="m-slot--hero" reserve={30}>
+          <span className="slot-tag">
+            <RotateIcon /> Drag to spin
+          </span>
+          <span className="slot-tag">{sp.taxonomy.class}</span>
+        </StageSlot>
         <div className="hero__top">
           <Reveal split="fade" immediate delay={0.5}>
             <ChapterLabel n={1}>Specimen</ChapterLabel>

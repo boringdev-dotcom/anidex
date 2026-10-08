@@ -13,7 +13,6 @@ function Root() {
       <Suspense fallback={null}>
         <SceneRoot />
       </Suspense>
-      <div className="stage-band" aria-hidden="true" />
       <Header />
       <Outlet />
       <Grain />

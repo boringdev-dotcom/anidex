@@ -1166,7 +1166,7 @@
   /* Split layout: the top of the screen is a fixed 3D stage with a solid background,
      the story scrolls underneath it, so text and 3D never overlap. */
   .species {
-    padding-top: calc(var(--band-h) + 0.25rem);
+    padding-top: var(--header-h);
   }
 
   .species .chapter {
@@ -1183,7 +1183,7 @@
   }
 
   .species .ch-next {
-    min-height: calc(100svh - var(--band-h));
+    min-height: 0;
   }
 
   .split .col-text,
@@ -1470,19 +1470,28 @@
 }
 
 @media (min-width: 769px) {
+  /* desktop: heading, then the readout beside the story caption, then the full-width chart */
   .pop__head {
-    display: grid;
-    grid-template-columns: auto minmax(0, 22rem);
-    grid-template-areas: 'label label' 'title title' 'readout history';
-    align-items: start;
-    column-gap: 3.2rem;
-    row-gap: 2.4vh;
+    gap: 2.4vh;
     max-width: 54vw;
   }
-  .pop__head > :first-child { grid-area: label; }
-  .pop__head .pop__title { grid-area: title; }
-  .pop__head .pop__readout { grid-area: readout; }
-  .pop__head .history { grid-area: history; padding-top: 0.6rem; }
+  .pop__unit {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2vh;
+  }
+  .pop__row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 22rem);
+    align-items: start;
+    column-gap: 3.2rem;
+    max-width: 54vw;
+  }
+  .pop__row .history {
+    padding-top: 0.6rem;
+  }
 }
 
 @media (max-width: 768px) {
@@ -1696,72 +1705,60 @@
   }
 }
 
-/* ---------- mobile 3D stage band (species pages) ---------- */
 
-:root {
-  --band-h: 46svh;
-}
+/* ---------- phone: the 3D lives in slots inside each chapter ---------- */
 
-.stage-band {
+.m-slot {
   display: none;
 }
 
 @media (max-width: 768px) {
-  body:has(.species) .stage-band {
-    display: block;
-    position: fixed;
-    inset: 0 0 auto 0;
-    height: var(--band-h);
-    z-index: 2;
-    background: var(--bg);
-    touch-action: pan-y pinch-zoom;
-    transition: background-color var(--theme-dur) ease;
-  }
-
-  /* soft edge where the story slides under the stage */
-  body:has(.species) .stage-band::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 100%;
-    height: 1.5rem;
-    background: linear-gradient(var(--bg), transparent);
-    pointer-events: none;
-  }
-
-  /* the canvas draws above the band (it is transparent and ignores pointer events) */
+  /* the canvas draws above slot backgrounds (it never takes input; drag reads window events) */
   body:has(.species) .scene {
     z-index: 3;
   }
 
+  /* content scrolls under the header, so it needs a solid background */
   body:has(.species) .site-header {
-    background: transparent;
-  }
-}
-
-/* ---------- phone: population readout stays in view while scrubbing ---------- */
-
-@media (max-width: 768px) {
-  .pop__head {
-    display: contents;
+    background: var(--bg);
   }
 
-  .pop__readout {
+  .m-slot {
+    display: block;
+    position: relative;
+    flex: none;
+    width: calc(100% + 2 * var(--gutter));
+    margin: 0 calc(-1 * var(--gutter));
+  }
+
+  .m-slot--hero {
+    height: 54svh;
+    margin-top: -1rem;
+  }
+
+  .m-slot--range {
+    height: 46svh;
+    margin-top: -0.6rem;
+  }
+
+  .m-slot--next {
+    height: 30svh;
+  }
+
+  /* sticky slots stay at the top while their chapter scrolls underneath */
+  .m-slot--family,
+  .m-slot--sightings {
     position: sticky;
-    top: calc(var(--band-h) + 1.1rem);
-    z-index: 1;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-areas: 'num label' 'num delta';
-    column-gap: 0.9rem;
-    align-items: end;
-    padding: 0.5rem 0 0.7rem;
+    top: var(--header-h);
+    z-index: 2;
+    height: 34svh;
     background: var(--bg);
     transition: background-color var(--theme-dur) ease;
   }
 
-  .pop__readout::after {
+  .m-slot--family::after,
+  .m-slot--sightings::after,
+  .pop__unit::after {
     content: '';
     position: absolute;
     left: 0;
@@ -1772,28 +1769,158 @@
     pointer-events: none;
   }
 
+  .m-slot__overlay {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: 0.7rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  .slot-tag {
+    flex: none;
+    white-space: nowrap;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .slot-tag svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .m-slot__overlay > div {
+    min-width: 0;
+  }
+
+  .slot-title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    line-height: 1.1;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .slot-sub {
+    margin-top: 0.2rem;
+    font-size: 0.72rem;
+    color: var(--ink-2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .slot-sub.is-extinct {
+    color: var(--loss);
+  }
+
+  .hero .m-slot--hero + .hero__top {
+    margin-top: 0.4rem;
+  }
+
+  /* ---- population: one unit (globe, number, story, timeline) stays in view while you scroll ---- */
+  .species .ch-pop .stage {
+    min-height: 240svh;
+    justify-content: flex-start;
+  }
+
+  .pop__unit {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding-bottom: 0.4rem;
+    background: var(--bg);
+    transition: background-color var(--theme-dur) ease;
+  }
+
+  .m-slot--pop {
+    height: 29svh;
+  }
+
+  .pop__row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .pop__readout {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: 'num label' 'num delta';
+    column-gap: 0.9rem;
+    align-items: end;
+  }
+
   .pop__number {
     grid-area: num;
-    font-size: clamp(2.6rem, 12vw, 3.4rem);
+    font-size: clamp(2.5rem, 11.5vw, 3.3rem);
     padding-bottom: 0.08em;
   }
 
   .pop__readout > .label {
     grid-area: label;
-    font-size: 0.62rem;
+    font-size: 0.6rem;
   }
 
   .pop__delta {
     grid-area: delta;
     margin-top: 0.1rem;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
+  }
+
+  .history {
+    gap: 0.5rem;
   }
 
   .event {
-    min-height: 0;
+    min-height: 3.6rem;
+    padding-left: 0.8rem;
   }
 
   .event__place {
-    font-size: 1.45rem;
+    font-size: 1.25rem;
+    margin-top: 0.1rem;
+  }
+
+  .event__note {
+    font-size: 0.78rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .legend {
+    font-size: 0.6rem;
+  }
+
+  .pop__source {
+    margin-top: 1.5rem;
+  }
+
+  /* ---- sightings: tap or scroll the list, the pinned globe turns to each place ---- */
+  .place {
+    padding: 0.85rem 0 0.35rem;
+  }
+
+  .place.is-active .place__name {
+    color: var(--ink);
+  }
+
+  .places .place:not(.is-active) .place__name {
+    color: var(--ink-2);
   }
 }
