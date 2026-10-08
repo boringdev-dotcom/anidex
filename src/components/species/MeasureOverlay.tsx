@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import type { Species } from '../../data/types';
-import { live } from '../../store/useStore';
-import { fmtLength } from '../../lib/format';
+import { live, useStore } from '../../store/useStore';
+import { fmtHeight, fmtLength } from '../../lib/format';
 import { REFERENCES } from '../../three/specimen/Specimen';
 
 /** HTML labels pinned to the 3D measurement lines and the comparison figure. Positions come from the director. */
@@ -30,23 +30,25 @@ export function MeasureOverlay({ sp }: { sp: Species }) {
     return () => gsap.ticker.remove(tick);
   }, []);
 
+  const units = useStore((s) => s.units);
+  const userH = useStore((s) => s.userHeightM);
   const ph = sp.physical;
   if (!ph) return null;
-  const refInfo = REFERENCES[ph.compare];
+  const refLabel = ph.compare === 'human' ? `You · ${fmtHeight(userH, units)}` : `Adult hand · ${fmtLength([REFERENCES.hand.sizeM, REFERENCES.hand.sizeM], units)}`;
   return (
     <div className="measure" aria-hidden="true">
       <div ref={len} className="measure__tag measure__tag--len">
-        <span className="measure__v num">{fmtLength(ph.lengthM)}</span>
+        <span className="measure__v num">{fmtLength(ph.lengthM, units)}</span>
         <span className="measure__k">{ph.lengthLabel}</span>
       </div>
       {ph.heightM && ph.heightLabel && (
         <div ref={ht} className="measure__tag measure__tag--ht">
-          <span className="measure__v num">{fmtLength(ph.heightM)}</span>
+          <span className="measure__v num">{fmtLength(ph.heightM, units)}</span>
           <span className="measure__k">{ph.heightLabel}</span>
         </div>
       )}
       <div ref={ref} className="measure__tag measure__tag--ref" data-clamp="1">
-        <span className="measure__k">{refInfo.label}</span>
+        <span className="measure__k">{refLabel}</span>
       </div>
     </div>
   );

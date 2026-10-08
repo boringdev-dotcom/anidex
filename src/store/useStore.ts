@@ -1,4 +1,27 @@
 import { create } from 'zustand';
+import type { Units } from '../lib/format';
+
+const PREFS = 'anidex-prefs';
+function loadPrefs(): { units: Units; userHeightM: number } {
+  let units: Units = /^en-(US|LR|MM)\b/.test(navigator.language) ? 'imperial' : 'metric';
+  let userHeightM = 1.7;
+  try {
+    const p = JSON.parse(localStorage.getItem(PREFS) ?? '{}');
+    if (p.units === 'metric' || p.units === 'imperial') units = p.units;
+    if (typeof p.userHeightM === 'number' && p.userHeightM >= 0.9 && p.userHeightM <= 2.3) userHeightM = p.userHeightM;
+  } catch {
+    /* defaults */
+  }
+  return { units, userHeightM };
+}
+export function savePrefs(p: { units: Units; userHeightM: number }) {
+  try {
+    localStorage.setItem(PREFS, JSON.stringify(p));
+  } catch {
+    /* private mode */
+  }
+}
+const prefs = loadPrefs();
 
 export type Theme = 'light' | 'dark';
 export type Page = 'landing' | 'species';
@@ -20,6 +43,9 @@ interface State {
   rangeSource: string | null;
   /** "Compare to you": show a person or hand at true scale beside the hero specimen. */
   compare: boolean;
+  units: Units;
+  /** the visitor's height for "Compare to you", in metres */
+  userHeightM: number;
   /** True while a page transition is running. */
   transitioning: boolean;
 
@@ -39,6 +65,8 @@ export const useStore = create<State>((set) => ({
   activePlace: -1,
   transitioning: false,
   compare: false,
+  units: prefs.units,
+  userHeightM: prefs.userHeightM,
   rangeSource: null,
   setTheme: (theme) => set({ theme }),
   set: (p) => set(p),
@@ -74,3 +102,7 @@ export const live = {
   /** Region of the range history the globe should face while scrubbing, or -1. */
   historyFocus: -1,
 };
+
+useStore.subscribe((s, prev) => {
+  if (s.units !== prev.units || s.userHeightM !== prev.userHeightM) savePrefs({ units: s.units, userHeightM: s.userHeightM });
+});

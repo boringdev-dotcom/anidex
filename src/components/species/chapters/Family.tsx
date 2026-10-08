@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import type { Species } from '../../../data/types';
 import { variantKey } from '../../../data';
 import { live, useStore } from '../../../store/useStore';
-import { fmt } from '../../../lib/format';
+import { fmt, fmtLength, fmtWeight } from '../../../lib/format';
 import { smoothstep } from '../../../lib/math';
 import { ChapterLabel } from '../../ui/ChapterLabel';
 import { Reveal } from '../../ui/Reveal';
@@ -12,8 +12,6 @@ import { StageSlot } from '../../ui/StageSlot';
 const WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
 const GROUP: Record<string, string> = { mainland: 'Mainland · P. t. tigris', sunda: 'Sunda Islands · P. t. sondaica' };
 
-const range = ([a, b]: [number, number], unit: string, digits = 0) =>
-  a === b ? `${a.toFixed(digits)} ${unit}` : `${a.toFixed(digits)} to ${b.toFixed(digits)} ${unit}`;
 
 export function Family({ sp, n }: { sp: Species; n: number }) {
   const variants = useMemo(() => sp.variants ?? [], [sp]);
@@ -21,6 +19,7 @@ export function Family({ sp, n }: { sp: Species; n: number }) {
   const [sel, setSel] = useState(0);
   const override = useRef(false);
   const chapter = useStore((s) => s.chapter);
+  const units = useStore((s) => s.units);
   const CH = n - 1;
   const active = chapter === CH;
 
@@ -71,7 +70,7 @@ export function Family({ sp, n }: { sp: Species; n: number }) {
           <div>
             <p className="slot-title">{v.name}</p>
             <p className={`slot-sub${v.alive ? '' : ' is-extinct'}`}>
-              {v.lengthM[1].toFixed(1)} m ·{' '}
+              {fmtLength([v.lengthM[1], v.lengthM[1]], units)} ·{' '}
               {v.alive ? (v.wild?.estimate ? `≈ ${fmt(v.wild.estimate)} wild` : v.wild?.estimate === 0 ? 'none in the wild' : 'numbers unknown') : `gone by ${v.extinctBy ?? '?'}`}
             </p>
           </div>
@@ -140,11 +139,11 @@ export function Family({ sp, n }: { sp: Species; n: number }) {
             </div>
             <div>
               <dt className="label">Length (male)</dt>
-              <dd className="num">{range(v.lengthM, 'm', 1)}</dd>
+              <dd className="num">{fmtLength(v.lengthM, units)}</dd>
             </div>
             <div>
               <dt className="label">Weight (male)</dt>
-              <dd className="num">{range(v.weightKg, 'kg')}</dd>
+              <dd className="num">{fmtWeight(v.weightKg, units)}</dd>
             </div>
           </dl>
           <p className="variant-card__range muted">
