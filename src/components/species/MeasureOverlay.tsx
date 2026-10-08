@@ -19,7 +19,13 @@ export function MeasureOverlay({ sp }: { sp: Species }) {
         const show = a.on && o > 0.02;
         el.style.opacity = show ? String(o) : '0';
         // keep centred labels on screen (the reference can sit near the edge on phones)
-        const x = el.dataset.clamp ? Math.min(window.innerWidth - 56, Math.max(56, a.x)) : a.x;
+        // keep labels on screen: centred ones (the reference) by half their width, the height label
+        // (which starts at its line and reads rightward) by its full width
+        const x = el.dataset.clamp
+          ? Math.min(window.innerWidth - 56, Math.max(56, a.x))
+          : el.dataset.clampRight
+            ? Math.min(window.innerWidth - el.offsetWidth - 14, a.x)
+            : a.x;
         if (show) el.style.transform = `translate3d(${x.toFixed(1)}px, ${a.y.toFixed(1)}px, 0)`;
       };
       place(len.current, m.len, m.opacity);
@@ -42,7 +48,7 @@ export function MeasureOverlay({ sp }: { sp: Species }) {
         <span className="measure__k">{ph.lengthLabel}</span>
       </div>
       {ph.heightM && ph.heightLabel && (
-        <div ref={ht} className="measure__tag measure__tag--ht">
+        <div ref={ht} className="measure__tag measure__tag--ht" data-clamp-right="1">
           <span className="measure__v num">{fmtLength(ph.heightM, units)}</span>
           <span className="measure__k">{ph.heightLabel}</span>
         </div>

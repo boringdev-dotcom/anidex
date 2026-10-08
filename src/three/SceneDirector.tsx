@@ -228,8 +228,11 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
         // fit the specimen inside its slot: by width, or by height using the shape's own proportions
         const shapeH = Math.max(0.3, specimenInfo.maxY - specimenInfo.minY);
         // leave room at the front for the height line and its label
-        const fill = measureLocal.hasHt ? lerp(0.7, 0.6, cmp) : 0.84;
-        let px = Math.min((sSlot.w * fill) / lerp(1, Math.max(tw, 1), cmp), (sSlot.h * 0.8) / lerp(shapeH, th, cmp));
+        // the animal spins, so fit the whole circle its body sweeps (it can never cross the screen edge),
+        // with a little extra room for the measurement line at whichever end it is
+        const sweep = Math.max(0.3, 2 * specimenInfo.radius);
+        const fill = measureLocal.hasHt ? lerp(0.8, 0.6, cmp) : 0.88;
+        let px = Math.min((sSlot.w * fill) / lerp(sweep, Math.max(tw, 1), cmp), (sSlot.h * 0.8) / lerp(shapeH, th, cmp));
         // the compare page's pair is wider than one animal: fit its actual width
         if (page === 'compare') px = Math.min((sSlot.w * 0.9) / Math.max(0.3, specimenInfo.maxX - specimenInfo.minX), (sSlot.h * 0.72) / shapeH);
         if (sSlot.slot.chapter === 'family') px *= live.variantScale;
@@ -268,8 +271,7 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
         }
       }
     }
-    // phones: shift left so the height line's label (to its right) stays on screen
-    if (slotMode && measureLocal.hasHt) sp.position.x -= lerp(46, 30, cmp) * pxToWorld * heroW;
+    // (phones keep the animal centred on its spin axis; the height label is kept on screen by the overlay)
     // a reference taller than the animal grows upward from the shared floor: recentre vertically
     if (refKind !== 'hand') {
       const top = Math.max(specimenInfo.maxY, specimenInfo.minY + rh);
