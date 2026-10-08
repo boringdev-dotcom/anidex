@@ -15,7 +15,8 @@
     "dev:site": "vite",
     "dev:api": "node --watch server/index.ts",
     "ingest": "node --experimental-strip-types scripts/ingest/index.ts",
-    "research:backfill": "node --experimental-strip-types scripts/research/backfill-population.ts"
+    "research:backfill": "node --experimental-strip-types scripts/research/backfill-population.ts",
+    "og": "node --experimental-strip-types scripts/og.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.132.1",

@@ -125,7 +125,8 @@
       "url": "https://www.wwf.org.mx",
       "year": 2026
     },
-    "note": "Each year is the winter season that starts that December, so 2025 means 2025 to 2026. Surveys before 2004 were made by the Monarch Butterfly Biosphere Reserve. Researchers suggest about 6 hectares is needed for a resilient eastern population."
+    "note": "Each year is the winter season that starts that December, so 2025 means 2025 to 2026. Surveys before 2004 were made by the Monarch Butterfly Biosphere Reserve. Researchers suggest about 6 hectares is needed for a resilient eastern population.",
+    "scope": "index"
   },
   "status": {
     "iucn": "LC",

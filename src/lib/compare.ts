@@ -70,7 +70,8 @@ export interface StatRow {
   ladder?: boolean;
 }
 
-const latestCount = (sp: Species) => sp.population?.points.at(-1) ?? null;
+/** The latest global count (regional figures and density indexes don't compare across species). */
+export const latestCount = (sp: Species) => (sp.population && !sp.population.scope ? (sp.population.points.at(-1) ?? null) : null);
 
 export function statRows(a: Species, b: Species, units: Units): StatRow[] {
   const side = <T,>(v: T | null | undefined, num: (v: T) => number, text: (v: T) => string): StatSide =>

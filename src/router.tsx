@@ -4,6 +4,7 @@ import Landing from './components/landing/Landing';
 import SpeciesPage from './components/species/SpeciesPage';
 import Explore, { type ExploreData } from './components/explore/Explore';
 import ComparePage, { type CompareData } from './components/compare/ComparePage';
+import OgPage, { type OgData } from './components/og/OgPage';
 import { pairPath, parsePair } from './lib/compare';
 import { Header } from './components/ui/Header';
 import { Grain } from './components/ui/Grain';
@@ -76,6 +77,11 @@ async function compareLoader({ params }: LoaderFunctionArgs): Promise<CompareDat
   return { a, b, relA, relB };
 }
 
+async function ogLoader({ params }: LoaderFunctionArgs): Promise<OgData> {
+  const [sp, stats] = await Promise.all([params.slug ? fetchSpecies(params.slug).catch(() => null) : null, fetchStats().catch(() => null)]);
+  return { sp, stats };
+}
+
 export const router = createBrowserRouter([
   {
     element: <Root />,
@@ -87,6 +93,9 @@ export const router = createBrowserRouter([
       { path: '/explore', element: <Explore />, loader: exploreLoader },
       { path: '/compare', loader: () => redirect(DEFAULT_PAIR) },
       { path: '/compare/:pair', element: <ComparePage />, loader: compareLoader },
+      // social card renders for scripts/og.ts (not linked from the site)
+      { path: '/og', element: <OgPage />, loader: ogLoader },
+      { path: '/og/:slug', element: <OgPage />, loader: ogLoader },
       { path: '*', loader: () => redirect('/') },
     ],
   },

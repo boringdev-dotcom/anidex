@@ -7,13 +7,14 @@
 import './env.ts';
 import express, { type Request, type Response } from 'express';
 import compression from 'compression';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { api } from './api.ts';
 import { pool } from './db/pool.ts';
 import { migrate } from './db/migrate.ts';
 import { seedAuto, seedCurated } from './db/seed.ts';
 import { startWorker, stopWorker } from './jobs.ts';
+import { injectMeta, pageMeta } from './meta.ts';
 
 const root = join(import.meta.dirname, '..');
 const dist = join(root, 'dist');
@@ -55,8 +56,14 @@ app.use((req: Request, res: Response) => {
   if (req.method !== 'GET' && req.method !== 'HEAD') return res.status(405).end();
   if (/\.[a-z0-9]{2,5}$/i.test(req.path)) return res.status(404).type('text/plain').send('Not found');
   res.setHeader('Cache-Control', 'no-cache');
-  res.sendFile(join(dist, 'index.html'));
+  // link previews: the page's own title, description and card image
+  pageMeta(req.path)
+    .then((m) => res.type('html').send(injectMeta(indexHtml(), m)))
+    .catch(() => res.sendFile(join(dist, 'index.html')));
 });
+
+let indexCache: string | null = null;
+const indexHtml = () => (indexCache ??= readFileSync(join(dist, 'index.html'), 'utf8'));
 
 if (pool) {
   await migrate(pool);
