@@ -71,7 +71,7 @@ export function Vitals({ sp }: { sp: Species }) {
     { k: 'Weight', v: fmtWeight(ph.weightKg, units), note: ph.weightNote },
     ph.heightM ? { k: ph.heightLabel === 'standing' ? 'Height' : 'Shoulder', v: fmtLength(ph.heightM, units) } : null,
     ph.lengthLabel === 'standing height' ? null : { k: ph.lengthLabel === 'wingspan' ? 'Wingspan' : 'Length', v: fmtLength(ph.lengthM, units) },
-    { k: 'Lifespan', v: fmtYears(ph.lifespanYrs), note: 'in the wild' },
+    ph.lifespanYrs ? { k: 'Lifespan', v: fmtYears(ph.lifespanYrs), note: 'in the wild' } : null,
   ].filter(Boolean) as { k: string; v: string; note?: string }[];
 
   return (

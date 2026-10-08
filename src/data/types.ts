@@ -95,7 +95,8 @@ export interface Physical {
   heightLabel: 'at shoulder' | 'standing' | null;
   lengthM: [number, number];
   lengthLabel: string;
-  lifespanYrs: [number, number];
+  /** wild lifespan; absent when nobody knows (the ocean sunfish, the dodo) */
+  lifespanYrs?: [number, number];
   fact: string;
   compare: 'human' | 'hand';
   source: Source;
