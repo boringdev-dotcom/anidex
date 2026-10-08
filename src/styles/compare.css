@@ -181,6 +181,23 @@
   color: var(--ink-3);
 }
 
+/* the browser's own clear button is a large white cross on phones; Cancel and backspace do the job */
+.picker__input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.picker__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.picker__cancel {
+  display: none;
+}
+
 .picker__list {
   display: flex;
   flex-direction: column;
@@ -465,6 +482,54 @@
     grid-template-columns: 7rem 1fr;
   }
 
+  /* phones: the picker is a full-screen search sheet above everything (the 3D canvas too) */
+  .picker {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    padding: calc(env(safe-area-inset-top) + 1rem) var(--gutter) 1rem;
+    border: 0;
+    box-shadow: none;
+    gap: 0.8rem;
+    animation: picker-in 0.22s ease both;
+  }
+
+  .picker__cancel {
+    display: inline-block;
+    padding: 0.4rem 0;
+  }
+
+  .picker__input {
+    font-size: 1.9rem;
+  }
+
+  .picker__list {
+    flex: 1;
+    max-height: none;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .picker__opt {
+    padding: 0.85rem 0.2rem;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+  }
+
+  .picker__opt.is-active {
+    background: transparent;
+  }
+
+  .picker__name {
+    font-size: 1.05rem;
+  }
+
+  html.picker-open,
+  html.picker-open body {
+    overflow: hidden;
+  }
+
   .cmp__picker,
   .compare-with__panel {
     position: static;
@@ -685,4 +750,11 @@ body:has(.og-card) .grain {
 
 .og-card__stat {
   color: var(--ink-2);
+}
+
+@keyframes picker-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
 }
