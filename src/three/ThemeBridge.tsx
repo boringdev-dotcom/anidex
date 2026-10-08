@@ -24,6 +24,7 @@ export function ThemeBridge() {
     const k = 1 - Math.exp(-dt / 0.16);
     palette.uInk.value.lerp(paletteTargets.ink, k);
     palette.uBg.value.lerp(paletteTargets.bg, k);
+    palette.uAccent.value.lerp(paletteTargets.accent, k);
   });
   return null;
 }

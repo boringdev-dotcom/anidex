@@ -1,19 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { area, curveMonotoneX, line } from 'd3-shape';
 import type { PopulationPoint } from '../../../data/types';
-import { estimateAt } from './popMath';
+import { estimateAt, type RangeEvent } from './popMath';
 import { fmt, fmtCompact } from '../../../lib/format';
 
 interface Props {
   points: PopulationPoint[];
   year: number;
+  /** [first, last] year of the scrubber. */
+  domain: [number, number];
+  events: RangeEvent[];
   onScrub: (year: number) => void;
   label: string;
 }
 
 const M = { t: 46, r: 10, b: 34, l: 10 };
 
-export function Timeline({ points, year, onScrub, label }: Props) {
+export function Timeline({ points, year, domain, events, onScrub, label }: Props) {
   const wrap = useRef<HTMLDivElement>(null);
   const [w, setW] = useState(800);
   const [touched, setTouched] = useState(false);
@@ -28,8 +31,7 @@ export function Timeline({ points, year, onScrub, label }: Props) {
     return () => ro.disconnect();
   }, []);
 
-  const y0 = points[0].year;
-  const y1 = points[points.length - 1].year;
+  const [y0, y1] = domain;
   const max = Math.max(...points.map((p) => p.high ?? p.estimate)) * 1.08;
   const x = (yr: number) => M.l + ((yr - y0) / (y1 - y0 || 1)) * (w - M.l - M.r);
   const y = (v: number) => M.t + (1 - v / max) * (h - M.t - M.b);
@@ -135,6 +137,25 @@ export function Timeline({ points, year, onScrub, label }: Props) {
             {t}
           </text>
         ))}
+
+        {events
+          .filter((e) => e.year >= y0 && e.year <= y1)
+          .map((e) => (
+            <g
+              key={`${e.region}-${e.kind}`}
+              className={`tl-event tl-event--${e.kind}${e.year <= year ? ' is-past' : ''}`}
+              transform={`translate(${x(e.year)},${h - M.b})`}
+              onPointerDown={(ev) => {
+                ev.stopPropagation();
+                setTouched(true);
+                onScrub(e.year);
+              }}
+            >
+              <title>{`${e.year} · ${e.kind === 'lost' ? 'Lost' : 'Returned'}: ${e.name}`}</title>
+              <rect x={-7} y={-14} width={14} height={20} fill="transparent" />
+              {e.kind === 'lost' ? <circle cy={-5} r={3.4} /> : <path d="M0 -9 L3.6 -5 L0 -1 L-3.6 -5 Z" />}
+            </g>
+          ))}
 
         <g
           className="tl-handle"

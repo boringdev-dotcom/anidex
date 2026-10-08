@@ -7,87 +7,134 @@ import { fmtEstimate } from '../../../lib/format';
 import { ChapterLabel } from '../../ui/ChapterLabel';
 import { Reveal } from '../../ui/Reveal';
 import { Timeline } from './Timeline';
-import { estimateAt, maxEstimate } from './popMath';
+import { estimateAt, rangeCounts, rangeEvents, type RangeEvent } from './popMath';
 
 const CH = 2;
 
 export function Population({ sp }: { sp: Species }) {
   const pts = sp.population.points;
+  const events = useMemo(() => rangeEvents(sp), [sp]);
+  const single = pts.length < 2;
+  // the scrubber starts at the first count and runs to the later of the last count or the last range event
+  const lastCount = pts[pts.length - 1].year;
   const y0 = pts[0].year;
-  const y1 = pts[pts.length - 1].year;
-  const max = useMemo(() => maxEstimate(pts), [pts]);
-  const [year, setYear] = useState(y0);
+  const y1 = Math.max(lastCount, events[events.length - 1]?.year ?? -Infinity);
+  const [year, setYear] = useState(single ? y1 : y0);
   const override = useRef(false);
   const chapter = useStore((s) => s.chapter);
 
-  // leaving the chapter hands control back to scroll
   useEffect(() => {
     if (chapter !== CH) override.current = false;
   }, [chapter]);
 
-  // scroll drives the year until the reader grabs the handle
   useEffect(() => {
+    if (single) return;
     const tick = () => {
       if (override.current) return;
-      const t = smoothstep(0.04, 0.8, live.progress[CH]);
+      const t = smoothstep(0.04, 0.82, live.progress[CH]);
       const yr = Math.round(y0 + (y1 - y0) * t);
       setYear((prev) => (prev === yr ? prev : yr));
     };
     gsap.ticker.add(tick);
     return () => gsap.ticker.remove(tick);
-  }, [y0, y1]);
+  }, [y0, y1, single]);
 
-  const est = estimateAt(pts, year);
+  // latest range event at or before the scrubbed year drives the globe focus and the caption
+  const current: RangeEvent | null = useMemo(() => {
+    let e: RangeEvent | null = null;
+    for (const ev of events) if (ev.year <= year) e = ev;
+    return e;
+  }, [events, year]);
+
   useEffect(() => {
-    live.alive = Math.max(0.004, est / max);
-  }, [est, max]);
+    live.year = year;
+    live.historyFocus = current ? current.region : -1;
+  }, [year, current]);
   useEffect(
     () => () => {
-      live.alive = 1;
+      live.year = null;
+      live.historyFocus = -1;
     },
     [],
   );
 
+  const est = estimateAt(pts, year);
   const first = pts[0].estimate;
   const change = ((est - first) / first) * 100;
-  const peak = pts.reduce((a, b) => (b.estimate > a.estimate ? b : a));
-  const deltaText =
-    pts.length < 2
-      ? `Single global estimate, ${y0}`
-      : year === y0
-      ? `Earliest estimate in this series`
-      : `${change >= 0 ? '+' : '−'}${Math.abs(change).toFixed(change > -10 && change < 10 ? 1 : 0)}% since ${y0}`;
+  const deltaText = single
+    ? `Single global estimate, ${pts[0].year}`
+    : year <= pts[0].year
+      ? 'Earliest estimate in this series'
+      : change >= 300
+        ? `${(est / first).toFixed(est / first < 10 ? 1 : 0)}× since ${pts[0].year}`
+        : `${change >= 0 ? '+' : '−'}${Math.abs(change).toFixed(change > -10 && change < 10 ? 1 : 0)}% since ${pts[0].year}`;
+  const counts = rangeCounts(sp, year);
+  const hasHistory = events.length > 0 || (sp.rangeHistory?.regions.length ?? 0) > 0;
 
   return (
     <section className="chapter ch-pop" aria-labelledby="pop-title">
       <div className="stage pop">
         <div className="pop__head">
-          <div className="pop__intro">
-            <Reveal split="fade">
-              <ChapterLabel n={3}>Population over time</ChapterLabel>
-            </Reveal>
-            <Reveal as="h2" id="pop-title" className="display h2" split="lines">
-              {sp.status.trend === 'increasing' ? 'Slowly coming back' : sp.status.trend === 'decreasing' ? 'Still slipping away' : 'Holding on, for now'}
-            </Reveal>
-            <p className="pop__peak label">
-              Peak in series · <span className="num label--ink">{fmtEstimate(peak.estimate)}</span> in <span className="num">{peak.year}</span>
-            </p>
-          </div>
+          <Reveal split="fade">
+            <ChapterLabel n={3}>Population over time</ChapterLabel>
+          </Reveal>
+          <Reveal as="h2" id="pop-title" className="display h2 pop__title" split="lines">
+            {sp.status.trend === 'increasing' ? 'Slowly coming back' : sp.status.trend === 'decreasing' ? 'Still slipping away' : 'Holding on, for now'}
+          </Reveal>
           <div className="pop__readout" aria-live="polite" aria-atomic="true">
             <p className="display pop__number num">
               <span className="pop__approx">≈</span>
               {fmtEstimate(est)}
             </p>
             <p className="label">
-              {sp.population.unit} · in <span className="num label--ink">{year}</span>
+              {sp.population.unit} · in <span className="num label--ink">{Math.min(year, lastCount)}</span>
+              {year > lastCount ? ' · latest count' : ''}
             </p>
             <p className="pop__delta num">{deltaText}</p>
           </div>
+
+          {hasHistory && (
+            <div className="history">
+              {current ? (
+                <div className="event" key={`${current.region}-${current.kind}`} data-kind={current.kind}>
+                  <p className="label event__meta">
+                    <span className="event__kind">{current.kind === 'lost' ? 'Lost' : 'Returned'}</span>
+                    <span className="num">{current.year}</span>
+                  </p>
+                  <p className="event__place">{current.name}</p>
+                  <p className="event__note">{current.note}</p>
+                </div>
+              ) : (
+                <div className="event event--idle">
+                  <p className="label">Drag through time to see where they vanished and where they came back</p>
+                </div>
+              )}
+              <ul className="legend label" aria-label="Map legend">
+                <li>
+                  <i className="lg lg--present" aria-hidden="true" />
+                  Present <span className="num label--ink">{counts.present}</span>
+                </li>
+                <li>
+                  <i className="lg lg--lost" aria-hidden="true" />
+                  Lost <span className="num label--ink">{counts.lost}</span>
+                </li>
+                {events.some((e) => e.kind === 'gained') && (
+                  <li>
+                    <i className="lg lg--new" aria-hidden="true" />
+                    Returned
+                  </li>
+                )}
+              </ul>
+            </div>
+          )}
         </div>
-        {pts.length > 1 ? (
+
+        {!single ? (
           <Timeline
             points={pts}
             year={year}
+            domain={[y0, y1]}
+            events={events}
             label={sp.population.unit}
             onScrub={(y) => {
               override.current = true;
@@ -96,17 +143,25 @@ export function Population({ sp }: { sp: Species }) {
           />
         ) : (
           <div className="timeline timeline--single">
-            <p className="label">
-              One estimate, no time series. Nobody has counted this species consistently enough to draw a line.
-            </p>
+            <p className="label">One estimate, no time series. Nobody has counted this species consistently enough to draw a line.</p>
           </div>
         )}
         <p className="label pop__source">
-          Source:{' '}
+          Population:{' '}
           <a className="link label--ink" href={sp.population.source.url} target="_blank" rel="noreferrer">
             {sp.population.source.label}
           </a>
           {sp.population.note ? <span className="pop__note"> {sp.population.note}</span> : null}
+          {sp.rangeHistory && (
+            <>
+              {' '}
+              Range history:{' '}
+              <a className="link label--ink" href={sp.rangeHistory.source.url} target="_blank" rel="noreferrer">
+                {sp.rangeHistory.source.label}
+              </a>
+              {sp.rangeHistory.note ? <span className="pop__note"> {sp.rangeHistory.note}</span> : null}
+            </>
+          )}
         </p>
       </div>
     </section>

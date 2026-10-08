@@ -203,11 +203,10 @@ em {
   box-shadow: 0 0 0 3px color-mix(in oklab, currentColor 22%, transparent);
 }
 
-/* split-text line masks */
-.split-line {
-  overflow: clip;
-  padding-bottom: 0.08em;
-  margin-bottom: -0.08em;
+/* split-text line masks: pad the clip box so serif descenders (g, p, y) are not cut */
+.split-line-mask {
+  padding: 0.04em 0.06em 0.26em;
+  margin: -0.04em -0.06em -0.26em;
 }
 
 @media (prefers-reduced-motion: reduce) {

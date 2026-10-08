@@ -50,6 +50,67 @@
       "UG"
     ]
   },
+  "rangeHistory": {
+    "regions": [
+      {
+        "name": "Mikeno sector, DRC",
+        "lat": -1.45,
+        "lon": 29.42,
+        "radius": 0.5,
+        "note": "DRC's Mikeno sector, in Africa's first national park, is part of the Virunga gorillas' home."
+      },
+      {
+        "name": "Volcanoes NP, Rwanda",
+        "lat": -1.47,
+        "lon": 29.53,
+        "radius": 0.5,
+        "note": "Rwanda's Volcanoes park, where gorillas have been studied since Dian Fossey began in 1967."
+      },
+      {
+        "name": "Mgahinga, Uganda",
+        "lat": -1.37,
+        "lon": 29.64,
+        "radius": 0.5,
+        "note": "Mgahinga's Nyakagezi group crosses freely between Uganda, Rwanda and DRC."
+      },
+      {
+        "name": "Bwindi",
+        "lat": -1.05,
+        "lon": 29.7,
+        "radius": 0.5,
+        "note": "Bwindi's 2011 census found at least 400 gorillas, up from 302 counted in 2006."
+      },
+      {
+        "name": "Sarambwe, DRC",
+        "lat": -1.08,
+        "lon": 29.58,
+        "radius": 0.5,
+        "note": "DRC's small Sarambwe reserve adjoins Bwindi and shares its gorilla population."
+      },
+      {
+        "name": "Pyrethrum clearance",
+        "lat": -1.55,
+        "lon": 29.62,
+        "radius": 0.5,
+        "to": 1973,
+        "note": "Between 1969 and 1973, part of Rwanda's Volcanoes park was cleared to grow pyrethrum."
+      },
+      {
+        "name": "Mikeno clearance",
+        "lat": -1.38,
+        "lon": 29.48,
+        "radius": 0.5,
+        "to": 2004,
+        "note": "In 2004 settlers illegally cleared about 15 square km of prime gorilla forest in the Mikeno sector."
+      }
+    ],
+    "source": {
+      "label": "IUCN Red List: Gorilla beringei ssp. beringei (Hickey et al. 2020)",
+      "url": "https://www.iucnredlist.org/species/39999/176396749",
+      "year": 2020
+    },
+    "note": "Mountain gorillas have never been reintroduced; their range changes are habitat losses at the edge of two small protected blocks."
+  },
   "population": {
     "unit": "mountain gorillas in the Virunga Massif",
     "points": [

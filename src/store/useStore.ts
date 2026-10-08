@@ -51,10 +51,10 @@ export const live = {
   /** In-chapter progress 0..1 for each chapter while it is held. */
   progress: new Float32Array(16),
   chapterCount: 0,
-  /** Fraction of the population maximum alive at the scrubbed year (0..1). */
-  alive: 1,
   /** Normalised pointer position -1..1. */
   pointer: { x: 0, y: 0 },
-  /** Lat/lon the globe should face. */
-  globeFocus: { lat: 0, lon: 0 },
+  /** Year currently shown by the population scrubber, or null outside that chapter. */
+  year: null as number | null,
+  /** Region of the range history the globe should face while scrubbing, or -1. */
+  historyFocus: -1,
 };

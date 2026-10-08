@@ -4,7 +4,7 @@ A field guide to the animals we might lose. Search a species and scroll through 
 
 1. **Specimen.** A 3D stipple study of the animal.
 2. **Where they live.** A dotted globe with the wild range from live GBIF data.
-3. **Population over time.** A draggable timeline. The specimen dissolves as the population falls.
+3. **Population over time.** A draggable timeline. As you scrub, the globe shows where the species was lost and where it came back, with a caption for each event.
 4. **Vulnerability.** The IUCN Red List category, trend and main threats.
 5. **Where and when to see them.** Places on the globe and the best months of the year.
 6. **How you can help.** Concrete actions and organisations to support.
@@ -36,8 +36,9 @@ Vite, React 19, TypeScript, React Three Fiber on three.js, GSAP with ScrollTrigg
 
 - **One canvas.** `src/three/SceneRoot.tsx` mounts a single fixed WebGL canvas behind the page. It never unmounts, so morphs carry across route changes.
 - **Scroll drives the scene.** Each chapter is a tall section with a sticky stage. `src/scroll/useChapterTracking.ts` turns scroll into a continuous chapter position. `src/three/SceneDirector.tsx` blends a pose per chapter for the specimen and the globe.
-- **One point cloud.** `src/three/stipple/` holds a single `Points` object. Its shader handles the morph between shapes, the population dissolve, and the collapse into a dot on the globe.
+- **One point cloud.** `src/three/stipple/` holds a single `Points` object. Its shader handles the morph between shapes and the collapse into a dot on the globe.
 - **Theme tokens.** `src/styles/tokens.css` is the only place colours live. `src/three/ThemeBridge.tsx` reads the same tokens and fades the WebGL colours to match.
+- **Range history.** Each species has curated `rangeHistory` regions with the year they were lost (`to`) or regained (`from`). `src/data/rangeState.ts` turns a year into present, lost or not yet. If `from` is later than `to`, the area was lost and later returned.
 - **Range layer.** `src/lib/gbif.ts` stitches two GBIF density tiles into a world texture. It falls back to raw occurrence records, then to the curated bounding box. The globe masks records outside the curated wild range, which hides zoo animals.
 
 ## Add a species
@@ -64,6 +65,7 @@ The model is sampled into the same point cloud, so every animation keeps working
 - **Ranges:** [GBIF](https://www.gbif.org) occurrence density maps, fetched live.
 - **Status:** the [IUCN Red List](https://www.iucnredlist.org). Each species links to its assessment.
 - **Populations:** sourced per species. The source and any caveats appear under each chart.
+- **Range history:** curated per species from the IUCN Red List, specialist group reports and peer-reviewed papers. Circles are approximate areas, not exact boundaries.
 - **Land outlines:** [Natural Earth](https://www.naturalearthdata.com), public domain.
 
 Population series mix methods across decades. Each species notes where early figures are back-estimates or not directly comparable.

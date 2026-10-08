@@ -18,6 +18,23 @@
     "regions": ["Central Kalimantan", "West Kalimantan", "East Kalimantan", "Sabah", "Sarawak"],
     "countries": ["ID", "MY"]
   },
+  "rangeHistory": {
+    "regions": [
+      { "name": "Sabangau", "lat": -2.5, "lon": 113.8, "radius": 0.5, "note": "The Sabangau peat swamp holds the largest single population, about 6,900 orangutans by a 2003 estimate." },
+      { "name": "Mawas, ex Mega Rice area", "lat": -2, "lon": 114.7, "radius": 0.5, "note": "From 1995 the Mega Rice Project drained and cleared peat forest; orangutans survive in its remnants." },
+      { "name": "Tanjung Puting", "lat": -2.9, "lon": 111.9, "radius": 0.6, "note": "Orangutan research and rehabilitation at Camp Leakey began in 1971." },
+      { "name": "Gunung Palung", "lat": -1.2, "lon": 110.1, "radius": 0.5, "note": "Gunung Palung National Park in West Kalimantan protects lowland and hill forest orangutans." },
+      { "name": "Batang Ai, Lanjak Entimau", "lat": 1.4, "lon": 112.2, "radius": 0.8, "note": "Sarawak's main population, where Iban taboos against killing orangutans helped them survive." },
+      { "name": "Lower Kinabatangan", "lat": 5.5, "lon": 118.3, "radius": 0.4, "note": "Orangutans survive in riverside forest fragments along Sabah's Kinabatangan River." },
+      { "name": "Ulu Segama Malua", "lat": 5, "lon": 117.6, "radius": 0.4, "note": "Logged forests of eastern Sabah that hold one of the state's largest orangutan populations." },
+      { "name": "Kutai", "lat": 0.4, "lon": 117.3, "radius": 0.4, "note": "Fires in 1983 and 1998 burned much of Kutai National Park and sharply cut its orangutans." },
+      { "name": "Sungai Wain", "lat": -1.1, "lon": 116.8, "radius": 0.3, "from": 1992, "note": "From 1992 to 1997, 82 ex-captive orangutans were released here; 1998 fires left about 15." },
+      { "name": "Bukit Batikap", "lat": 0.3, "lon": 113.4, "radius": 0.4, "from": 2012, "note": "BOS Foundation began releasing rehabilitated orangutans into Bukit Batikap forest in 2012." },
+      { "name": "Kehje Sewen", "lat": 1, "lon": 116.5, "radius": 0.4, "from": 2012, "note": "BOS Foundation began releasing rehabilitated orangutans into Kehje Sewen forest in 2012." }
+    ],
+    "source": { "label": "IUCN Red List: Pongo pygmaeus (Ancrenaz et al. 2016)", "url": "https://www.iucnredlist.org/species/17975/259043172", "year": 2016 },
+    "note": "Losses were gradual thinning rather than dated local extinctions, with over 100,000 orangutans lost from 1999 to 2015 (Voigt et al. 2018)."
+  },
   "population": {
     "unit": "wild Bornean orangutans (modelled total)",
     "points": [

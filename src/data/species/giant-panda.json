@@ -54,6 +54,75 @@
       "CN"
     ]
   },
+  "rangeHistory": {
+    "regions": [
+      {
+        "name": "Minshan",
+        "lat": 32.8,
+        "lon": 104,
+        "radius": 1,
+        "note": "Minshan holds the most pandas; a bamboo die-off there in the mid-1970s left at least 138 dead."
+      },
+      {
+        "name": "Qionglai",
+        "lat": 30.9,
+        "lon": 103,
+        "radius": 0.9,
+        "note": "Qionglai includes Wolong, where the first captive-bred panda was released into the wild in 2006."
+      },
+      {
+        "name": "Qinling",
+        "lat": 33.7,
+        "lon": 108,
+        "radius": 0.9,
+        "note": "The Qinling pandas, on the northern edge of the range, are a genetically distinct population."
+      },
+      {
+        "name": "Liangshan",
+        "lat": 28.3,
+        "lon": 103.5,
+        "radius": 0.7,
+        "note": "Liangshan is the southernmost of the six mountain ranges where wild pandas survive."
+      },
+      {
+        "name": "Daxiangling",
+        "lat": 29.6,
+        "lon": 102.9,
+        "radius": 0.5,
+        "note": "Daxiangling holds one of the smaller, more isolated panda populations."
+      },
+      {
+        "name": "Xiaoxiangling",
+        "lat": 28.9,
+        "lon": 102.3,
+        "radius": 0.5,
+        "note": "Tao Tao, a captive-born male, was released at Liziping here in 2012 to bolster a tiny population."
+      },
+      {
+        "name": "Fengxian, west Qinling",
+        "lat": 34,
+        "lon": 106.6,
+        "radius": 0.5,
+        "to": 1970,
+        "from": 2006,
+        "note": "Unseen in Fengxian county since before the 1970s, pandas were confirmed back there in 2006."
+      },
+      {
+        "name": "Hubei, Shennongjia",
+        "lat": 31.5,
+        "lon": 110.4,
+        "radius": 1.2,
+        "to": 1900,
+        "note": "Pandas still lived in Hubei into the 1800s but later vanished from the Shennongjia area."
+      }
+    ],
+    "source": {
+      "label": "IUCN Red List: Ailuropoda melanoleuca (Swaisgood, Wang and Wei 2016)",
+      "url": "https://www.iucnredlist.org/species/712/121745669",
+      "year": 2016
+    },
+    "note": "Older losses across Hunan, Hubei, Guizhou and Yunnan are poorly dated; the Hubei year is approximate."
+  },
   "population": {
     "unit": "wild giant pandas in China (national surveys)",
     "points": [

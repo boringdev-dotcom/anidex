@@ -66,6 +66,99 @@
       "UZ"
     ]
   },
+  "rangeHistory": {
+    "regions": [
+      {
+        "name": "Nepal Himalaya",
+        "lat": 28.8,
+        "lon": 83.5,
+        "radius": 2.5,
+        "note": "Nepal's high Himalaya held an estimated 300 to 500 snow leopards in 2003."
+      },
+      {
+        "name": "Ladakh",
+        "lat": 34,
+        "lon": 77.5,
+        "radius": 2,
+        "note": "Ladakh's Hemis National Park is one of the best studied snow leopard strongholds."
+      },
+      {
+        "name": "Qinghai Plateau",
+        "lat": 33.5,
+        "lon": 94,
+        "radius": 5,
+        "note": "China holds about 60 percent of the range; Schaller estimated about 650 in Qinghai in the 1980s."
+      },
+      {
+        "name": "Mongolian Altai",
+        "lat": 46.5,
+        "lon": 93.5,
+        "radius": 3,
+        "note": "Mongolia's Altai and Gobi ranges held an estimated 500 to 1,000 snow leopards in 2003."
+      },
+      {
+        "name": "Kyrgyz Tien Shan",
+        "lat": 41.6,
+        "lon": 75.5,
+        "radius": 2,
+        "note": "Kyrgyzstan's Tien Shan held an estimated 150 to 500 snow leopards in 2003."
+      },
+      {
+        "name": "Pamir",
+        "lat": 38.5,
+        "lon": 73,
+        "radius": 2,
+        "note": "Tajikistan's Pamir held an estimated 180 to 220 snow leopards in 2003."
+      },
+      {
+        "name": "Russian Altai",
+        "lat": 50,
+        "lon": 88,
+        "radius": 1.5,
+        "note": "Poaching cut Altai Republic snow leopards from about 40 to 10 to 15 by 2008; patrols since 2011 aid recovery."
+      },
+      {
+        "name": "Karatau, Kazakhstan",
+        "lat": 43.5,
+        "lon": 69.5,
+        "radius": 1,
+        "to": 1949,
+        "note": "Snow leopards vanished from Kazakhstan's Karatau ridge; the last were recorded in the 1940s."
+      },
+      {
+        "name": "Helan Mountains",
+        "lat": 38.8,
+        "lon": 105.9,
+        "radius": 0.8,
+        "to": 1959,
+        "from": 2020,
+        "note": "Unconfirmed in China's Helan Mountains since the 1950s, a snow leopard was camera-trapped there in 2020."
+      },
+      {
+        "name": "Mazong Shan, Gansu",
+        "lat": 41.8,
+        "lon": 97,
+        "radius": 0.8,
+        "to": 1996,
+        "note": "Surveys reported snow leopards extirpated from Gansu's Mazong Shan by 1996."
+      },
+      {
+        "name": "Tomur, Xinjiang",
+        "lat": 42,
+        "lon": 80.2,
+        "radius": 0.8,
+        "to": 1989,
+        "from": 2004,
+        "note": "After herders killed over 10 in 1989, Tomur's cats nearly vanished; 2004-05 surveys found them back."
+      }
+    ],
+    "source": {
+      "label": "Snow Leopard Survival Strategy (McCarthy and Chapron 2003)",
+      "url": "https://snowleopardnetwork.org/wp-content/uploads/2020/04/slss_full_2003.pdf",
+      "year": 2003
+    },
+    "note": "Snow leopards are hard to survey, so gaps in records are not always true absences; Tomur's 1989 loss was a near disappearance."
+  },
   "population": {
     "unit": "snow leopards worldwide (expert range-wide estimates)",
     "points": [

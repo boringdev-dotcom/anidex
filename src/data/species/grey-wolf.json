@@ -280,5 +280,109 @@
       }
     ]
   },
-  "next": "bengal-tiger"
+  "next": "bengal-tiger",
+  "rangeHistory": {
+    "regions": [
+      {
+        "name": "Northern Minnesota",
+        "lat": 47.6,
+        "lon": -93,
+        "radius": 1.5,
+        "note": "Minnesota kept the last large wolf population in the lower 48 states and seeded the Great Lakes return."
+      },
+      {
+        "name": "Northern Wisconsin",
+        "lat": 45.9,
+        "lon": -90.5,
+        "radius": 1.2,
+        "from": 1975,
+        "note": "Wiped out by 1960, wolves crossed back into Wisconsin from Minnesota in the mid-1970s."
+      },
+      {
+        "name": "Upper Peninsula, Michigan",
+        "lat": 46.3,
+        "lon": -87,
+        "radius": 1.2,
+        "from": 1991,
+        "note": "A pair in Michigan's Upper Peninsula produced the first verified pups there in 1991."
+      },
+      {
+        "name": "Yellowstone",
+        "lat": 44.6,
+        "lon": -110.5,
+        "radius": 1.2,
+        "from": 1995,
+        "note": "14 wolves from Alberta were released in Yellowstone in 1995; its last pack was killed in 1926."
+      },
+      {
+        "name": "Blue Range, Arizona",
+        "lat": 33.6,
+        "lon": -109.1,
+        "radius": 1.2,
+        "from": 1998,
+        "note": "The first 11 captive-bred Mexican wolves were released in the Blue Range in 1998."
+      },
+      {
+        "name": "Colorado",
+        "lat": 40.1,
+        "lon": -106.1,
+        "radius": 1,
+        "from": 2023,
+        "note": "Colorado released its first reintroduced wolves in Grand County in December 2023."
+      },
+      {
+        "name": "Chihuahua and Durango",
+        "lat": 26,
+        "lon": -106,
+        "radius": 2.5,
+        "to": 1980,
+        "note": "By 1980 the last few wild Mexican wolves in Chihuahua and Durango had been caught for breeding."
+      },
+      {
+        "name": "Italian Apennines",
+        "lat": 42,
+        "lon": 13.8,
+        "radius": 2,
+        "note": "About 100 wolves survived in the Apennines in the 1970s and later spread north into the Alps."
+      },
+      {
+        "name": "Mercantour, France",
+        "lat": 44.1,
+        "lon": 7.2,
+        "radius": 0.8,
+        "from": 1992,
+        "note": "Two wolves from Italy were seen in France's Mercantour National Park in 1992."
+      },
+      {
+        "name": "Lusatia, Germany",
+        "lat": 51.4,
+        "lon": 14.6,
+        "radius": 0.8,
+        "from": 2000,
+        "note": "In 2000 wolves from Poland raised Germany's first wild pups in about 150 years."
+      },
+      {
+        "name": "Jutland, Denmark",
+        "lat": 56.4,
+        "lon": 8.6,
+        "radius": 1,
+        "from": 2012,
+        "note": "A wolf found in Thy in 2012 was Denmark's first since 1813; a pack settled in Jutland in 2017."
+      },
+      {
+        "name": "Varmland, Sweden",
+        "lat": 60,
+        "lon": 13,
+        "radius": 1.5,
+        "from": 1983,
+        "note": "Functionally extinct in Scandinavia by the 1960s, wolves bred again in Varmland in 1983."
+      }
+    ],
+    "source": {
+      "label": "IUCN Red List: Canis lupus",
+      "url": "https://www.iucnredlist.org/species/3746/226161232",
+      "year": 2026
+    },
+    "note": "A selection of documented losses and returns; wolves also came back to Idaho, the Netherlands, Belgium and more."
+  }
 }

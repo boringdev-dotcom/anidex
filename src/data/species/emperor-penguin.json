@@ -208,5 +208,87 @@
       }
     ]
   },
-  "next": "axolotl"
+  "next": "axolotl",
+  "rangeHistory": {
+    "regions": [
+      {
+        "name": "Halley Bay",
+        "lat": -75.6,
+        "lon": -27.5,
+        "radius": 0.5,
+        "to": 2016,
+        "note": "Breeding failed almost totally at Halley Bay from 2016 to 2018; it had been the second largest colony."
+      },
+      {
+        "name": "Dion Islands",
+        "lat": -67.9,
+        "lon": -68.7,
+        "radius": 0.5,
+        "to": 2009,
+        "note": "The Dion Islands colony, about 150 pairs in 1948, had vanished by 2009."
+      },
+      {
+        "name": "Dawson-Lambton",
+        "lat": -76.1,
+        "lon": -26.7,
+        "radius": 0.5,
+        "note": "Grew from 1,280 to 14,612 pairs between 2015 and 2018 as Halley Bay birds moved in."
+      },
+      {
+        "name": "Atka Bay",
+        "lat": -70.6,
+        "lon": -8.1,
+        "radius": 0.6,
+        "note": "A large colony on fast ice near the German Neumayer station."
+      },
+      {
+        "name": "Snow Hill Island",
+        "lat": -64.5,
+        "lon": -57.4,
+        "radius": 0.6,
+        "note": "One of the most northerly colonies, on sea ice off the Antarctic Peninsula."
+      },
+      {
+        "name": "Bellingshausen Sea",
+        "lat": -72,
+        "lon": -79,
+        "radius": 4,
+        "note": "Four of the five colonies here lost all their chicks when sea ice broke up early in 2022."
+      },
+      {
+        "name": "Cape Washington",
+        "lat": -74.6,
+        "lon": 165.4,
+        "radius": 0.6,
+        "note": "One of the largest colonies, on fast ice in the Ross Sea."
+      },
+      {
+        "name": "Coulman Island",
+        "lat": -73.4,
+        "lon": 169.6,
+        "radius": 0.6,
+        "note": "One of the largest known colonies, in the western Ross Sea."
+      },
+      {
+        "name": "Pointe Geologie",
+        "lat": -66.7,
+        "lon": 140,
+        "radius": 0.6,
+        "note": "Studied since the 1950s; numbers here halved in the late 1970s during a warm spell."
+      },
+      {
+        "name": "Auster",
+        "lat": -67.4,
+        "lon": 64,
+        "radius": 0.6,
+        "note": "A large East Antarctic colony near Mawson station."
+      }
+    ],
+    "source": {
+      "label": "Fretwell et al. 2012, PLoS ONE 7: e33751 (first global satellite census)",
+      "url": "https://doi.org/10.1371/journal.pone.0033751",
+      "year": 2012
+    },
+    "note": "Colonies can shift between years; a lost marker means the colony collapsed or vanished, not that every bird died."
+  }
 }

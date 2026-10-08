@@ -61,6 +61,7 @@
   --st-VU: oklch(var(--status-l) var(--status-c) var(--h-VU));
   --st-EN: oklch(var(--status-l) var(--status-c) var(--h-EN));
   --st-CR: oklch(var(--status-l) calc(var(--status-c) + 0.03) var(--h-CR));
+  --loss: var(--st-CR);
   --st-EW: var(--ink-2);
   --st-EX: var(--ink-3);
 }

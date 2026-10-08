@@ -1,4 +1,5 @@
-import type { PopulationPoint } from '../../../data/types';
+import type { PopulationPoint, Species } from '../../../data/types';
+import { regionState } from '../../../data/rangeState';
 
 export function estimateAt(points: PopulationPoint[], year: number): number {
   if (!points.length) return 0;
@@ -17,6 +18,34 @@ export function estimateAt(points: PopulationPoint[], year: number): number {
   return a.estimate + ((b.estimate - a.estimate) * (year - a.year)) / (b.year - a.year);
 }
 
-export function maxEstimate(points: PopulationPoint[]): number {
-  return Math.max(...points.map((p) => p.estimate), 1);
+export interface RangeEvent {
+  year: number;
+  kind: 'lost' | 'gained';
+  region: number;
+  name: string;
+  note: string;
+}
+
+/** Every dated change in the species' range, oldest first. */
+export function rangeEvents(sp: Species): RangeEvent[] {
+  const out: RangeEvent[] = [];
+  (sp.rangeHistory?.regions ?? []).slice(0, 16).forEach((r, i) => {
+    if (r.from != null) out.push({ year: r.from, kind: 'gained', region: i, name: r.name, note: r.note });
+    if (r.to != null) out.push({ year: r.to, kind: 'lost', region: i, name: r.name, note: r.note });
+  });
+  return out.sort((a, b) => a.year - b.year || (a.kind === 'lost' ? -1 : 1));
+}
+
+/** Occupied / lost counts at a given year. */
+export function rangeCounts(sp: Species, year: number) {
+  let present = 0;
+  let lost = 0;
+  let total = 0;
+  for (const r of sp.rangeHistory?.regions.slice(0, 16) ?? []) {
+    const st = regionState(r, year);
+    if (st !== 0) total++;
+    if (st === -1) lost++;
+    if (st === 1) present++;
+  }
+  return { present, lost, total };
 }

@@ -19,6 +19,24 @@
     "regions": ["Kunene and Etosha", "KwaZulu-Natal", "Laikipia and Tsavo", "Zimbabwe Lowveld", "Serengeti and Ngorongoro"],
     "countries": ["ZA", "NA", "KE", "ZW", "TZ", "ZM", "MW", "BW", "SZ", "RW", "MZ", "AO"]
   },
+  "rangeHistory": {
+    "regions": [
+      { "name": "Kunene and Etosha", "lat": -19.5, "lon": 14.5, "radius": 2, "note": "Desert-adapted black rhinos roam unfenced communal land in Namibia's Kunene region." },
+      { "name": "KwaZulu-Natal parks", "lat": -28.2, "lon": 31.9, "radius": 1, "note": "Zululand reserves kept black rhinos and sent 20 to restock Kruger, where they had died out, in 1971." },
+      { "name": "Laikipia and Tsavo", "lat": -1, "lon": 37.5, "radius": 2.5, "note": "Kenya conserves about 75% of all eastern black rhinos, mostly in guarded sanctuaries." },
+      { "name": "Zimbabwe Lowveld", "lat": -21, "lon": 31, "radius": 1.5, "note": "Lowveld conservancies such as Save Valley and Bubye Valley hold most of Zimbabwe's black rhinos." },
+      { "name": "Zakouma, Chad", "lat": 10.9, "lon": 19.8, "radius": 1.5, "to": 1972, "note": "The last black rhino in Chad was recorded in Zakouma in 1972." },
+      { "name": "Northern Cameroon", "lat": 8.4, "lon": 14, "radius": 1.5, "to": 2011, "note": "Surveys in 2006 found no sign; the western black rhino was declared extinct in 2011." },
+      { "name": "Mwabvi, Malawi", "lat": -16.7, "lon": 35, "radius": 0.6, "to": 1989, "note": "Malawi's last native black rhinos left signs at Mwabvi in 1989; the species was declared extinct in 1990." },
+      { "name": "Liwonde, Malawi", "lat": -14.8, "lon": 35.3, "radius": 0.6, "from": 1993, "note": "Two black rhinos from Kruger brought the species back to Malawi at Liwonde in 1993." },
+      { "name": "South Luangwa, Zambia", "lat": -13.1, "lon": 31.6, "radius": 0.8, "to": 1998, "note": "Heavy poaching in the 1980s emptied the Luangwa Valley; Zambia declared them extinct in 1998." },
+      { "name": "North Luangwa, Zambia", "lat": -11.8, "lon": 32.2, "radius": 0.6, "from": 2003, "note": "Five black rhinos from South Africa returned the species to Zambia at North Luangwa in 2003." },
+      { "name": "Rwanda", "lat": -1.5, "lon": 30.6, "radius": 0.5, "to": 2007, "note": "Poachers wiped out the last black rhinos in Akagera; the final confirmed sighting was in 2007." },
+      { "name": "Akagera return", "lat": -1.9, "lon": 30.8, "radius": 0.5, "from": 2017, "note": "18 eastern black rhinos from South Africa were reintroduced to Akagera in 2017, ten years on." }
+    ],
+    "source": { "label": "IUCN Red List: Diceros bicornis (Emslie 2020)", "url": "https://www.iucnredlist.org/species/6557/152728945", "year": 2020 },
+    "note": "Where rhinos were lost and later returned, the loss and the reintroduction are shown as two nearby markers."
+  },
   "population": {
     "unit": "wild black rhinos in Africa (continental estimate)",
     "points": [

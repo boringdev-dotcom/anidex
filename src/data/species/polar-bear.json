@@ -19,6 +19,21 @@
     "regions": ["Canadian Arctic Archipelago", "Hudson Bay", "Beaufort and Chukchi Seas", "Barents Sea and Svalbard", "Greenland", "Russian Arctic"],
     "countries": ["CA", "US", "RU", "GL", "SJ"]
   },
+  "rangeHistory": {
+    "regions": [
+      { "name": "Western Hudson Bay", "lat": 58.8, "lon": -93, "radius": 2.5, "note": "About 618 bears in 2021, roughly half the 1987 estimate, as ice-free seasons lengthened." },
+      { "name": "Southern Hudson Bay", "lat": 55, "lon": -84.5, "radius": 2.5, "note": "The southernmost polar bears, summering on the Ontario coast and islands of James Bay." },
+      { "name": "Southern Beaufort Sea", "lat": 71.2, "lon": -145, "radius": 3, "note": "Low survival from 2004 to 2006 cut numbers by 25 to 50%, to about 900 bears in 2010." },
+      { "name": "Chukchi Sea", "lat": 70.5, "lon": -172, "radius": 3.5, "note": "Shared by the US and Russia, about 2,937 bears in 2016 and judged likely stable." },
+      { "name": "M'Clintock Channel", "lat": 71.5, "lon": -101, "radius": 2, "note": "Recovering from overhunting, rising from about 284 bears around 2000 to 716 by 2016." },
+      { "name": "Baffin Bay", "lat": 72.5, "lon": -66, "radius": 3, "note": "Shared by Nunavut and Greenland, estimated at about 2,826 bears in 2013." },
+      { "name": "Southeast Greenland", "lat": 63.5, "lon": -41.5, "radius": 2, "note": "Recognised in 2022 as a distinct group that hunts from glacier ice in fjords." },
+      { "name": "Svalbard and Barents Sea", "lat": 77.5, "lon": 20, "radius": 4, "note": "A 2015 survey found about 973 bears in the Norwegian Barents Sea, with no decline detected yet." },
+      { "name": "Kara and Laptev Seas", "lat": 76.5, "lon": 95, "radius": 8, "note": "Bears in the Russian Kara and Laptev seas have never been fully surveyed, so trends are unknown." }
+    ],
+    "source": { "label": "IUCN/SSC Polar Bear Specialist Group: subpopulation status table", "url": "https://www.iucn-pbsg.org/population-status", "year": 2024 },
+    "note": "No polar bear subpopulation has disappeared, so no areas are marked lost; the danger shows as decline within the range."
+  },
   "population": {
     "unit": "polar bears worldwide (PBSG global estimate)",
     "points": [

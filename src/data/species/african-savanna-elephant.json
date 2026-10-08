@@ -80,6 +80,99 @@
       "ZW"
     ]
   },
+  "rangeHistory": {
+    "regions": [
+      {
+        "name": "Okavango and Chobe",
+        "lat": -19.3,
+        "lon": 24.8,
+        "radius": 2.5,
+        "note": "Northern Botswana and the wider KAZA landscape hold the largest savanna elephant population."
+      },
+      {
+        "name": "Kruger",
+        "lat": -23.9,
+        "lon": 31.6,
+        "radius": 1.5,
+        "note": "Kruger had only about 10 elephants in 1905; immigrants from Mozambique rebuilt the population."
+      },
+      {
+        "name": "Tsavo",
+        "lat": -3,
+        "lon": 38.6,
+        "radius": 1.5,
+        "note": "Tsavo and its surroundings hold Kenya's largest elephant population."
+      },
+      {
+        "name": "Selous",
+        "lat": -8.5,
+        "lon": 37.5,
+        "radius": 2,
+        "note": "Poaching cut Selous elephants from 38,975 in 2009 to 13,084 in 2013."
+      },
+      {
+        "name": "Zakouma",
+        "lat": 10.8,
+        "lon": 19.8,
+        "radius": 1,
+        "note": "About 4,000 Zakouma elephants were poached between 2002 and 2010, leaving roughly 450."
+      },
+      {
+        "name": "Gourma, Mali",
+        "lat": 15.3,
+        "lon": -1.5,
+        "radius": 1.5,
+        "note": "Africa's most northerly elephants, a few hundred, migrate across Mali's Gourma semi-desert."
+      },
+      {
+        "name": "The Gambia",
+        "lat": 13.4,
+        "lon": -15,
+        "radius": 1,
+        "to": 1913,
+        "note": "The Gambia's last recorded elephant was shot in 1913."
+      },
+      {
+        "name": "Assaba, Mauritania",
+        "lat": 16.7,
+        "lon": -11.5,
+        "radius": 1,
+        "to": 1989,
+        "note": "Mauritania's Assaba herd, then Africa's most northerly elephants, died out during the 1980s."
+      },
+      {
+        "name": "Majete, Malawi",
+        "lat": -15.9,
+        "lon": 34.6,
+        "radius": 0.6,
+        "to": 1992,
+        "from": 2006,
+        "note": "Poachers wiped out Majete's elephants by the early 1990s; 70 were brought back from Liwonde in 2006."
+      },
+      {
+        "name": "Pilanesberg",
+        "lat": -25.3,
+        "lon": 27.1,
+        "radius": 0.5,
+        "from": 1981,
+        "note": "Young elephants from Kruger were released in Pilanesberg in 1981, returning them to the area."
+      },
+      {
+        "name": "Luiana, Angola",
+        "lat": -17.3,
+        "lon": 22.2,
+        "radius": 1.2,
+        "from": 2004,
+        "note": "After Angola's war ended in 2002, elephants recolonised Luiana, rising from 366 in 2004 to 1,827 in 2005."
+      }
+    ],
+    "source": {
+      "label": "African Elephant Status Report 2016 (IUCN SSC African Elephant Specialist Group)",
+      "url": "https://portals.iucn.org/library/node/46878",
+      "year": 2016
+    },
+    "note": "Elephants still range across much of their sub-Saharan range in fragments; Luiana's from date marks recolonisation after near loss in the war."
+  },
   "population": {
     "unit": "African elephants continent-wide (savanna and forest species combined)",
     "points": [

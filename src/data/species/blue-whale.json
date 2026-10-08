@@ -18,6 +18,23 @@
     "regions": ["Southern Ocean", "North Pacific", "North Atlantic", "Northern Indian Ocean", "Eastern South Pacific"],
     "countries": ["US", "MX", "CA", "CL", "LK", "AU", "NZ", "IS", "PT"]
   },
+  "rangeHistory": {
+    "regions": [
+      { "name": "Antarctic waters", "lat": -66, "lon": 40, "radius": 12, "note": "Antarctic blue whales fell from about 239,000 to about 360 by 1973, then began a slow recovery." },
+      { "name": "South Georgia", "lat": -54.5, "lon": -37, "radius": 1.8, "to": 1935, "note": "Most of the 42,698 blue whales killed at South Georgia were taken by the mid 1930s; they all but vanished." },
+      { "name": "Gulf of Alaska", "lat": 56.5, "lon": -150, "radius": 4, "to": 1965, "note": "Blue whales were caught here until whaling for them ended in 1965, then went largely unseen." },
+      { "name": "Iceland", "lat": 65.5, "lon": -20, "radius": 3, "note": "Hunted off Iceland until protection in 1960, North Atlantic blue whales still feed here in summer." },
+      { "name": "California coast", "lat": 34.5, "lon": -121, "radius": 4, "note": "About 2,200 blue whales feed off California, put at 97% of pre-whaling numbers by a 2014 study." },
+      { "name": "Gulf of California", "lat": 26.5, "lon": -110.8, "radius": 2, "note": "Eastern North Pacific blue whales gather in the Gulf of California in winter and spring." },
+      { "name": "Haida Gwaii, BC", "lat": 52.5, "lon": -132, "radius": 2, "from": 1997, "note": "Blue whales seen off British Columbia from 1997 were photo-matched to the California population." },
+      { "name": "Chiloé and Corcovado", "lat": -43, "lon": -74.3, "radius": 1.5, "note": "Surveys in 2003 found 153 blue whales, including mothers and calves, feeding off southern Chile." },
+      { "name": "Southern Sri Lanka", "lat": 5.6, "lon": 80.5, "radius": 1.5, "note": "A northern Indian Ocean population stays year round off Sri Lanka instead of migrating to polar seas." },
+      { "name": "Bonney Upwelling", "lat": -38.5, "lon": 141, "radius": 2, "note": "Pygmy blue whales feed in the cold upwelling off South Australia and Victoria each summer." },
+      { "name": "South Georgia return", "lat": -53.6, "lon": -35.2, "radius": 1.2, "from": 2020, "note": "A February 2020 survey logged 58 blue whale sightings, after only one in 1998 to 2018." }
+    ],
+    "source": { "label": "IUCN Red List: Balaenoptera musculus (Cooke 2018)", "url": "https://www.iucnredlist.org/species/2477/156923585", "year": 2018 },
+    "note": "Lost markers show where whaling left blue whales effectively absent, not that every whale vanished; the 2020 South Georgia return falls after the last population year."
+  },
   "population": {
     "unit": "Antarctic blue whales (B. m. intermedia) in the Southern Ocean",
     "points": [

@@ -33,6 +33,22 @@ export interface PopulationPoint {
   high?: number;
 }
 
+export interface RangeRegion {
+  /** Short place name shown in the caption, e.g. "Bali". */
+  name: string;
+  lat: number;
+  lon: number;
+  /** Approximate radius of the area in degrees (0.5 to 15). */
+  radius: number;
+  /** Year the species was first present here, if it arrived or was reintroduced within the timeline. */
+  from?: number;
+  /** Year the species was lost here (last record, declared extinct, or extirpated).
+   *  If `from` is later than `to`, it was lost in `to` and returned in `from`. */
+  to?: number;
+  /** One sentence shown when the scrubber passes this event. */
+  note: string;
+}
+
 export interface Species {
   slug: string;
   commonName: string;
@@ -64,6 +80,16 @@ export interface Species {
     regions: string[];
     /** ISO-3166 alpha-2 codes */
     countries: string[];
+  };
+
+  /**
+   * Where the species has disappeared from, or returned to, over time. Drawn on the globe
+   * in the population chapter and driven by the year scrubber.
+   */
+  rangeHistory?: {
+    regions: RangeRegion[];
+    source: Source;
+    note?: string;
   };
 
   population: {

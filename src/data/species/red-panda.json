@@ -19,6 +19,24 @@
     "regions": ["Eastern Nepal", "Sikkim and Darjeeling", "Bhutan", "Arunachal Pradesh", "Yunnan and Sichuan mountains"],
     "countries": ["NP", "IN", "BT", "MM", "CN"]
   },
+  "rangeHistory": {
+    "regions": [
+      { "name": "Western Nepal", "lat": 29, "lon": 82.6, "radius": 1, "note": "The western edge of the global range, in forests from Rara National Park to Dhorpatan." },
+      { "name": "Eastern Nepal", "lat": 27.4, "lon": 87.8, "radius": 0.8, "note": "Bamboo forests of Taplejung, Panchthar and Ilam hold much of the Nepal population." },
+      { "name": "Sikkim and Darjeeling", "lat": 27.2, "lon": 88.6, "radius": 0.5, "note": "Singalila National Park, where Darjeeling Zoo began releasing captive-bred red pandas in 2003." },
+      { "name": "Bhutan", "lat": 27.4, "lon": 90.4, "radius": 1.2, "note": "Bhutan keeps some of the least fragmented red panda forest in the Himalaya." },
+      { "name": "Arunachal Pradesh", "lat": 27.8, "lon": 93.5, "radius": 1.5, "note": "Arunachal Pradesh holds the largest share of red pandas in India." },
+      { "name": "Northern Myanmar", "lat": 27, "lon": 97.6, "radius": 1.2, "note": "Kachin State forests near Hkakabo Razi, where hunting for trade is a documented threat." },
+      { "name": "Western Sichuan", "lat": 30.5, "lon": 102.8, "radius": 2, "note": "Minshan, Qionglai, Liangshan and Xiangling mountains hold most Chinese red pandas." },
+      { "name": "Northwest Yunnan", "lat": 26.8, "lon": 99.5, "radius": 1.5, "note": "The Gaoligong and Hengduan mountains of Yunnan are a second Chinese stronghold." },
+      { "name": "Southern Gansu", "lat": 33.4, "lon": 104, "radius": 0.7, "to": 1999, "note": "Red pandas were reported extinct in Gansu by 1999 (Wei et al.)." },
+      { "name": "Southern Shaanxi", "lat": 33.5, "lon": 107.5, "radius": 1, "to": 1999, "note": "Red pandas were reported extinct in Shaanxi by 1999 (Wei et al.)." },
+      { "name": "Southern Qinghai", "lat": 32.9, "lon": 100.8, "radius": 1, "to": 1999, "note": "Red pandas were reported extinct in Qinghai by 1999 (Wei et al.)." },
+      { "name": "Northern Guizhou", "lat": 28, "lon": 107.3, "radius": 1, "to": 1999, "note": "Red pandas were reported extinct in Guizhou by 1999 (Wei et al.)." }
+    ],
+    "source": { "label": "IUCN Red List: Ailurus fulgens (Glatston et al. 2015)", "url": "https://www.iucnredlist.org/species/714/110023718", "year": 2015 },
+    "note": "The Chinese losses are dated to when Wei et al. reported them in 1999; the animals disappeared earlier, on undated timelines."
+  },
   "population": {
     "unit": "wild red pandas worldwide (all ages)",
     "points": [
