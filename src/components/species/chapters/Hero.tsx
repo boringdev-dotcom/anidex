@@ -4,9 +4,11 @@ import { ChapterLabel } from '../../ui/ChapterLabel';
 import { Reveal } from '../../ui/Reveal';
 import { RotateIcon, StageSlot } from '../../ui/StageSlot';
 import { Vitals } from '../Vitals';
+import { SpecimenStatus } from '../SpecimenStatus';
+import type { SpeciesRecord } from '../../../data/api';
 import { useStore } from '../../../store/useStore';
 
-export function Hero({ sp }: { sp: Species }) {
+export function Hero({ sp }: { sp: Species | SpeciesRecord }) {
   const long = sp.commonName.length > 16;
   const comparing = useStore((s) => s.compare);
   return (
@@ -22,9 +24,12 @@ export function Hero({ sp }: { sp: Species }) {
           <Reveal split="fade" immediate delay={0.5}>
             <ChapterLabel n={1}>Specimen</ChapterLabel>
           </Reveal>
-          <Reveal as="p" className="label hero__taxo" split="fade" immediate delay={0.6}>
-            {[sp.taxonomy.class, sp.taxonomy.order, sp.taxonomy.family].filter(Boolean).join(' / ')}
-          </Reveal>
+          <div className="hero__aside">
+            <Reveal as="p" className="label hero__taxo" split="fade" immediate delay={0.6}>
+              {[sp.taxonomy.class, sp.taxonomy.order, sp.taxonomy.family].filter(Boolean).join(' / ')}
+            </Reveal>
+            {'tier' in sp && <SpecimenStatus sp={sp} />}
+          </div>
         </div>
 
         <div className="hero__bottom">

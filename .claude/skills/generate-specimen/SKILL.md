@@ -5,21 +5,23 @@ description: Generate, regenerate or fix the 3D specimen model for an AniDex spe
 
 # Generate a species specimen
 
-Each species page shows its animal as a stipple point cloud sampled from a textured GLB in `public/models/<slug>.glb`. The texture's brightness sets each point's size, so markings (stripes, patches, wing veins) show through. This skill produces that GLB and checks it.
+Each species page shows its animal as a stipple point cloud sampled from a textured GLB. Models live in the Cloudflare R2 bucket `anidex-models`, served from `https://models.anidex.fyi/models/<slug>-<hash>.glb`; data refers to them by path (`/models/<slug>-<hash>.glb`) and the client prefixes the domain. The name includes a content hash, so a regenerated model gets a new URL and old ones can be cached forever. The texture's brightness sets each point's size, so markings (stripes, patches, wing veins) show through. This skill produces that GLB and checks it.
 
-Pipeline (all in `scripts/generate-models.ts`, run with `npm run models`):
+Pipeline (stages in `server/specimens.ts`, shared by `scripts/generate-models.ts` and the on-demand worker in `server/models.ts`; run locally with `npm run models`):
 1. **Reference image.** Nano Banana Pro draws one full-body photo on white. The prompt is built from the body plan's pose plus a per-species detail line.
 2. **3D model.** Hunyuan 3D v3.1 Pro (`fal-ai/hunyuan-3d/v3.1/pro/image-to-3d`) turns it into a textured GLB, about 22 MB raw.
-3. **Optimize.** glTF-Transform welds, simplifies, converts textures to 1024px WebP and applies meshopt, giving roughly 0.35 to 0.55 MB.
-4. **Wire.** If the species JSON has no `specimen.model`, the script adds `{ "url": "/models/<slug>.glb", "yaw": 1.5708 }`.
+3. **Optimize and store.** glTF-Transform welds, simplifies, converts textures to 1024px WebP and applies meshopt, giving roughly 0.35 to 0.8 MB. The result is uploaded to R2 as `models/<slug>-<hash>.glb` (a copy stays in `scripts/.cache/<slug>/model.glb`).
+4. **Wire.** The script points the species JSON at the stored path, keeping any hand-tuned `yaw` (new models get `yaw: 1.5708`).
 
-**Subspecies.** A species can list `variants` in its JSON, like the tiger's nine subspecies. Each variant becomes its own task with key `<species>--<variant>` (e.g. `tiger--amur`). It writes `public/models/tiger--amur.glb` and wires the model into that variant's `specimen.model` inside the parent JSON. `--only tiger` selects the species and all its variants; `--only tiger--amur` selects one. Variant prompts use `variants[].specimen.promptDetail`. Extinct variants (`alive: false`) get a "careful reconstruction" line in the prompt. A variant that already points at a model (e.g. Bengal reusing `bengal-tiger.glb`) is skipped.
+**Open-data species** (the ~200 in the database, `tier = 'auto'`) are not JSON files. `npm run models -- --auto --top 200 --concurrency 6` generates the most popular ones without a model and writes `species.model = { url, orient: 'auto' }` straight to the database in `DATABASE_URL` (production). `--only a,b` picks specific slugs. `orient: auto` makes the client turn the model side-on by its longest axis, because generated models face different ways. Body plans that are low and flat get a default camera tilt (`PLAN_TILT` in `src/three/SceneDirector.tsx`). Visitors also trigger generation on first visit to a species without a model (`POST /api/species/:slug/specimen`, capped by `MODEL_DAILY_CAP`, default 30 a day).
+
+**Subspecies.** A species can list `variants` in its JSON, like the tiger's nine subspecies. Each variant becomes its own task with key `<species>--<variant>` (e.g. `tiger--amur`). It stores `models/tiger--amur-<hash>.glb` and wires the model into that variant's `specimen.model` inside the parent JSON. `--only tiger` selects the species and all its variants; `--only tiger--amur` selects one. Variant prompts use `variants[].specimen.promptDetail`. Extinct variants (`alive: false`) get a "careful reconstruction" line in the prompt. A variant that already points at a model (e.g. Bengal reusing the `bengal-tiger` model) is skipped.
 
 Every stage is cached in `scripts/.cache/<slug>/` (`reference.png`, `raw.glb`, `thumbnail.png`), so reruns only pay for missing steps.
 
 ## Before you start
 
-- **Key:** the script reads `FAL_KEY` from the environment, `.env`, `.env.local` or `src/backend/.env`. Check it exists without printing it, e.g. `grep -c '^FAL_KEY=' src/backend/.env .env 2>/dev/null`. Never echo, log or commit the key.
+- **Keys:** the script reads `FAL_KEY` and `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` from the environment or `src/backend/.env`. Check they exist without printing values, e.g. `grep -oE '^(FAL_KEY|R2_[A-Z_]+)=' src/backend/.env`. Never echo, log or commit them.
 - **Species file:** `src/data/species/<slug>.json` must exist. For a brand-new species, add a detail line, either in the `DETAIL` map in the script or as `specimen.promptDetail` in its JSON. Describe colours and markings plus any defining feature (tusks, gills, ringed tail).
 - **Cost:** about $0.15 per reference image and $0.38 per Hunyuan Pro model. Tell the user the estimate before generating more than two or three species, or before regenerating ones that already look fine.
 - **Dev server:** the preview step needs `npm run dev` running on port 5173 (the `anidex` launch config). Use `--url` if it is elsewhere.
@@ -80,12 +82,12 @@ npx tsc -b
 npm run build
 ```
 
-Commit `public/models/<slug>.glb` and the species JSON. Never commit `.env` files or `scripts/.cache/`; both are in `.gitignore`. Mention the fal cost in the summary to the user.
+Commit the species JSON (the model itself is already in R2). Never commit `.env` files or `scripts/.cache/`; both are in `.gitignore`. Mention the fal cost in the summary to the user.
 
 ## Troubleshooting
 
 - **"FAL_KEY not found":** the user needs to add it to one of the env files above. Do not ask them to paste it into chat.
 - **Preview says "redirected to /":** the slug has no JSON in `src/data/species/`.
-- **Preview shows the old procedural body:** the GLB failed to load. Look for an `[anidex] model for <slug> failed` line in the preview's problems output. Check that the file exists and that `specimen.model.url` starts with `/models/`.
+- **Preview shows the old procedural body:** the GLB failed to load. Look for an `[anidex] model for <slug> failed` line in the preview's problems output. Check that `specimen.model.url` starts with `/models/` and that the file loads from `https://models.anidex.fyi` (a 404 means the upload didn't happen; a CORS error means the page's origin is missing from the bucket's CORS policy).
 - **Points look like noise with no markings:** the texture probably has very little contrast, for example an all-white animal. That is expected; the silhouette still carries it.
-- **Model file over about 0.8 MB:** lower `face_count` in `makeModel`, or the `simplify` ratio in `optimize`, then rerun with `--force model` or `--force optimize` respectively.
+- **Model file over about 0.8 MB:** lower `face_count` in `generateModel`, or the `simplify` ratio in `optimizeGlb` (both in `server/specimens.ts`), then rerun with `--force model` or `--force optimize` respectively.

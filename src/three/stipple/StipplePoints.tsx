@@ -78,6 +78,7 @@ export function StipplePoints() {
   );
 
   const shapeKey = useStore((s) => s.previewShape ?? s.shape);
+  const modelRev = useStore((s) => s.modelRev);
 
   useEffect(() => {
     let cancelled = false;
@@ -152,7 +153,7 @@ export function StipplePoints() {
     return () => {
       cancelled = true;
     };
-  }, [shapeKey, geometry]);
+  }, [shapeKey, modelRev, geometry]);
 
   return <points geometry={geometry} material={material} frustumCulled={false} renderOrder={2} />;
 }

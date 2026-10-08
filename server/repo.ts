@@ -37,7 +37,9 @@ export function searchText(sp: Pick<Species, 'commonName' | 'scientificName' | '
 
 // ---------------- postgres ----------------
 
-const SUMMARY_COLS = `slug, common_name, scientific_name, iucn, class, "order", family, tier, photo, data->'specimen' as specimen`;
+// a generated model (species.model) is layered onto the specimen settings
+const SUMMARY_COLS = `slug, common_name, scientific_name, iucn, class, "order", family, tier, photo,
+  case when model is not null then jsonb_set(data->'specimen', '{model}', model) else data->'specimen' end as specimen`;
 
 interface Row {
   slug: string;
@@ -70,7 +72,7 @@ function pgRepo(): Repo {
   return {
     kind: 'postgres',
     async get(slug) {
-      const r = await db.query(`select data, tier, photo, needs_review from species where slug = $1`, [slug]);
+      const r = await db.query(`select data, tier, photo, needs_review, model from species where slug = $1`, [slug]);
       if (!r.rowCount) return null;
       const row = r.rows[0];
       let next: SpeciesSummary | null = null;
@@ -82,6 +84,7 @@ function pgRepo(): Repo {
       // on-demand research is stored separately (so data reloads keep it) and layered on top here
       const { research, ...base } = row.data;
       const merged = research ? { ...base, ...research.fields, status: { ...base.status, ...research.fields?.status }, sources: [...(base.sources ?? []), ...(research.sources ?? [])] } : base;
+      if (row.model) merged.specimen = { ...merged.specimen, model: row.model };
       return { ...merged, tier: row.tier, photo: row.photo, needsReview: row.needs_review, research: research ? { state: 'done', at: research.at } : undefined, nextSummary: next };
     },
     async search(q, limit = 8) {

@@ -35,6 +35,8 @@ interface State {
   shape: string;
   /** Hover preview on the landing page overrides `shape` while set. */
   previewShape: string | null;
+  /** bumped when a species' generated model arrives, so the point cloud re-forms into it */
+  modelRev: number;
   /** Active chapter index (rounded scroll position) for UI that needs to re-render. */
   chapter: number;
   /** Index of the hovered sighting place, or -1. */
@@ -61,6 +63,7 @@ export const useStore = create<State>((set) => ({
   slug: null,
   shape: 'ambient',
   previewShape: null,
+  modelRev: 0,
   chapter: 0,
   activePlace: -1,
   transitioning: false,

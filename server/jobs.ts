@@ -3,6 +3,8 @@
  * species is researched at most once at a time; a daily cap bounds API spend.
  */
 import type pg from 'pg';
+import { runModel } from './models.ts';
+import { generationEnabled } from './specimens.ts';
 import { researchEnabled, researchSpecies } from './research.ts';
 
 export type ResearchState = 'done' | 'queued' | 'running' | 'failed' | 'capped' | 'unavailable';
@@ -50,40 +52,52 @@ async function runResearch(db: pg.Pool, slug: string) {
   return result;
 }
 
-let running = false;
+/** Each job kind has its own lane, so a 4-minute model never holds up research. */
+const RUNNERS: Record<string, (db: pg.Pool, key: string) => Promise<{ costUsd: number } & Record<string, unknown>>> = {
+  research: async (db, key) => {
+    const r = await runResearch(db, key);
+    return { costUsd: r.costUsd, model: r.model };
+  },
+  model: runModel,
+};
+const busy = new Set<string>();
 
-/** Poll for queued jobs, one at a time. Call once at startup. */
+/** Poll for queued jobs, one at a time per kind. Call once at startup. */
 export function startWorker(db: pg.Pool) {
   // jobs left "running" by a previous instance (deploy, crash) go back to the queue
   db.query(`update jobs set status = 'queued' where status = 'running'`).catch(() => {});
-  const tick = async () => {
-    if (running) return;
-    running = true;
+  const tick = async (kind: string) => {
+    if (busy.has(kind)) return;
+    busy.add(kind);
     try {
       const claim = await db.query<{ id: string; kind: string; key: string }>(
         `update jobs set status = 'running', started_at = now(), attempts = attempts + 1
-          where id = (select id from jobs where status = 'queued' order by created_at for update skip locked limit 1)
+          where id = (select id from jobs where status = 'queued' and kind = $1 order by created_at for update skip locked limit 1)
           returning id, kind, key`,
+        [kind],
       );
       const job = claim.rows[0];
       if (!job) return;
       const t0 = Date.now();
       try {
-        if (job.kind !== 'research') throw new Error(`unknown job kind ${job.kind}`);
-        const res = await runResearch(db, job.key);
-        await db.query(`update jobs set status = 'done', finished_at = now(), payload = $2 where id = $1`, [job.id, { costUsd: res.costUsd, model: res.model, seconds: Math.round((Date.now() - t0) / 1000) }]);
-        console.log(`[jobs] researched ${job.key} in ${Math.round((Date.now() - t0) / 1000)}s for $${res.costUsd}`);
+        const res = await RUNNERS[kind](db, job.key);
+        const seconds = Math.round((Date.now() - t0) / 1000);
+        await db.query(`update jobs set status = 'done', finished_at = now(), payload = $2 where id = $1`, [job.id, { ...res, seconds }]);
+        console.log(`[jobs] ${kind} ${job.key} done in ${seconds}s for $${res.costUsd}`);
       } catch (err) {
         const msg = (err as Error).message?.slice(0, 500) ?? 'failed';
         await db.query(`update jobs set status = 'failed', finished_at = now(), error = $2 where id = $1`, [job.id, msg]);
-        console.error(`[jobs] ${job.kind} ${job.key} failed: ${msg}`);
+        console.error(`[jobs] ${kind} ${job.key} failed: ${msg}`);
       }
     } catch (err) {
       console.error('[jobs] worker error', (err as Error).message);
     } finally {
-      running = false;
+      busy.delete(kind);
     }
   };
-  setInterval(tick, 4000).unref();
-  console.log(`[jobs] worker started (research ${researchEnabled() ? `on, cap ${DAILY_CAP}/day` : 'off: ANTHROPIC_API_KEY not set'})`);
+  setInterval(() => Object.keys(RUNNERS).forEach((k) => void tick(k)), 4000).unref();
+  console.log(
+    `[jobs] worker started (research ${researchEnabled() ? `on, cap ${DAILY_CAP}/day` : 'off: ANTHROPIC_API_KEY not set'}; ` +
+      `models ${generationEnabled() ? `on, cap ${process.env.MODEL_DAILY_CAP ?? 30}/day` : 'off: FAL_KEY or R2 not set'})`,
+  );
 }

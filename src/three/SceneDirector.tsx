@@ -17,6 +17,9 @@ import { measureLocal, measureUniforms } from './MeasureLines';
 import { figureInfo, figureUniforms } from './ScaleFigure';
 import { REFERENCES, type ReferenceKind } from './specimen/Specimen';
 
+/** Default camera tilt by body plan: low, flat animals read better seen partly from above. */
+const PLAN_TILT: Record<string, number> = { serpentine: 0.62, amphibian: 0.45, arthropod: 0.7, aquatic: 0.3 };
+
 const wrap = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
 const tmpV = new THREE.Vector3();
 const tmpE = new THREE.Euler();
@@ -287,7 +290,7 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     const shown = getSpecimenSource(previewShape ?? shape);
     const handCompare = refKind === 'hand';
     // the landing Earth leans its north toward the viewer (most land is in the northern hemisphere)
-    const baseT = shown ? (shown.specimen.tilt ?? 0.08) : (previewShape ?? shape) === 'ambient' ? 0.32 : 0.08;
+    const baseT = shown ? (shown.specimen.tilt ?? PLAN_TILT[shown.specimen.bodyPlan] ?? 0.08) : (previewShape ?? shape) === 'ambient' ? 0.32 : 0.08;
     const tiltTarget = lerp(baseT, handCompare ? baseT : 0.03, cmp);
     baseTilt.current = damp(baseTilt.current, tiltTarget, 3, dt);
     sp.rotation.x = baseTilt.current + si.pitch;
