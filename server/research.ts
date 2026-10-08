@@ -13,33 +13,27 @@ const PRICE = { input: 4 / 1e6, output: 20 / 1e6, cacheRead: 0.2 / 1e6, search: 
 export const researchEnabled = () => !!process.env.ANTHROPIC_API_KEY;
 
 const range = { type: 'object', additionalProperties: false, required: ['min', 'max'], properties: { min: { type: 'number' }, max: { type: 'number' } } };
-const nullableRange = { anyOf: [range, { type: 'null' }] };
-const nullableNumber = { anyOf: [{ type: 'number' }, { type: 'null' }] };
-const nullableInt = { anyOf: [{ type: 'integer' }, { type: 'null' }] };
 const source = { type: 'object', additionalProperties: false, required: ['label', 'url'], properties: { label: { type: 'string' }, url: { type: 'string' } } };
+// Kept flat on purpose: optional values use 0 or "" instead of null unions, because every anyOf
+// grows the compiled output grammar and the API rejects grammars that get too large.
 const POPULATION = {
-  anyOf: [
-    { type: 'null' },
-    {
-      type: 'object',
-      additionalProperties: false,
-      required: ['unit', 'points', 'source', 'note'],
-      properties: {
-        unit: { type: 'string' },
-        points: {
-          type: 'array',
-          items: {
-            type: 'object',
-            additionalProperties: false,
-            required: ['year', 'estimate', 'low', 'high'],
-            properties: { year: { type: 'integer' }, estimate: { type: 'number' }, low: nullableNumber, high: nullableNumber },
-          },
-        },
-        source,
-        note: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+  type: 'object',
+  additionalProperties: false,
+  required: ['unit', 'points', 'source', 'note'],
+  properties: {
+    unit: { type: 'string' },
+    points: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['year', 'estimate', 'low', 'high'],
+        properties: { year: { type: 'integer' }, estimate: { type: 'number' }, low: { type: 'number' }, high: { type: 'number' } },
       },
     },
-  ],
+    source,
+    note: { type: 'string' },
+  },
 };
 const RANGE_HISTORY = {
   type: 'object',
@@ -52,16 +46,16 @@ const RANGE_HISTORY = {
         type: 'object',
         additionalProperties: false,
         required: ['name', 'lat', 'lon', 'radius', 'from', 'to', 'note'],
-        properties: { name: { type: 'string' }, lat: { type: 'number' }, lon: { type: 'number' }, radius: { type: 'number' }, from: nullableInt, to: nullableInt, note: { type: 'string' } },
+        properties: { name: { type: 'string' }, lat: { type: 'number' }, lon: { type: 'number' }, radius: { type: 'number' }, from: { type: 'integer' }, to: { type: 'integer' }, note: { type: 'string' } },
       },
     },
-    source: { anyOf: [source, { type: 'null' }] },
+    source,
   },
 };
 const SCHEMA = {
   type: 'object',
   additionalProperties: false,
-  required: ['status', 'threats', 'help', 'sightings', 'physical', 'specimen', 'population', 'rangeHistory', 'sources'],
+  required: ['status', 'threats', 'help', 'sightings', 'physical', 'specimen', 'sources'],
   properties: {
     status: {
       type: 'object',
@@ -69,7 +63,7 @@ const SCHEMA = {
       required: ['trend', 'assessedYear'],
       properties: {
         trend: { type: 'string', enum: ['increasing', 'decreasing', 'stable', 'unknown'] },
-        assessedYear: { anyOf: [{ type: 'integer' }, { type: 'null' }] },
+        assessedYear: { type: 'integer' },
       },
     },
     threats: {
@@ -87,7 +81,7 @@ const SCHEMA = {
             type: 'object',
             additionalProperties: false,
             required: ['title', 'detail', 'url'],
-            properties: { title: { type: 'string' }, detail: { type: 'string' }, url: { anyOf: [{ type: 'string' }, { type: 'null' }] } },
+            properties: { title: { type: 'string' }, detail: { type: 'string' }, url: { type: 'string' } },
           },
         },
         orgs: {
@@ -120,9 +114,9 @@ const SCHEMA = {
       required: ['weightKg', 'weightNote', 'heightM', 'heightLabel', 'lengthM', 'lengthLabel', 'lifespanYrs', 'fact', 'compare'],
       properties: {
         weightKg: range,
-        weightNote: { anyOf: [{ type: 'string' }, { type: 'null' }] },
-        heightM: nullableRange,
-        heightLabel: { anyOf: [{ type: 'string', enum: ['at shoulder', 'standing'] }, { type: 'null' }] },
+        weightNote: { type: 'string' },
+        heightM: range,
+        heightLabel: { type: 'string', enum: ['at shoulder', 'standing', 'none'] },
         lengthM: range,
         lengthLabel: { type: 'string', enum: ['nose to tail tip', 'head and body', 'wingspan', 'total length', 'standing height', 'shell length'] },
         lifespanYrs: range,
@@ -143,13 +137,14 @@ const SCHEMA = {
         tail: { type: 'number' },
       },
     },
-    population: POPULATION,
-    rangeHistory: RANGE_HISTORY,
     sources: { type: 'array', items: source },
   },
 } as const;
 
-/** The population-only research (backfills species researched before population was added). */
+/**
+ * Population and range history, researched in a second call alongside the main one (one schema
+ * with everything compiles to a grammar the API rejects as too large). Also used by the backfill.
+ */
 const POPULATION_SCHEMA = {
   type: 'object',
   additionalProperties: false,
@@ -163,33 +158,40 @@ interface Range {
 }
 
 export interface ResearchOutput {
-  status: { trend: Species['status']['trend']; assessedYear: number | null };
+  status: { trend: Species['status']['trend']; assessedYear: number };
   threats: { title: string; detail: string }[];
-  help: { actions: { title: string; detail: string; url: string | null }[]; orgs: { name: string; url: string }[] };
+  help: { actions: { title: string; detail: string; url: string }[]; orgs: { name: string; url: string }[] };
   sightings: { places: { name: string; country: string; lat: number; lon: number; note: string }[]; bestMonths: number[]; tip: string };
-  physical: Omit<NonNullable<Species['physical']>, 'weightKg' | 'heightM' | 'lengthM' | 'lifespanYrs' | 'source'> & {
+  physical: Omit<NonNullable<Species['physical']>, 'weightKg' | 'heightM' | 'heightLabel' | 'lengthM' | 'lifespanYrs' | 'source'> & {
+    heightLabel: 'at shoulder' | 'standing' | 'none';
     weightKg: Range;
-    heightM: Range | null;
+    heightM: Range;
     lengthM: Range;
     lifespanYrs: Range;
-    weightNote: string | null;
+    weightNote: string;
   };
   specimen: { sizeClass: Species['specimen']['sizeClass']; length: number; height: number; bulk: number; neck: number; tail: number };
-  population: PopulationOutput | null;
+  sources: { label: string; url: string }[];
+}
+
+interface HistoryOutput {
+  population: PopulationOutput;
   rangeHistory: RangeHistoryOutput;
   sources: { label: string; url: string }[];
 }
 
 interface PopulationOutput {
   unit: string;
-  points: { year: number; estimate: number; low: number | null; high: number | null }[];
+  /** low and high are 0 when no range was published */
+  points: { year: number; estimate: number; low: number; high: number }[];
   source: { label: string; url: string };
-  note: string | null;
+  note: string;
 }
 
 interface RangeHistoryOutput {
-  regions: { name: string; lat: number; lon: number; radius: number; from: number | null; to: number | null; note: string }[];
-  source: { label: string; url: string } | null;
+  /** from and to are 0 when not applicable */
+  regions: { name: string; lat: number; lon: number; radius: number; from: number; to: number; note: string }[];
+  source: { label: string; url: string };
 }
 
 export interface ResearchResult {
@@ -206,6 +208,8 @@ const SYSTEM = `You research animal species for AniDex, a public wildlife encycl
 
 Use web search to verify every fact. Prefer the IUCN Red List, national wildlife agencies, peer-reviewed papers, museums and zoos (Smithsonian, San Diego Zoo Wildlife Alliance), Animal Diversity Web, and major conservation NGOs. Never invent numbers, places or organisations. If something is genuinely unknown, use the closest well-supported value and keep the text honest about it (for example an empty threats list, or trend "unknown").
 
+Unknown or not-applicable values: use 0 for numbers and years, an empty string for text and links, an empty list for lists, and {"min":0,"max":0} for a range. Never put a guess in their place.
+
 Writing style: plain, factual sentences. Each threat detail, action detail, place note and the field note is one sentence, under 120 characters. Never use em dashes or en dashes; use commas, periods or "to".
 
 Fields:
@@ -213,10 +217,10 @@ Fields:
 - threats: the 3 to 5 main threats.
 - help: 3 or 4 concrete things an ordinary person can do, plus 2 or 3 reputable organisations working on this species or its habitat (real URLs).
 - sightings: 3 to 5 real, publicly visitable places where people reliably see it in the wild (national parks, reserves, reefs, birding sites), with coordinates to 2 decimals; best months to see it there (1 to 12); one tip explaining the timing. If wild viewing is not realistic (very rare, deep sea, extinct), return an empty places list and say why in the tip.
-- physical: typical adult ranges, not records. Units: kilograms, metres, years. Shoulder height for four-legged animals, standing height for upright ones, null height for fish, snakes, insects and similar. Length includes the tail unless lengthLabel says otherwise; wingspan for birds and butterflies is fine. lifespanYrs is lifespan in the wild. fact is one striking, verified fact about its body or physiology. compare is "hand" only if adults are under 0.4 m long.
+- physical: typical adult ranges, not records. Units: kilograms, metres, years. Shoulder height for four-legged animals, standing height for upright ones, no height (heightM 0 to 0, heightLabel "none") for fish, snakes, insects and similar. Length includes the tail unless lengthLabel says otherwise; wingspan for birds and butterflies is fine. lifespanYrs is lifespan in the wild. fact is one striking, verified fact about its body or physiology. compare is "hand" only if adults are under 0.4 m long.
 - specimen: shape hints for a stylised 3D figure, each 0 to 1: length (body length relative to height), height (leg length), bulk (heaviness), neck, tail; sizeClass xs (insect) to xl (elephant, whale).
-- population: the global wild population over time, built ONLY from published estimates (IUCN assessments past and present, range-wide surveys, census reports, peer-reviewed papers). The point is to show the trend, so search specifically for historical figures: older IUCN assessments, past range-wide surveys, and review papers that tabulate earlier estimates. Most well-studied species have several across decades. One point per year with a real published figure, oldest first, ideally 3 to 8 points. estimate is the published figure, or the midpoint of a published range with low and high set to that range. Prefer figures that count the same thing; if the record mixes total and mature-individual counts, use what was published and explain it in note. unit is short, under 40 characters, e.g. "lions in the wild" or "mature individuals". note is one sentence on how reliable and comparable the numbers are. Use a single point only when no earlier figure was ever published. If no credible global figure exists, return null. Never interpolate, extrapolate or round an estimate into existence.
-- rangeHistory: places where the species was lost (extirpated, last recorded) or came back (reintroduced, recolonised) since about 1800, for the globe. Each region is a short place name, a centre with coordinates to 1 decimal, a radius in degrees (0.5 to 15) covering the area, the year it was lost (to) and/or the year it returned (from; later than to if it was lost then returned), and one sentence. Include 2 to 4 regions where it still lives with both years null, so the map shows what remains. Up to 12 regions. If nothing is documented, return an empty list. source is the main page you used, or null.
+- population: the global wild population over time, built ONLY from published estimates (IUCN assessments past and present, range-wide surveys, census reports, peer-reviewed papers). The point is to show the trend, so search specifically for historical figures: older IUCN assessments, past range-wide surveys, and review papers that tabulate earlier estimates. Most well-studied species have several across decades. One point per year with a real published figure, oldest first, ideally 3 to 8 points. estimate is the published figure, or the midpoint of a published range with low and high set to that range (low and high are 0 when no range was published). Prefer figures that count the same thing; if the record mixes total and mature-individual counts, use what was published and explain it in note. unit is short, under 40 characters, e.g. "lions in the wild" or "mature individuals". note is one sentence on how reliable and comparable the numbers are (empty if there are no points). Use a single point only when no earlier figure was ever published. If no credible global figure exists, return an empty points list. Never interpolate, extrapolate or round an estimate into existence.
+- rangeHistory: places where the species was lost (extirpated, last recorded) or came back (reintroduced, recolonised) since about 1800, for the globe. Each region is a short place name, a centre with coordinates to 1 decimal, a radius in degrees (0.5 to 15) covering the area, the year it was lost (to) and/or the year it returned (from; later than to if it was lost then returned), using 0 for a year that does not apply, and one sentence. Include 2 to 4 regions where it still lives with both years 0, so the map shows what remains. Up to 12 regions. If nothing is documented, return an empty list. source is the main page you used (empty label and url if none).
 - sources: every page you relied on, label plus URL.`;
 
 type ResearchInput = Species & { summary?: { text: string } | null };
@@ -270,18 +274,38 @@ async function ask<T>(user: string, schema: unknown, maxSearches: number): Promi
 }
 
 export async function researchSpecies(sp: ResearchInput): Promise<ResearchResult> {
-  const { out, costUsd, model } = await ask<ResearchOutput>(`Research this species and fill every field.\n\n${describe(sp)}`, SCHEMA, 14);
+  const [main, history] = await Promise.all([
+    ask<ResearchOutput>(
+      `Research this species and fill every field. Leave population and range history aside; they are researched separately.\n\n${describe(sp)}`,
+      SCHEMA,
+      12,
+    ),
+    // the page is still useful without a population chart, so this one may fail on its own
+    ask<HistoryOutput>(historyPrompt(sp), POPULATION_SCHEMA, 6).catch((err) => {
+      console.warn(`[research] population for ${sp.slug} failed: ${(err as Error).message}`);
+      return null;
+    }),
+  ]);
   const at = new Date().toISOString();
-  return { at, historyAt: at, model, costUsd, ...toFields(sp, out) };
+  const base = toFields(sp, main.out);
+  const seen = new Set<string>();
+  const sources = [...base.sources, ...cleanSources(history?.out.sources ?? [])].filter((x) => !seen.has(x.url) && seen.add(x.url));
+  return {
+    at,
+    ...(history ? { historyAt: at } : {}),
+    model: main.model,
+    costUsd: Math.round((main.costUsd + (history?.costUsd ?? 0)) * 1000) / 1000,
+    fields: { ...base.fields, ...(history ? historyFields(history.out) : {}) },
+    sources,
+  };
 }
+
+const historyPrompt = (sp: ResearchInput) =>
+  `Research only the population and rangeHistory fields for this species (plus the sources you used).\n\n${describe(sp)}`;
 
 /** Population and range history only, for species researched before those fields existed. */
 export async function researchPopulation(sp: ResearchInput) {
-  const { out, costUsd, model } = await ask<Pick<ResearchOutput, 'population' | 'rangeHistory' | 'sources'>>(
-    `Research only the population and rangeHistory fields for this species (plus the sources you used).\n\n${describe(sp)}`,
-    POPULATION_SCHEMA,
-    8,
-  );
+  const { out, costUsd, model } = await ask<HistoryOutput>(historyPrompt(sp), POPULATION_SCHEMA, 6);
   return { at: new Date().toISOString(), model, costUsd, fields: historyFields(out), sources: cleanSources(out.sources) };
 }
 
@@ -302,7 +326,7 @@ export function toFields(sp: Species, o: ResearchOutput): Pick<ResearchResult, '
           weightKg: weight,
           weightNote: p.weightNote && p.weightNote.length <= 40 ? p.weightNote : undefined,
           heightM: pair(p.heightM),
-          heightLabel: p.heightM && p.heightLabel ? p.heightLabel : null,
+          heightLabel: pair(p.heightM) && p.heightLabel !== 'none' ? p.heightLabel : null,
           lengthM: length,
           lengthLabel: p.lengthLabel,
           lifespanYrs: life,
@@ -341,7 +365,7 @@ export function toFields(sp: Species, o: ResearchOutput): Pick<ResearchResult, '
       },
     },
   };
-  return { fields: { ...fields, ...historyFields(o) }, sources: cleanSources(o.sources) };
+  return { fields, sources: cleanSources(o.sources) };
 }
 
 const isUrl = (u: string | undefined | null): u is string => !!u && /^https?:\/\//.test(u);
@@ -349,7 +373,7 @@ const cleanSources = (list: { label: string; url: string }[]) => list.filter((s)
 const num = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? v : null);
 
 /** Validate the population series and range history (drop anything that can't be drawn honestly). */
-export function historyFields(o: Pick<ResearchOutput, 'population' | 'rangeHistory'>): Pick<Species, 'population' | 'rangeHistory'> {
+export function historyFields(o: Pick<HistoryOutput, 'population' | 'rangeHistory'>): Pick<Species, 'population' | 'rangeHistory'> {
   const thisYear = new Date().getFullYear();
   const out: Pick<Species, 'population' | 'rangeHistory'> = {};
   const p = o.population;
