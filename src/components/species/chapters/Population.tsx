@@ -20,6 +20,7 @@ export function Population({ sp, n }: { sp: Species; n: number }) {
   const y1 = Math.max(lastCount, events[events.length - 1]?.year ?? -Infinity);
   const [year, setYear] = useState(single ? y1 : y0);
   const override = useRef(false);
+  const unitRef = useRef<HTMLDivElement>(null);
   const chapter = useStore((s) => s.chapter);
   // this chapter's index among the page's chapters (it moves when a species has extra chapters)
   const CH = n - 1;
@@ -32,7 +33,17 @@ export function Population({ sp, n }: { sp: Species; n: number }) {
     if (single) return;
     const tick = () => {
       if (override.current) return;
-      const t = smoothstep(0.04, 0.82, live.progress[CH]);
+      let t = smoothstep(0.04, 0.82, live.progress[CH]);
+      // phones: the unit (globe, number, chart) pins inside its scrub area; the year follows the pin,
+      // from the first year when it pins to the last when it lets go
+      const unit = unitRef.current;
+      const scrub = unit?.parentElement;
+      if (unit && scrub && window.matchMedia('(max-width: 768px)').matches) {
+        const headerH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 72;
+        const r = scrub.getBoundingClientRect();
+        const span = Math.max(1, r.height - unit.offsetHeight);
+        t = smoothstep(0.02, 0.92, (headerH - r.top) / span);
+      }
       const yr = Math.round(y0 + (y1 - y0) * t);
       setYear((prev) => (prev === yr ? prev : yr));
     };
@@ -109,7 +120,8 @@ export function Population({ sp, n }: { sp: Species; n: number }) {
         </div>
 
         {/* one unit: on phones it stays in view (globe, number, story, timeline) while you scrub */}
-        <div className="pop__unit">
+        <div className="pop__scrub">
+        <div className="pop__unit" ref={unitRef}>
           <StageSlot kind="globe" chapter="population" className="m-slot--pop" />
           <div className="pop__row">
           <div className="pop__readout" aria-live="polite" aria-atomic="true">
@@ -177,6 +189,7 @@ export function Population({ sp, n }: { sp: Species; n: number }) {
             <p className="label">One estimate, no time series. Nobody has counted this species consistently enough to draw a line.</p>
           </div>
         )}
+        </div>
         </div>
 
         <p className="label pop__source">
