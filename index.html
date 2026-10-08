@@ -17,6 +17,19 @@
         document.documentElement.setAttribute('data-theme', t);
       })();
     </script>
+    <!-- Cloudflare Web Analytics (cookieless). Only on the live site, so local development and the
+         social-card renders (/og) don't count as visits; spa: client-side navigations count as views. -->
+    <script>
+      (function () {
+        var h = location.hostname;
+        if ((h !== 'anidex.fyi' && h !== 'www.anidex.fyi') || location.pathname.indexOf('/og') === 0) return;
+        var s = document.createElement('script');
+        s.defer = true;
+        s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+        s.setAttribute('data-cf-beacon', '{"token": "afb2b083c7e9425a94a07ecd5a91d164", "spa": true}');
+        document.head.appendChild(s);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
