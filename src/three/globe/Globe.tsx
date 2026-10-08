@@ -26,6 +26,9 @@ export const globeUniforms = {
   uBbox2: { value: new THREE.Vector4(-180, -90, 180, 90) },
   uCentroid2: { value: new THREE.Vector2() },
   uPair: { value: 0 },
+  /** the spot the reader tapped (lon, lat) and how visible its marker is */
+  uTap: { value: new THREE.Vector2() },
+  uTapOn: { value: 0 },
   uOpacity: { value: 0 },
   uReveal: { value: 0 },
   uRipple: { value: 0 },

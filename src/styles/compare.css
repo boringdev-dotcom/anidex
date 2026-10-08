@@ -758,3 +758,90 @@ body:has(.og-card) .grain {
     transform: translateY(12px);
   }
 }
+
+/* ---------- tap the globe: what's here ---------- */
+.tapcard {
+  position: fixed;
+  z-index: 45;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.85rem 0.95rem 0.95rem;
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 18px 50px -20px rgb(0 0 0 / 0.5);
+  animation: picker-in 0.2s ease both;
+}
+
+.tapcard__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tapcard__head .label {
+  color: var(--ink-3);
+}
+
+.tapcard__close {
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--ink-2);
+  padding: 0 0.15rem;
+}
+
+.tapcard__place {
+  font-family: var(--font-display);
+  font-size: 1.55rem;
+  line-height: 1.05;
+}
+
+.tapcard__count {
+  font-size: var(--fs-small);
+  color: var(--ink-2);
+}
+
+.tapcard__count .num {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.tapcard__hint {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+}
+
+.tapcard__region {
+  border-top: 1px solid var(--line);
+  padding-top: 0.55rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.tapcard__note {
+  font-size: var(--fs-small);
+  color: var(--ink-2);
+}
+
+.range__tip {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+}
+
+@media (max-width: 768px) {
+  .range__tip {
+    display: none;
+  }
+}
+
+.tapcard--sheet {
+  left: 12px;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  max-height: 46svh;
+  overflow-y: auto;
+  z-index: 60;
+}

@@ -22,6 +22,9 @@ const PLAN_TILT: Record<string, number> = { serpentine: 0.62, amphibian: 0.45, a
 
 const wrap = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
 const tmpV = new THREE.Vector3();
+const tapNdc = new THREE.Vector2();
+const tapRay = new THREE.Raycaster();
+const tapSphere = new THREE.Sphere();
 const tmpE = new THREE.Euler();
 
 /**
@@ -380,6 +383,30 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     gi.dYaw = gi.dPitch = 0;
     userQ.current.setFromEuler(tmpE.set(gi.pitch, gi.yaw, 0, 'XYZ'));
     spin.quaternion.copy(userQ.current).multiply(focusQ.current);
+
+    // a tap on the globe: find the latitude and longitude under it (species pages)
+    const tap = interaction.tap;
+    if (tap) {
+      interaction.tap = null;
+      if (page === 'species' && eff.go > 0.6) {
+        root.current?.updateMatrixWorld(true);
+        tapNdc.set((tap.x / size.width) * 2 - 1, -(tap.y / size.height) * 2 + 1);
+        tapRay.setFromCamera(tapNdc, state.camera);
+        gl.getWorldPosition(tapSphere.center);
+        tapSphere.radius = gl.getWorldScale(tmpV).x;
+        const hit = tapRay.ray.intersectSphere(tapSphere, tmpV);
+        if (hit) {
+          spin.worldToLocal(hit).normalize();
+          const lat = (Math.asin(hit.y) * 180) / Math.PI;
+          let lon = (Math.atan2(hit.z, -hit.x) * 180) / Math.PI - 180;
+          if (lon < -180) lon += 360;
+          useStore.setState({ globeTap: { lat, lon, x: tap.x, y: tap.y } });
+        }
+      }
+    }
+    const gt = useStore.getState().globeTap;
+    if (gt) globeUniforms.uTap.value.set(gt.lon, gt.lat);
+    globeUniforms.uTapOn.value = damp(globeUniforms.uTapOn.value, gt && page === 'species' ? 1 : 0, 6, dt);
 
     // parallax on the whole rig
     if (root.current && !reduced) {
