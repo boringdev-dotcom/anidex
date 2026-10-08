@@ -52,6 +52,13 @@ export async function runResearch(db: pg.Pool, slug: string) {
   return result;
 }
 
+/** Out of credit at Anthropic or fal (fal answers 403 "Exhausted balance"). */
+function isBillingError(err: unknown): boolean {
+  const e = err as { message?: string; status?: number; body?: { detail?: unknown } };
+  const text = `${e?.message ?? ''} ${JSON.stringify(e?.body ?? '')}`;
+  return /credit balance is too low|exhausted balance|insufficient (funds|credit)/i.test(text) || (e?.status === 403 && /balance/i.test(text));
+}
+
 /** Each job kind has its own lane, so a 4-minute model never holds up research. */
 const RUNNERS: Record<string, (db: pg.Pool, key: string) => Promise<{ costUsd: number } & Record<string, unknown>>> = {
   research: async (db, key) => {
@@ -117,7 +124,12 @@ export function startWorker(db: pg.Pool) {
         console.log(`[jobs] ${kind} ${job.key} done in ${seconds}s for $${res.costUsd}`);
       } catch (err) {
         const msg = (err as Error).message?.slice(0, 500) ?? 'failed';
-        await db.query(`update jobs set status = 'failed', finished_at = now(), error = $2 where id = $1`, [job.id, msg]);
+        // an empty API balance isn't the species' fault: give the attempt back so a later visit retries
+        const billing = isBillingError(err);
+        await db.query(
+          `update jobs set status = 'failed', finished_at = now(), error = $2, attempts = case when $3 then greatest(attempts - 1, 0) else attempts end where id = $1`,
+          [job.id, msg, billing],
+        );
         console.error(`[jobs] ${kind} ${job.key} failed: ${msg}`);
       }
     } catch (err) {
