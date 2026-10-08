@@ -155,8 +155,16 @@ function StatsTable({ rows, a, b }: { rows: StatRow[]; a: SpeciesRecord; b: Spec
   );
 }
 
+/**
+ * Keyed by the pair, like the species page: moving from one matchup to another mounts a fresh page.
+ * Page transitions fade the old page out, and a reused element would stay invisible.
+ */
 export default function ComparePage() {
-  const { a, b, relA, relB } = useLoaderData() as CompareData;
+  const data = useLoaderData() as CompareData;
+  return <CompareStory key={`${data.a.slug}|${data.b.slug}`} {...data} />;
+}
+
+function CompareStory({ a, b, relA, relB }: CompareData) {
   const go = useTransitionNavigate();
   const units = useStore((s) => s.units);
   const [picking, setPicking] = useState<'a' | 'b' | null>(null);
