@@ -172,6 +172,14 @@ const SCHEMA = {
   },
 } as const;
 
+/** Measurements alone: the follow-up when the main research comes back without usable ones. */
+const PHYSICAL_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['physical', 'sources'],
+  properties: { physical: SCHEMA.properties.physical, sources: { type: 'array', items: source } },
+} as const;
+
 /**
  * Population and range history, researched in a second call alongside the main one (one schema
  * with everything compiles to a grammar the API rejects as too large). Also used by the backfill.
@@ -313,14 +321,29 @@ export async function researchSpecies(sp: ResearchInput): Promise<ResearchResult
   ]);
   const at = new Date().toISOString();
   if (process.env.RESEARCH_DEBUG) console.log('[research] raw physical', JSON.stringify(main.out.physical));
-  const base = toFields(sp, main.out);
+  let base = toFields(sp, main.out);
+  let extraCost = 0;
+  // the model sometimes leaves weight or length at 0; one short follow-up asks for the measurements alone
+  if (!base.fields.physical) {
+    const retry = await ask<Pick<ResearchOutput, 'physical' | 'sources'>>(
+      `Research only the physical measurements of this species (plus the sources you used). Weight and length must be real published ranges, never 0.\n\n${describe(sp)}`,
+      PHYSICAL_SCHEMA,
+      3,
+    ).catch(() => null);
+    if (retry) {
+      extraCost = retry.costUsd;
+      if (process.env.RESEARCH_DEBUG) console.log('[research] retry physical', JSON.stringify(retry.out.physical));
+      const redo = toFields(sp, { ...main.out, physical: retry.out.physical, sources: [...main.out.sources, ...retry.out.sources] });
+      if (redo.fields.physical) base = { fields: { ...base.fields, physical: redo.fields.physical }, sources: redo.sources };
+    }
+  }
   const seen = new Set<string>();
   const sources = [...base.sources, ...cleanSources(history?.out.sources ?? [])].filter((x) => !seen.has(x.url) && seen.add(x.url));
   return {
     at,
     ...(history ? { historyAt: at } : {}),
     model: main.model,
-    costUsd: Math.round((main.costUsd + (history?.costUsd ?? 0)) * 1000) / 1000,
+    costUsd: Math.round((main.costUsd + (history?.costUsd ?? 0) + extraCost) * 1000) / 1000,
     fields: { ...base.fields, ...(history ? historyFields(history.out) : {}) },
     sources,
   };
