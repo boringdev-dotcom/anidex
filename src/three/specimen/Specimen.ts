@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type { SpecimenSource } from '../../data';
 import { buildBody, type Proportions } from './bodyPlans';
-import { ambientShape, hashString, sampleParts, sampleTextured, type Shape, type TexturedPart } from '../stipple/sample';
+import { ambientShape, earthShape, hashString, sampleParts, sampleTextured, type Shape, type TexturedPart } from '../stipple/sample';
 
 /**
  * The specimen boundary. Everything in the scene asks for a species' Shape through here.
@@ -89,6 +89,25 @@ export function loadSpecimenShape(sp: SpecimenSource): Promise<Shape> {
 }
 
 let ambient: Shape | null = null;
+/** Synchronous placeholder sphere, used only until the Earth is ready. */
 export function getAmbientShape(): Shape {
   return (ambient ??= ambientShape(POINT_COUNT));
+}
+
+let earth: Promise<Shape> | null = null;
+/** The landing Earth, built from the same land mask as the globe. */
+export function loadEarthShape(): Promise<Shape> {
+  return (earth ??= new Promise<Shape>((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const w = 720;
+      const h = 360;
+      const ctx = Object.assign(document.createElement('canvas'), { width: w, height: h }).getContext('2d', { willReadFrequently: true });
+      if (!ctx) return resolve(getAmbientShape());
+      ctx.drawImage(img, 0, 0, w, h);
+      resolve(earthShape(POINT_COUNT, { data: ctx.getImageData(0, 0, w, h).data, width: w, height: h }));
+    };
+    img.onerror = () => resolve(getAmbientShape());
+    img.src = '/textures/land-mask.png';
+  }));
 }

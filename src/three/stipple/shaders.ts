@@ -19,6 +19,8 @@ uniform vec3 uTarget;
 uniform float uToneInvert;
 uniform float uMidFrom;
 uniform float uMidTo;
+uniform float uInvFrom;
+uniform float uInvTo;
 uniform float uExposure;
 
 varying float vAlpha;
@@ -68,8 +70,9 @@ void main() {
   // k is "how much ink" a point gets: brightness in the dark theme, darkness in the light theme.
   float tone = mix(aToneFrom, aToneTo, st);
   float toneMid = mix(uMidFrom, uMidTo, st);
-  float k = mix(tone, 1.0 - tone, uToneInvert);
-  float kMid = mix(toneMid, 1.0 - toneMid, uToneInvert);
+  float inv = uToneInvert * mix(uInvFrom, uInvTo, st);
+  float k = mix(tone, 1.0 - tone, inv);
+  float kMid = mix(toneMid, 1.0 - toneMid, inv);
   // auto-exposure: the animal's typical tone sits at a solid, visible level in both themes,
   // and markings read as deviations from it (so pale bears survive on cream, penguins on black)
   k = clamp(0.58 + uExposure + (k - kMid) * 1.25, 0.0, 1.0);
