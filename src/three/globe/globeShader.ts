@@ -38,6 +38,7 @@ uniform float uRegAnim[MAX_REGIONS]; // 0..1 since the last change, drives the p
 uniform float uRegFocus[MAX_REGIONS];
 uniform int uRegCount;
 uniform float uHistory;
+uniform float uStep;
 
 varying vec2 vUv;
 varying vec3 vNormalV;
@@ -69,7 +70,7 @@ float disc(float dist, float r, float aa) { return 1.0 - smoothstep(r - aa, r + 
 void main() {
   vec2 ll = vec2(vUv.x * 360.0 - 180.0, vUv.y * 180.0 - 90.0);
   vec2 c;
-  float stepDeg = 1.4;
+  float stepDeg = uStep;
   float dist = cell(ll, stepDeg, c);
   vec2 cuv = vec2((c.x + 180.0) / 360.0, (c.y + 90.0) / 180.0);
   float aa = fwidth(dist) * 1.1 + 0.015;

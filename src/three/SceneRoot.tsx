@@ -45,7 +45,7 @@ export default function SceneRoot() {
   return (
     <div className="scene" aria-hidden="true">
       <Canvas
-        dpr={[1, window.matchMedia('(max-width: 768px)').matches ? 1.25 : 1.6]}
+        dpr={[1, window.matchMedia('(max-width: 768px)').matches ? 2 : 1.6]}
         gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
         camera={{ position: [0, 0, 6], fov: 35, near: 0.1, far: 50 }}
       >

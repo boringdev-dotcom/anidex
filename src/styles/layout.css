@@ -1156,38 +1156,27 @@
     transition: transform 0.6s var(--ease-out);
   }
 
-  /* text flows; the 3D sits in the top of the viewport behind a soft veil */
-  .chapter {
-    height: auto !important;
+  /* Split layout: the top of the screen is a fixed 3D stage with a solid background,
+     the story scrolls underneath it, so text and 3D never overlap. */
+  .species {
+    padding-top: calc(var(--band-h) + 0.25rem);
   }
 
-  .stage {
+  .species .chapter {
+    height: auto !important;
+    min-height: 58svh;
+  }
+
+  .species .stage {
     position: relative;
     height: auto;
-    min-height: 100svh;
-    padding-top: 50svh;
-    padding-bottom: 12svh;
+    min-height: 0;
+    padding: 1.6rem var(--gutter) 3rem;
     gap: 1.4rem;
   }
 
-  .stage::before {
-    content: '';
-    position: absolute;
-    inset: 40svh 0 0 0;
-    background: linear-gradient(transparent, var(--bg) 9svh);
-    z-index: -1;
-    transition: background var(--theme-dur) ease;
-  }
-
-  .ch-help .stage,
-  .ch-next .stage {
-    padding-top: calc(var(--header-h) + 8svh);
-  }
-
-  .ch-help .stage::before,
-  .ch-next .stage::before {
-    inset: 0;
-    background: color-mix(in oklab, var(--bg) 55%, transparent);
+  .species .ch-next {
+    min-height: calc(100svh - var(--band-h));
   }
 
   .split .col-text,
@@ -1201,13 +1190,8 @@
   }
 
   .hero {
-    padding-top: calc(var(--header-h) + 2svh);
-    padding-bottom: 6svh;
-    min-height: 100svh;
-  }
-
-  .hero::before {
-    display: none;
+    padding-top: 1rem;
+    padding-bottom: 3rem;
   }
 
   .hero__top {
@@ -1702,5 +1686,49 @@
     right: auto;
     bottom: auto;
     width: 100%;
+  }
+}
+
+/* ---------- mobile 3D stage band (species pages) ---------- */
+
+:root {
+  --band-h: 46svh;
+}
+
+.stage-band {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  body:has(.species) .stage-band {
+    display: block;
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: var(--band-h);
+    z-index: 2;
+    background: var(--bg);
+    touch-action: pan-y pinch-zoom;
+    transition: background-color var(--theme-dur) ease;
+  }
+
+  /* soft edge where the story slides under the stage */
+  body:has(.species) .stage-band::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 3.5rem;
+    background: linear-gradient(var(--bg), transparent);
+    pointer-events: none;
+  }
+
+  /* the canvas draws above the band (it is transparent and ignores pointer events) */
+  body:has(.species) .scene {
+    z-index: 3;
+  }
+
+  body:has(.species) .site-header {
+    background: transparent;
   }
 }
