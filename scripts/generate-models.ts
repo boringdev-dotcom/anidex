@@ -146,7 +146,7 @@ async function makeModel(sp: Sp, dir: string, imageUrl: string): Promise<{ raw: 
   if (r.thumbnailUrl) await download(r.thumbnailUrl).then((b) => writeFileSync(join(dir, 'thumbnail.png'), b)).catch(() => {});
   writeFileSync(join(dir, 'model.json'), JSON.stringify({ requestId: r.requestId, glb: r.glbUrl }, null, 2));
   log(sp.slug, 'model: done');
-  return { raw, paid: !resumeId };
+  return { raw, paid: r.requestId !== resumeId };
 }
 
 /** Optimize and upload; returns the site path of the stored model ("/models/<slug>-<hash>.glb"). */
