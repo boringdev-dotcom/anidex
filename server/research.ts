@@ -6,9 +6,38 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { Species } from '../src/data/types.ts';
 
-export const RESEARCH_MODEL = 'claude-opus-5-5';
-// Claude Opus 5.5 list prices ($ per token) and web search ($ per search), for the cost log
-const PRICE = { input: 4 / 1e6, output: 20 / 1e6, cacheRead: 0.2 / 1e6, search: 10 / 1000 };
+/** Claude Haiku 5.5 by default; RESEARCH_MODEL can switch it (e.g. claude-opus-5-5 for a deeper pass). */
+export const RESEARCH_MODEL = process.env.RESEARCH_MODEL ?? 'claude-haiku-5-5';
+
+/**
+ * List prices in $ per million tokens, for the cost log. Haiku 5.5 is priced by prompt length:
+ * prompts over 100k tokens pay the higher tier. Web search is $10 per 1,000 searches on every model.
+ */
+const PRICES: Record<string, { tiers: { upTo: number; input: number; output: number; cacheRead: number }[] }> = {
+  'claude-haiku-5-5': {
+    tiers: [
+      { upTo: 100_000, input: 0.1, output: 0.5, cacheRead: 0.01 },
+      { upTo: Infinity, input: 0.5, output: 2.5, cacheRead: 0.05 },
+    ],
+  },
+  'claude-sonnet-5-5': { tiers: [{ upTo: Infinity, input: 2, output: 10, cacheRead: 0.1 }] },
+  'claude-opus-5-5': { tiers: [{ upTo: Infinity, input: 4, output: 20, cacheRead: 0.2 }] },
+};
+const SEARCH_PRICE = 10 / 1000;
+
+function requestCost(model: string, u: Anthropic.Beta.BetaUsage): number {
+  const table = PRICES[model] ?? PRICES['claude-opus-5-5'];
+  const prompt = (u.input_tokens ?? 0) + (u.cache_creation_input_tokens ?? 0) + (u.cache_read_input_tokens ?? 0);
+  const t = table.tiers.find((x) => prompt <= x.upTo) ?? table.tiers[table.tiers.length - 1];
+  return (
+    ((u.input_tokens ?? 0) * t.input +
+      (u.cache_creation_input_tokens ?? 0) * t.input * 1.25 +
+      (u.cache_read_input_tokens ?? 0) * t.cacheRead +
+      (u.output_tokens ?? 0) * t.output) /
+      1e6 +
+    (u.server_tool_use?.web_search_requests ?? 0) * SEARCH_PRICE
+  );
+}
 
 export const researchEnabled = () => !!process.env.ANTHROPIC_API_KEY;
 
@@ -252,13 +281,7 @@ async function ask<T>(user: string, schema: unknown, maxSearches: number): Promi
       messages,
     });
     response = await stream.finalMessage();
-    const u = response.usage;
-    cost +=
-      (u.input_tokens ?? 0) * PRICE.input +
-      (u.cache_creation_input_tokens ?? 0) * PRICE.input * 1.25 +
-      (u.cache_read_input_tokens ?? 0) * PRICE.cacheRead +
-      (u.output_tokens ?? 0) * PRICE.output +
-      (u.server_tool_use?.web_search_requests ?? 0) * PRICE.search;
+    cost += requestCost(response.model in PRICES ? response.model : RESEARCH_MODEL, response.usage);
     if (response.stop_reason !== 'pause_turn') break;
     messages.push({ role: 'assistant', content: response.content });
   }
