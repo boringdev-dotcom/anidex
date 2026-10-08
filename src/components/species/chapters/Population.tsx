@@ -11,7 +11,7 @@ import { StageSlot } from '../../ui/StageSlot';
 import { estimateAt, rangeCounts, rangeEvents, type RangeEvent } from './popMath';
 
 export function Population({ sp, n }: { sp: Species; n: number }) {
-  const pts = sp.population.points;
+  const pts = sp.population!.points;
   const events = useMemo(() => rangeEvents(sp), [sp]);
   const single = pts.length < 2;
   // the scrubber starts at the first count and runs to the later of the last count or the last range event
@@ -118,7 +118,7 @@ export function Population({ sp, n }: { sp: Species; n: number }) {
               {fmtEstimate(est)}
             </p>
             <p className="label">
-              {sp.population.unit} · in <span className="num label--ink">{Math.min(year, lastCount)}</span>
+              {sp.population!.unit} · in <span className="num label--ink">{Math.min(year, lastCount)}</span>
               {year > lastCount ? ' · latest count' : ''}
             </p>
             <p className="pop__delta num">{deltaText}</p>
@@ -166,7 +166,7 @@ export function Population({ sp, n }: { sp: Species; n: number }) {
             year={year}
             domain={[y0, y1]}
             events={events}
-            label={sp.population.unit}
+            label={sp.population!.unit}
             onScrub={(y) => {
               override.current = true;
               setYear(y);
@@ -181,10 +181,10 @@ export function Population({ sp, n }: { sp: Species; n: number }) {
 
         <p className="label pop__source">
           Population:{' '}
-          <a className="link label--ink" href={sp.population.source.url} target="_blank" rel="noreferrer">
-            {sp.population.source.label}
+          <a className="link label--ink" href={sp.population!.source.url} target="_blank" rel="noreferrer">
+            {sp.population!.source.label}
           </a>
-          {sp.population.note ? <span className="pop__note"> {sp.population.note}</span> : null}
+          {sp.population!.note ? <span className="pop__note"> {sp.population!.note}</span> : null}
           {sp.rangeHistory && (
             <>
               {' '}

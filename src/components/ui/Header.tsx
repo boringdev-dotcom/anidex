@@ -31,6 +31,9 @@ export function Header() {
         )}
       </div>
       <nav className="site-header__right" aria-label="Site">
+        <Link to="/explore" className="label label--ink header-link">
+          Explore
+        </Link>
         {page === 'species' && (
           <a href="/" className="label label--ink header-link" onClick={home}>
             Search

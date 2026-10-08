@@ -2,6 +2,7 @@ import { createBrowserRouter, Outlet, redirect, ScrollRestoration, type LoaderFu
 import { lazy, Suspense } from 'react';
 import Landing from './components/landing/Landing';
 import SpeciesPage from './components/species/SpeciesPage';
+import Explore, { type ExploreData } from './components/explore/Explore';
 import { Header } from './components/ui/Header';
 import { Grain } from './components/ui/Grain';
 import { fetchSpecies, fetchStats, listSpecies, Moved } from './data';
@@ -36,6 +37,12 @@ async function landingLoader(): Promise<LandingData> {
   return { stats, featured: featured?.items ?? [] };
 }
 
+async function exploreLoader({ request }: LoaderFunctionArgs): Promise<ExploreData> {
+  const p = Object.fromEntries(new URL(request.url).searchParams);
+  const [list, stats] = await Promise.all([listSpecies({ ...p, pageSize: 40 }), fetchStats().catch(() => null)]);
+  return { list, stats };
+}
+
 async function speciesLoader({ params }: LoaderFunctionArgs) {
   try {
     const sp = await fetchSpecies(String(params.slug));
@@ -55,6 +62,7 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', element: <Landing />, loader: landingLoader },
       { path: '/species/:slug', element: <SpeciesPage />, loader: speciesLoader },
+      { path: '/explore', element: <Explore />, loader: exploreLoader },
       { path: '*', loader: () => redirect('/') },
     ],
   },

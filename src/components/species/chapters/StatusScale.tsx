@@ -7,7 +7,7 @@ import { prefersReducedMotion } from '../../../hooks/useMediaQuery';
 
 export function StatusScale({ status }: { status: IUCNStatus }) {
   const ref = useRef<HTMLDivElement>(null);
-  const idx = STATUS_ORDER.indexOf(status);
+  const idx = (STATUS_ORDER as readonly string[]).indexOf(status);
   const n = STATUS_ORDER.length;
   const pct = ((idx + 0.5) / n) * 100;
 

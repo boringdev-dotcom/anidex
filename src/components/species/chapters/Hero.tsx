@@ -23,7 +23,7 @@ export function Hero({ sp }: { sp: Species }) {
             <ChapterLabel n={1}>Specimen</ChapterLabel>
           </Reveal>
           <Reveal as="p" className="label hero__taxo" split="fade" immediate delay={0.6}>
-            {sp.taxonomy.class} <span aria-hidden="true">/</span> {sp.taxonomy.order} <span aria-hidden="true">/</span> {sp.taxonomy.family}
+            {[sp.taxonomy.class, sp.taxonomy.order, sp.taxonomy.family].filter(Boolean).join(' / ')}
           </Reveal>
         </div>
 

@@ -32,6 +32,8 @@ export interface SpeciesRecord extends Species {
   /** text summary and its attribution, for auto pages */
   summary?: { text: string; source: string; url: string; license: string } | null;
   sources?: { label: string; url: string }[];
+  /** on-demand research (auto pages): present once it has run */
+  research?: { state: 'done'; at: string };
   /** the species the footer leads to: the curated `next`, or the closest relative */
   nextSummary?: SpeciesSummary | null;
 }
@@ -47,4 +49,11 @@ export interface Stats {
   total: number;
   threatened: number;
   byClass: { name: string; count: number }[];
+}
+
+export type ResearchState = 'done' | 'queued' | 'running' | 'failed' | 'capped' | 'unavailable';
+export interface ResearchStatusResponse {
+  state: ResearchState;
+  position?: number;
+  error?: string;
 }

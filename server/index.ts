@@ -12,7 +12,8 @@ import { join } from 'node:path';
 import { api } from './api.ts';
 import { pool } from './db/pool.ts';
 import { migrate } from './db/migrate.ts';
-import { seedCurated } from './db/seed.ts';
+import { seedAuto, seedCurated } from './db/seed.ts';
+import { startWorker } from './jobs.ts';
 
 const root = join(import.meta.dirname, '..');
 const dist = join(root, 'dist');
@@ -60,6 +61,8 @@ app.use((req: Request, res: Response) => {
 if (pool) {
   await migrate(pool);
   console.log(`[db] upserted ${await seedCurated(pool)} curated species`);
+  console.log(`[db] ${await seedAuto(pool)}`);
+  startWorker(pool);
 } else {
   console.log('[db] DATABASE_URL not set: serving the bundled curated species');
 }

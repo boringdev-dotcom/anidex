@@ -79,7 +79,10 @@ function pgRepo(): Repo {
         next = n.rowCount ? toSummary(n.rows[0]) : null;
       }
       next ??= (await this.related(slug, 1))[0] ?? null;
-      return { ...row.data, tier: row.tier, photo: row.photo, needsReview: row.needs_review, nextSummary: next };
+      // on-demand research is stored separately (so data reloads keep it) and layered on top here
+      const { research, ...base } = row.data;
+      const merged = research ? { ...base, ...research.fields, status: { ...base.status, ...research.fields?.status }, sources: [...(base.sources ?? []), ...(research.sources ?? [])] } : base;
+      return { ...merged, tier: row.tier, photo: row.photo, needsReview: row.needs_review, research: research ? { state: 'done', at: research.at } : undefined, nextSummary: next };
     },
     async search(q, limit = 8) {
       const term = q.trim().toLowerCase();
