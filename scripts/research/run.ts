@@ -43,7 +43,7 @@ await Promise.all(
         const ph = r.fields.physical;
         console.log(
           `${slug.padEnd(28)} $${r.costUsd} ${((Date.now() - t0) / 1000).toFixed(0)}s  ` +
-            `measurements: ${ph ? `${ph.weightKg.join('-')} kg, ${ph.lengthM.join('-')} m` : 'none'}` +
+            `measurements: ${ph ? `${ph.weightKg?.join("-") ?? "no weight"} kg, ${ph.lengthM.join("-")} m` : "none"}` +
             `${r.fields.population ? `, population ${r.fields.population.points.length} pts` : ''}`,
         );
       } catch (err) {
