@@ -1,0 +1,212 @@
+{
+  "slug": "emperor-penguin",
+  "commonName": "Emperor penguin",
+  "scientificName": "Aptenodytes forsteri",
+  "descriptor": "The tallest penguin, raising its chick on Antarctic sea ice through the darkest, coldest months.",
+  "aliases": [
+    "emperor",
+    "penguin",
+    "antarctic penguin",
+    "aptenodytes",
+    "king of penguins"
+  ],
+  "taxonomy": {
+    "class": "Aves",
+    "order": "Sphenisciformes",
+    "family": "Spheniscidae"
+  },
+  "gbifTaxonKey": 2481661,
+  "specimen": {
+    "sizeClass": "m",
+    "bodyPlan": "biped",
+    "proportions": {
+      "length": 0.35,
+      "height": 0.9,
+      "bulk": 0.75,
+      "neck": 0.15,
+      "tail": 0.1
+    },
+    "features": [
+      "beak",
+      "flippers"
+    ]
+  },
+  "range": {
+    "summary": "Circumpolar around the Antarctic coast, breeding in more than 60 known colonies on fast ice and foraging in the surrounding Southern Ocean.",
+    "centroid": {
+      "lat": -74.6,
+      "lon": 165.4
+    },
+    "bbox": [
+      -180,
+      -78,
+      180,
+      -64
+    ],
+    "regions": [
+      "Ross Sea",
+      "Weddell Sea",
+      "Dronning Maud Land coast",
+      "Adelie Land and East Antarctica",
+      "Bellingshausen and Amundsen Seas"
+    ],
+    "countries": []
+  },
+  "population": {
+    "unit": "adult emperor penguins at colonies in spring (global satellite index)",
+    "points": [
+      {
+        "year": 2009,
+        "estimate": 252000
+      },
+      {
+        "year": 2010,
+        "estimate": 233000
+      },
+      {
+        "year": 2011,
+        "estimate": 221000
+      },
+      {
+        "year": 2012,
+        "estimate": 225000
+      },
+      {
+        "year": 2014,
+        "estimate": 222000
+      },
+      {
+        "year": 2015,
+        "estimate": 206000
+      },
+      {
+        "year": 2016,
+        "estimate": 206000
+      },
+      {
+        "year": 2017,
+        "estimate": 215000
+      },
+      {
+        "year": 2018,
+        "estimate": 228000
+      }
+    ],
+    "source": {
+      "label": "LaRue et al. 2024, Proc. R. Soc. B 291: 20232067",
+      "url": "https://doi.org/10.1098/rspb.2023.2067",
+      "year": 2024
+    },
+    "note": "The 2009 and 2018 values are stated in the paper; other years are read from its Figure 1 and are approximate to within about 2,000. This index counts adults present in late spring, so it is lower than the older 2009 estimate of about 238,000 breeding pairs."
+  },
+  "status": {
+    "iucn": "EN",
+    "assessed": 2026,
+    "trend": "decreasing",
+    "threats": [
+      {
+        "title": "Early sea-ice break-up",
+        "detail": "When fast ice breaks up before chicks fledge, whole colonies can fail, as happened across the Bellingshausen Sea in 2022."
+      },
+      {
+        "title": "Long-term sea-ice loss",
+        "detail": "Climate models project the global population will halve by the 2080s without deep emissions cuts."
+      },
+      {
+        "title": "Moulting habitat loss",
+        "detail": "Adults need stable ice for a month each summer while they moult and cannot swim."
+      },
+      {
+        "title": "Food web change",
+        "detail": "Shifts in sea ice alter the krill, fish and squid that emperors dive for."
+      }
+    ],
+    "source": {
+      "label": "IUCN Red List update: emperor penguin moved from Near Threatened to Endangered",
+      "url": "https://iucn.org/press-release/202604/emperor-penguin-and-antarctic-fur-seal-now-endangered-due-climate-change-iucn",
+      "year": 2026
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Snow Hill Island",
+        "country": "Antarctica (Weddell Sea)",
+        "lat": -64.52,
+        "lon": -57.44,
+        "note": "The most visited colony, reached by icebreaker and helicopter."
+      },
+      {
+        "name": "Gould Bay",
+        "country": "Antarctica (Weddell Sea)",
+        "lat": -77.69,
+        "lon": -47.66,
+        "note": "Large colony reached by small-plane expeditions from Union Glacier."
+      },
+      {
+        "name": "Atka Bay",
+        "country": "Antarctica (Dronning Maud Land)",
+        "lat": -70.61,
+        "lon": -8.15,
+        "note": "Colony near Germany's Neumayer station, visited on fly-in trips."
+      },
+      {
+        "name": "Pointe Geologie",
+        "country": "Antarctica (Adelie Land)",
+        "lat": -66.67,
+        "lon": 140.01,
+        "note": "Long-studied colony near Dumont d'Urville station, made famous on film."
+      },
+      {
+        "name": "Cape Washington",
+        "country": "Antarctica (Ross Sea)",
+        "lat": -74.65,
+        "lon": 165.42,
+        "note": "One of the largest colonies, occasionally reached by Ross Sea voyages."
+      }
+    ],
+    "bestMonths": [
+      10,
+      11,
+      12
+    ],
+    "tip": "Late October to December, chicks have left their parents' feet and the fast ice still holds. Colonies disperse once the ice breaks up in summer."
+  },
+  "help": {
+    "actions": [
+      {
+        "title": "Cut your carbon emissions",
+        "detail": "Sea-ice loss driven by warming is the main threat, so emissions cuts matter more than anything else."
+      },
+      {
+        "title": "Back Antarctic marine protected areas",
+        "detail": "Support proposals for protected areas in the Weddell Sea and East Antarctica at CCAMLR.",
+        "url": "https://www.asoc.org"
+      },
+      {
+        "title": "Skip krill oil supplements",
+        "detail": "Antarctic krill fishing competes with penguins and their prey for the same food."
+      },
+      {
+        "title": "Travel only with IAATO operators",
+        "detail": "Members follow distance and visitor limits that keep disturbance at colonies low.",
+        "url": "https://iaato.org"
+      }
+    ],
+    "orgs": [
+      {
+        "name": "British Antarctic Survey",
+        "url": "https://www.bas.ac.uk"
+      },
+      {
+        "name": "Antarctic and Southern Ocean Coalition",
+        "url": "https://www.asoc.org"
+      },
+      {
+        "name": "Scientific Committee on Antarctic Research",
+        "url": "https://scar.org"
+      }
+    ]
+  },
+  "next": "axolotl"
+}

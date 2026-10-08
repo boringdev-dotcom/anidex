@@ -1,0 +1,66 @@
+/* Single source of truth for both the DOM and the WebGL scene (read by src/theme/tokens.ts). */
+:root {
+  --font-display: 'Instrument Serif', 'Times New Roman', serif;
+  --font-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
+
+  --fs-mega: clamp(3.6rem, 12.5vw, 15rem);
+  --fs-display: clamp(3rem, 7.4vw, 8.75rem);
+  --fs-h2: clamp(2.25rem, 4.8vw, 5.5rem);
+  --fs-h3: clamp(1.45rem, 2.1vw, 2.2rem);
+  --fs-body: clamp(0.98rem, 1.02vw, 1.1rem);
+  --fs-small: 0.875rem;
+  --fs-label: 0.6875rem;
+
+  --gutter: clamp(16px, 3.2vw, 52px);
+  --header-h: 72px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --theme-dur: 0.6s;
+
+  /* IUCN status hues: one ramp, green to red. Lightness/chroma set per theme. */
+  --h-LC: 152;
+  --h-NT: 118;
+  --h-VU: 78;
+  --h-EN: 48;
+  --h-CR: 22;
+}
+
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0b0b0c;
+  --ink: #ede6d6;
+  --ink-2: rgb(237 230 214 / 0.64);
+  --ink-3: rgb(237 230 214 / 0.4);
+  --line: rgb(237 230 214 / 0.16);
+  --line-strong: rgb(237 230 214 / 0.32);
+  --veil: rgb(11 11 12 / 0.82);
+  --grain-opacity: 0.075;
+  --grain-blend: screen;
+  --status-l: 0.8;
+  --status-c: 0.15;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f3ebd8;
+  --ink: #101418;
+  --ink-2: rgb(16 20 24 / 0.68);
+  --ink-3: rgb(16 20 24 / 0.45);
+  --line: rgb(16 20 24 / 0.14);
+  --line-strong: rgb(16 20 24 / 0.3);
+  --veil: rgb(243 235 216 / 0.86);
+  --grain-opacity: 0.12;
+  --grain-blend: multiply;
+  --status-l: 0.5;
+  --status-c: 0.15;
+}
+
+:root {
+  --st-LC: oklch(var(--status-l) var(--status-c) var(--h-LC));
+  --st-NT: oklch(var(--status-l) var(--status-c) var(--h-NT));
+  --st-VU: oklch(var(--status-l) var(--status-c) var(--h-VU));
+  --st-EN: oklch(var(--status-l) var(--status-c) var(--h-EN));
+  --st-CR: oklch(var(--status-l) calc(var(--status-c) + 0.03) var(--h-CR));
+  --st-EW: var(--ink-2);
+  --st-EX: var(--ink-3);
+}

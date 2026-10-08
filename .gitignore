@@ -1,52 +1,7 @@
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
-# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-
-# Test binary, built with `go test -c`
-*.test
-
-# Code coverage profiles and other test artifacts
-*.out
-coverage.*
-*.coverprofile
-profile.cov
-
-# Dependency directories (remove the comment below to include it)
-# vendor/
-
-# Go workspace file
-go.work
-go.work.sum
-
-# env file
-.env
-
-# Editor/IDE
-# .idea/
-# .vscode/
-serviceAccountKey.json
-
-# Frontend - React Native/Expo
-src/frontend/node_modules/
-src/frontend/.expo/
-src/frontend/dist/
-src/frontend/web-build/
-src/frontend/*.orig.*
-src/frontend/*.jks
-src/frontend/*.p8
-src/frontend/*.p12
-src/frontend/*.key
-src/frontend/*.mobileprovision
-src/frontend/.metro-health-check*
-src/frontend/npm-debug.*
-src/frontend/yarn-debug.*
-src/frontend/yarn-error.*
-src/frontend/*.tsbuildinfo
-src/frontend/google-services.json
-src/frontend/GoogleService-Info.plist
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+*.tsbuildinfo
+.vite

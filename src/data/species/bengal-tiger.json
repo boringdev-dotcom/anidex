@@ -1,0 +1,220 @@
+{
+  "slug": "bengal-tiger",
+  "commonName": "Bengal tiger",
+  "scientificName": "Panthera tigris tigris",
+  "descriptor": "The largest living cat, hunting alone through the forests and mangroves of the Indian subcontinent.",
+  "aliases": [
+    "tiger",
+    "royal bengal tiger",
+    "indian tiger",
+    "bagh",
+    "big cat"
+  ],
+  "taxonomy": {
+    "class": "Mammalia",
+    "order": "Carnivora",
+    "family": "Felidae"
+  },
+  "gbifTaxonKey": 5219416,
+  "specimen": {
+    "sizeClass": "l",
+    "bodyPlan": "quadruped",
+    "proportions": {
+      "length": 0.85,
+      "height": 0.5,
+      "bulk": 0.65,
+      "neck": 0.2,
+      "tail": 0.8
+    },
+    "features": [
+      "roundEars"
+    ]
+  },
+  "range": {
+    "summary": "Fragmented populations across India, Bangladesh, Nepal and Bhutan, from Himalayan foothills to the Sundarbans delta.",
+    "centroid": {
+      "lat": 23.5,
+      "lon": 82
+    },
+    "bbox": [
+      68,
+      8,
+      97,
+      31
+    ],
+    "regions": [
+      "Central Indian highlands",
+      "Terai Arc",
+      "Western Ghats",
+      "Sundarbans"
+    ],
+    "countries": [
+      "IN",
+      "BD",
+      "NP",
+      "BT"
+    ]
+  },
+  "population": {
+    "unit": "wild tigers in India",
+    "points": [
+      {
+        "year": 1900,
+        "estimate": 40000
+      },
+      {
+        "year": 1972,
+        "estimate": 1827
+      },
+      {
+        "year": 2006,
+        "estimate": 1411,
+        "low": 1165,
+        "high": 1657
+      },
+      {
+        "year": 2010,
+        "estimate": 1706,
+        "low": 1520,
+        "high": 1909
+      },
+      {
+        "year": 2014,
+        "estimate": 2226,
+        "low": 1945,
+        "high": 2491
+      },
+      {
+        "year": 2018,
+        "estimate": 2967,
+        "low": 2603,
+        "high": 3346
+      },
+      {
+        "year": 2022,
+        "estimate": 3682,
+        "low": 3167,
+        "high": 3925
+      }
+    ],
+    "source": {
+      "label": "NTCA, Status of Tigers in India 2022",
+      "url": "https://ntca.gov.in",
+      "year": 2023
+    },
+    "note": "The 1900 figure is a widely cited historical back-estimate, not a census. Counts before 2006 used pugmark methods and are not directly comparable with camera-trap estimates."
+  },
+  "status": {
+    "iucn": "EN",
+    "assessed": 2022,
+    "trend": "stable",
+    "threats": [
+      {
+        "title": "Habitat loss and fragmentation",
+        "detail": "Roads, mines and farmland sever the corridors that connect reserves."
+      },
+      {
+        "title": "Poaching",
+        "detail": "Demand for skins, bones and body parts persists across Asia."
+      },
+      {
+        "title": "Prey depletion",
+        "detail": "Bushmeat hunting removes the deer and wild pigs tigers depend on."
+      },
+      {
+        "title": "Conflict with people",
+        "detail": "Retaliatory killings follow livestock losses on reserve edges."
+      }
+    ],
+    "source": {
+      "label": "IUCN Red List: Panthera tigris",
+      "url": "https://www.iucnredlist.org/species/15955/214862019",
+      "year": 2022
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Ranthambore National Park",
+        "country": "India",
+        "lat": 26.02,
+        "lon": 76.5,
+        "note": "Dry deciduous forest with old fort ruins and high sighting rates."
+      },
+      {
+        "name": "Bandhavgarh National Park",
+        "country": "India",
+        "lat": 23.7,
+        "lon": 81.03,
+        "note": "One of the highest tiger densities in India."
+      },
+      {
+        "name": "Kanha National Park",
+        "country": "India",
+        "lat": 22.33,
+        "lon": 80.63,
+        "note": "Sal forest and meadows; the setting that inspired The Jungle Book."
+      },
+      {
+        "name": "Sundarbans",
+        "country": "India / Bangladesh",
+        "lat": 21.95,
+        "lon": 89.18,
+        "note": "Mangrove tigers that swim between islands. Sightings are rare."
+      },
+      {
+        "name": "Chitwan National Park",
+        "country": "Nepal",
+        "lat": 27.53,
+        "lon": 84.35,
+        "note": "Grassland and riverine forest at the foot of the Himalaya."
+      }
+    ],
+    "bestMonths": [
+      11,
+      12,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "tip": "Late dry season, March to May, draws tigers to the few remaining waterholes. Most Indian parks close core zones during the monsoon."
+  },
+  "help": {
+    "actions": [
+      {
+        "title": "Choose certified wood and paper",
+        "detail": "FSC-certified products reduce pressure on the forests tigers live in.",
+        "url": "https://fsc.org"
+      },
+      {
+        "title": "Never buy tiger products",
+        "detail": "Skins, bone wine, teeth and claws fund the poaching networks."
+      },
+      {
+        "title": "Travel with responsible operators",
+        "detail": "Pick lodges that fund patrols, employ locals and cap vehicle numbers."
+      },
+      {
+        "title": "Fund rangers directly",
+        "detail": "Anti-poaching patrols are one of the most cost-effective interventions."
+      }
+    ],
+    "orgs": [
+      {
+        "name": "Panthera",
+        "url": "https://panthera.org"
+      },
+      {
+        "name": "WWF Tigers",
+        "url": "https://www.worldwildlife.org/species/tiger"
+      },
+      {
+        "name": "Wildlife Conservation Trust",
+        "url": "https://www.wildlifeconservationtrust.org"
+      }
+    ]
+  },
+  "next": "snow-leopard"
+}

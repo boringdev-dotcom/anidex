@@ -1,0 +1,229 @@
+{
+  "slug": "african-savanna-elephant",
+  "commonName": "African savanna elephant",
+  "scientificName": "Loxodonta africana",
+  "descriptor": "The largest living land animal, reshaping Africa's savannas as it feeds, digs for water and walks.",
+  "aliases": [
+    "african elephant",
+    "african bush elephant",
+    "savannah elephant",
+    "bush elephant",
+    "tembo",
+    "ndlovu"
+  ],
+  "taxonomy": {
+    "class": "Mammalia",
+    "order": "Proboscidea",
+    "family": "Elephantidae"
+  },
+  "gbifTaxonKey": 2435350,
+  "specimen": {
+    "sizeClass": "xl",
+    "bodyPlan": "quadruped",
+    "proportions": {
+      "length": 0.8,
+      "height": 0.8,
+      "bulk": 1,
+      "neck": 0.1,
+      "tail": 0.25
+    },
+    "features": [
+      "trunk",
+      "bigEars"
+    ]
+  },
+  "range": {
+    "summary": "Savannas, woodlands, floodplains and semi-deserts across sub-Saharan Africa, with most elephants now in southern and eastern Africa.",
+    "centroid": {
+      "lat": -18.5,
+      "lon": 25.5
+    },
+    "bbox": [
+      -14,
+      -35,
+      43,
+      17
+    ],
+    "regions": [
+      "Kavango-Zambezi (KAZA)",
+      "East African savannas",
+      "Southern African lowveld",
+      "Sahel and West Africa"
+    ],
+    "countries": [
+      "AO",
+      "BJ",
+      "BW",
+      "BF",
+      "CM",
+      "CF",
+      "TD",
+      "CD",
+      "ER",
+      "ET",
+      "GH",
+      "KE",
+      "MW",
+      "ML",
+      "MZ",
+      "NA",
+      "NE",
+      "NG",
+      "RW",
+      "SN",
+      "ZA",
+      "SS",
+      "SZ",
+      "TZ",
+      "UG",
+      "ZM",
+      "ZW"
+    ]
+  },
+  "population": {
+    "unit": "African elephants continent-wide (savanna and forest species combined)",
+    "points": [
+      {
+        "year": 1979,
+        "estimate": 1300000
+      },
+      {
+        "year": 1987,
+        "estimate": 760000
+      },
+      {
+        "year": 1989,
+        "estimate": 609000
+      },
+      {
+        "year": 2006,
+        "estimate": 508325,
+        "low": 471762,
+        "high": 544888
+      },
+      {
+        "year": 2016,
+        "estimate": 411005,
+        "low": 390841,
+        "high": 431169
+      }
+    ],
+    "source": {
+      "label": "African Elephant Database (IUCN SSC AfESG), with Douglas-Hamilton 1979 and 1987 and the Ivory Trade Review Group 1989",
+      "url": "https://africanelephantdatabase.org/report/2016/Africa",
+      "year": 2016
+    },
+    "note": "Figures before 2006 are expert estimates with large uncertainty, and 1979 may be an overestimate. No continent-wide count separates the two species; the 2016 Great Elephant Census counted 352,271 savanna elephants in 18 countries."
+  },
+  "status": {
+    "iucn": "EN",
+    "assessed": 2021,
+    "trend": "decreasing",
+    "threats": [
+      {
+        "title": "Poaching for ivory",
+        "detail": "Illegal killing surged after 2008 and peaked in 2011, wiping out herds across East and Central Africa."
+      },
+      {
+        "title": "Habitat loss and fragmentation",
+        "detail": "Farms, fences and settlements cut the migration routes between water and seasonal grazing."
+      },
+      {
+        "title": "Conflict with people",
+        "detail": "Crop raiding and deaths on both sides lead to retaliatory and control killings."
+      },
+      {
+        "title": "Drought and climate change",
+        "detail": "Longer dry spells strain water supplies and kill calves in hard-hit populations."
+      }
+    ],
+    "source": {
+      "label": "IUCN Red List: Loxodonta africana",
+      "url": "https://www.iucnredlist.org/species/181008073/223031019",
+      "year": 2021
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Chobe National Park",
+        "country": "Botswana",
+        "lat": -17.82,
+        "lon": 25.05,
+        "note": "Huge dry-season herds gather along the Chobe riverfront."
+      },
+      {
+        "name": "Amboseli National Park",
+        "country": "Kenya",
+        "lat": -2.64,
+        "lon": 37.24,
+        "note": "Big-tusked elephants in front of Kilimanjaro, studied for over 50 years."
+      },
+      {
+        "name": "Kruger National Park",
+        "country": "South Africa",
+        "lat": -23.94,
+        "lon": 31.51,
+        "note": "Large, accessible population with good self-drive roads."
+      },
+      {
+        "name": "Etosha National Park",
+        "country": "Namibia",
+        "lat": -18.99,
+        "lon": 15.75,
+        "note": "Pale, dust-coated elephants at floodlit waterholes in a semi-desert."
+      },
+      {
+        "name": "Tarangire National Park",
+        "country": "Tanzania",
+        "lat": -4,
+        "lon": 36.05,
+        "note": "Baobab country where hundreds of elephants crowd the river in the dry months."
+      }
+    ],
+    "bestMonths": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "tip": "The dry season from June to October concentrates elephants at rivers and waterholes, and thinner vegetation makes them easier to see."
+  },
+  "help": {
+    "actions": [
+      {
+        "title": "Never buy ivory",
+        "detail": "Antique or new, any ivory sale helps launder poached tusks into legal markets."
+      },
+      {
+        "title": "Support coexistence projects",
+        "detail": "Beehive fences and early-warning systems keep elephants out of crops without harming them.",
+        "url": "https://elephantsandbees.com"
+      },
+      {
+        "title": "Travel with responsible operators",
+        "detail": "Pick lodges and conservancies that share income with communities living alongside elephants."
+      },
+      {
+        "title": "Fund rangers and monitoring",
+        "detail": "Anti-poaching patrols and aerial surveys are what detect and stop a poaching surge early."
+      }
+    ],
+    "orgs": [
+      {
+        "name": "Save the Elephants",
+        "url": "https://savetheelephants.org"
+      },
+      {
+        "name": "Elephants Without Borders",
+        "url": "https://elephantswithoutborders.org"
+      },
+      {
+        "name": "African Wildlife Foundation",
+        "url": "https://www.awf.org"
+      }
+    ]
+  },
+  "next": "giant-panda"
+}

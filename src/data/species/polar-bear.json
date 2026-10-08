@@ -1,0 +1,71 @@
+{
+  "slug": "polar-bear",
+  "commonName": "Polar bear",
+  "scientificName": "Ursus maritimus",
+  "descriptor": "The largest land carnivore, a marine mammal that hunts seals from the drifting sea ice of the Arctic.",
+  "aliases": ["ice bear", "sea bear", "white bear", "nanuq", "arctic bear"],
+  "taxonomy": { "class": "Mammalia", "order": "Carnivora", "family": "Ursidae" },
+  "gbifTaxonKey": 2433451,
+  "specimen": {
+    "sizeClass": "l",
+    "bodyPlan": "quadruped",
+    "proportions": { "length": 0.75, "height": 0.55, "bulk": 0.8, "neck": 0.35, "tail": 0.08 },
+    "features": ["roundEars"]
+  },
+  "range": {
+    "summary": "Circumpolar across the Arctic sea ice in 20 subpopulations, from Hudson Bay and the Canadian archipelago to Alaska, Russia, Greenland and Svalbard.",
+    "centroid": { "lat": 74.0, "lon": -95.0 },
+    "bbox": [-180, 51, 180, 90],
+    "regions": ["Canadian Arctic Archipelago", "Hudson Bay", "Beaufort and Chukchi Seas", "Barents Sea and Svalbard", "Greenland", "Russian Arctic"],
+    "countries": ["CA", "US", "RU", "GL", "SJ"]
+  },
+  "population": {
+    "unit": "polar bears worldwide (PBSG global estimate)",
+    "points": [
+      { "year": 1993, "estimate": 24920, "low": 21470, "high": 28370 },
+      { "year": 1997, "estimate": 24500, "low": 22000, "high": 27000 },
+      { "year": 2001, "estimate": 23250, "low": 21500, "high": 25000 },
+      { "year": 2005, "estimate": 22500, "low": 20000, "high": 25000 },
+      { "year": 2009, "estimate": 22500, "low": 20000, "high": 25000 },
+      { "year": 2015, "estimate": 26000, "low": 22000, "high": 31000 }
+    ],
+    "source": { "label": "IUCN/SSC Polar Bear Specialist Group proceedings (1993 to 2009) and Regehr et al. 2016", "url": "https://www.iucn-pbsg.org/population-status", "year": 2016 },
+    "note": "PBSG published only ranges from 1993 to 2009, so the estimate shown is the midpoint. Changes between these totals mostly reflect which surveys were included, not real change, and several Russian Arctic subpopulations have never been surveyed."
+  },
+  "status": {
+    "iucn": "VU",
+    "assessed": 2015,
+    "trend": "unknown",
+    "threats": [
+      { "title": "Loss of sea ice", "detail": "A warming Arctic shortens the ice season, cutting hunting time and lengthening fasts on land." },
+      { "title": "Conflict with people", "detail": "Bears stranded ashore for longer wander into towns and camps, and some are killed in defence of life." },
+      { "title": "Pollution", "detail": "Persistent industrial chemicals concentrate up the Arctic food web and build up in polar bear fat." },
+      { "title": "Industry and shipping", "detail": "Oil, gas and shipping expand as the ice retreats, bringing spill risk and disturbance near dens." }
+    ],
+    "source": { "label": "IUCN Red List: Ursus maritimus", "url": "https://www.iucnredlist.org/species/22823/14871490", "year": 2015 }
+  },
+  "sightings": {
+    "places": [
+      { "name": "Churchill", "country": "Canada", "lat": 58.77, "lon": -94.17, "note": "Bears gather on the Hudson Bay shore each autumn waiting for the sea to freeze." },
+      { "name": "Wapusk National Park", "country": "Canada", "lat": 57.78, "lon": -93.37, "note": "One of the largest denning areas known; mothers and cubs emerge in late winter." },
+      { "name": "Svalbard", "country": "Norway", "lat": 78.22, "lon": 15.65, "note": "Expedition ships from Longyearbyen search the pack ice edge in summer." },
+      { "name": "Wrangel Island", "country": "Russia", "lat": 71.23, "lon": -179.42, "note": "A remote reserve with very high densities of maternity dens. Access is tightly restricted." }
+    ],
+    "bestMonths": [2, 3, 7, 8, 10, 11],
+    "tip": "Churchill peaks in October and November before Hudson Bay freezes. Svalbard cruises run in July and August, and Wapusk den tours run in February and March."
+  },
+  "help": {
+    "actions": [
+      { "title": "Cut your carbon emissions", "detail": "Sea ice loss driven by warming is the single biggest threat, so every reduction in emissions counts." },
+      { "title": "Back strong climate policy", "detail": "Vote for and support leaders who commit to rapid, binding emission cuts." },
+      { "title": "Travel with regulated operators", "detail": "Choose tours that follow local viewing rules and keep a safe distance from bears." },
+      { "title": "Support polar bear research", "detail": "Long-term population monitoring is expensive and relies on sustained funding.", "url": "https://polarbearsinternational.org" }
+    ],
+    "orgs": [
+      { "name": "Polar Bears International", "url": "https://polarbearsinternational.org" },
+      { "name": "IUCN SSC Polar Bear Specialist Group", "url": "https://www.iucn-pbsg.org" },
+      { "name": "WWF Arctic", "url": "https://www.arcticwwf.org" }
+    ]
+  },
+  "next": "bornean-orangutan"
+}

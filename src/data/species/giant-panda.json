@@ -1,0 +1,178 @@
+{
+  "slug": "giant-panda",
+  "commonName": "Giant panda",
+  "scientificName": "Ailuropoda melanoleuca",
+  "descriptor": "A black-and-white bear that lives almost entirely on bamboo in the misty mountain forests of central China.",
+  "aliases": [
+    "panda",
+    "panda bear",
+    "bamboo bear",
+    "da xiongmao",
+    "xiongmao"
+  ],
+  "taxonomy": {
+    "class": "Mammalia",
+    "order": "Carnivora",
+    "family": "Ursidae"
+  },
+  "gbifTaxonKey": 2433399,
+  "specimen": {
+    "sizeClass": "l",
+    "bodyPlan": "quadruped",
+    "proportions": {
+      "length": 0.6,
+      "height": 0.5,
+      "bulk": 0.85,
+      "neck": 0.1,
+      "tail": 0.05
+    },
+    "features": [
+      "roundEars"
+    ]
+  },
+  "range": {
+    "summary": "Temperate bamboo forests between about 1,200 and 3,500 m in six mountain ranges of Sichuan, Shaanxi and Gansu.",
+    "centroid": {
+      "lat": 32.5,
+      "lon": 104
+    },
+    "bbox": [
+      102,
+      28,
+      109,
+      34.5
+    ],
+    "regions": [
+      "Minshan",
+      "Qionglai",
+      "Qinling",
+      "Liangshan",
+      "Daxiangling",
+      "Xiaoxiangling"
+    ],
+    "countries": [
+      "CN"
+    ]
+  },
+  "population": {
+    "unit": "wild giant pandas in China (national surveys)",
+    "points": [
+      {
+        "year": 1977,
+        "estimate": 2459
+      },
+      {
+        "year": 1988,
+        "estimate": 1114
+      },
+      {
+        "year": 2003,
+        "estimate": 1596
+      },
+      {
+        "year": 2014,
+        "estimate": 1864
+      }
+    ],
+    "source": {
+      "label": "State Forestry Administration, Fourth National Giant Panda Survey",
+      "url": "https://www.giantpandaglobal.com/en/news/the-results-of-the-fourth-giant-panda-survey-2015-02-28",
+      "year": 2015
+    },
+    "note": "Each point is the end year of a multi-year national survey. Methods improved over time, so early surveys are not strictly comparable. The 2014 figure excludes dependent cubs, and officials said in 2024 the wild population was nearly 1,900."
+  },
+  "status": {
+    "iucn": "VU",
+    "assessed": 2016,
+    "trend": "increasing",
+    "threats": [
+      {
+        "title": "Habitat fragmentation",
+        "detail": "Roads, dams and settlements split pandas into more than 30 isolated subpopulations."
+      },
+      {
+        "title": "Small, isolated groups",
+        "detail": "Many subpopulations hold fewer than 10 animals and risk inbreeding and local loss."
+      },
+      {
+        "title": "Climate change",
+        "detail": "Warming is projected to shrink the bamboo forests pandas rely on by over a third this century."
+      },
+      {
+        "title": "Bamboo die-offs",
+        "detail": "Bamboo flowers and dies en masse every few decades, leaving fragmented pandas with nowhere to move."
+      }
+    ],
+    "source": {
+      "label": "IUCN Red List: Ailuropoda melanoleuca",
+      "url": "https://www.iucnredlist.org/species/712/121745669",
+      "year": 2016
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Foping National Nature Reserve",
+        "country": "China",
+        "lat": 33.67,
+        "lon": 107.85,
+        "note": "Qinling reserve with one of the highest wild panda densities."
+      },
+      {
+        "name": "Tangjiahe National Nature Reserve",
+        "country": "China",
+        "lat": 32.6,
+        "lon": 104.75,
+        "note": "Minshan forests with takin, golden monkeys and occasional pandas."
+      },
+      {
+        "name": "Wolong National Nature Reserve",
+        "country": "China",
+        "lat": 31.04,
+        "lon": 103.18,
+        "note": "Famous panda research base in the Qionglai mountains; wild sightings are rare."
+      }
+    ],
+    "bestMonths": [
+      11,
+      12,
+      1,
+      2,
+      3,
+      4
+    ],
+    "tip": "Pandas move down to lower bamboo forests in winter and early spring, and March to April is the mating season, when they are most active. Even then, a wild sighting takes luck and a local tracker."
+  },
+  "help": {
+    "actions": [
+      {
+        "title": "Choose certified wood and paper",
+        "detail": "FSC-certified products reduce logging pressure on mountain forests.",
+        "url": "https://fsc.org"
+      },
+      {
+        "title": "Support habitat corridors",
+        "detail": "Replanted bamboo corridors reconnect isolated groups so pandas can breed and move."
+      },
+      {
+        "title": "Skip panda photo ops",
+        "detail": "Pay-to-hold experiences stress animals; visit reserves that put wild habitat first."
+      },
+      {
+        "title": "Back long-term monitoring",
+        "detail": "Camera traps and DNA surveys tell rangers where pandas are and where they are vanishing."
+      }
+    ],
+    "orgs": [
+      {
+        "name": "WWF Giant Panda",
+        "url": "https://www.worldwildlife.org/species/giant-panda"
+      },
+      {
+        "name": "Pandas International",
+        "url": "https://www.pandasinternational.org"
+      }
+    ]
+  },
+  "next": "mountain-gorilla"
+}

@@ -1,0 +1,284 @@
+{
+  "slug": "grey-wolf",
+  "commonName": "Grey wolf",
+  "scientificName": "Canis lupus",
+  "descriptor": "The largest wild dog, living and hunting in family packs across the forests, tundra and steppe of the north.",
+  "aliases": [
+    "gray wolf",
+    "wolf",
+    "timber wolf",
+    "lobo",
+    "canis lupus"
+  ],
+  "taxonomy": {
+    "class": "Mammalia",
+    "order": "Carnivora",
+    "family": "Canidae"
+  },
+  "gbifTaxonKey": 5219173,
+  "specimen": {
+    "sizeClass": "m",
+    "bodyPlan": "quadruped",
+    "proportions": {
+      "length": 0.75,
+      "height": 0.6,
+      "bulk": 0.45,
+      "neck": 0.3,
+      "tail": 0.55
+    },
+    "features": [
+      "pointyEars"
+    ]
+  },
+  "range": {
+    "summary": "Across much of North America, Europe and Asia, from Arctic tundra to deserts. Wolves are recolonising western Europe and parts of the United States after near extermination.",
+    "centroid": {
+      "lat": 58,
+      "lon": 95
+    },
+    "bbox": [
+      -180,
+      8,
+      180,
+      84
+    ],
+    "regions": [
+      "Canada and Alaska",
+      "Siberia and the Russian Far East",
+      "Central Asian steppe and mountains",
+      "Europe",
+      "Northern Rockies and Great Lakes",
+      "Indian subcontinent and Arabia"
+    ],
+    "countries": [
+      "AF",
+      "AL",
+      "AM",
+      "AT",
+      "AZ",
+      "BY",
+      "BE",
+      "BT",
+      "BA",
+      "BG",
+      "CA",
+      "CN",
+      "HR",
+      "CZ",
+      "DK",
+      "EE",
+      "FI",
+      "FR",
+      "GE",
+      "DE",
+      "GR",
+      "GL",
+      "HU",
+      "IN",
+      "IR",
+      "IQ",
+      "IL",
+      "IT",
+      "JO",
+      "KZ",
+      "KP",
+      "KR",
+      "KG",
+      "LV",
+      "LY",
+      "LT",
+      "LU",
+      "MX",
+      "MD",
+      "MN",
+      "ME",
+      "MM",
+      "NP",
+      "NL",
+      "MK",
+      "NO",
+      "OM",
+      "PK",
+      "PL",
+      "PT",
+      "RO",
+      "RU",
+      "SA",
+      "RS",
+      "SK",
+      "SI",
+      "ES",
+      "SE",
+      "CH",
+      "SY",
+      "TJ",
+      "TM",
+      "TR",
+      "UA",
+      "AE",
+      "US",
+      "UZ",
+      "YE"
+    ]
+  },
+  "population": {
+    "unit": "wolves in Wisconsin, USA (late-winter count)",
+    "points": [
+      {
+        "year": 1980,
+        "estimate": 25
+      },
+      {
+        "year": 1985,
+        "estimate": 14
+      },
+      {
+        "year": 1990,
+        "estimate": 34
+      },
+      {
+        "year": 1995,
+        "estimate": 83
+      },
+      {
+        "year": 2000,
+        "estimate": 248
+      },
+      {
+        "year": 2005,
+        "estimate": 435
+      },
+      {
+        "year": 2010,
+        "estimate": 704
+      },
+      {
+        "year": 2020,
+        "estimate": 1034,
+        "low": 1034,
+        "high": 1057
+      },
+      {
+        "year": 2026,
+        "estimate": 1162,
+        "low": 1026,
+        "high": 1307
+      }
+    ],
+    "source": {
+      "label": "Wisconsin DNR, Annual Wolf Report 2026 and Gray Wolf Monitoring Report 2020",
+      "url": "https://dnr.wisconsin.gov/topic/WildlifeHabitat/wolf",
+      "year": 2026
+    },
+    "note": "Counts from 1980 to 2020 are minimum late-winter counts from snow tracking and radio collars. The 2026 figure is a model-based estimate with a 95% credible interval, so it is not strictly comparable."
+  },
+  "status": {
+    "iucn": "LC",
+    "assessed": 2026,
+    "trend": "stable",
+    "threats": [
+      {
+        "title": "Conflict over livestock",
+        "detail": "Attacks on sheep and cattle lead to legal culls and illegal retaliatory killing."
+      },
+      {
+        "title": "Hunting and poaching",
+        "detail": "Wolves are hunted or trapped across much of their range, legally and illegally."
+      },
+      {
+        "title": "Roads and fragmentation",
+        "detail": "Vehicle collisions are a leading cause of death for dispersing wolves in Europe."
+      },
+      {
+        "title": "Hybridisation with dogs",
+        "detail": "Free-roaming dogs interbreed with wolves in parts of southern Europe and Asia."
+      }
+    ],
+    "source": {
+      "label": "IUCN Red List: Canis lupus",
+      "url": "https://www.iucnredlist.org/species/3746/226161232",
+      "year": 2026
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Lamar Valley, Yellowstone National Park",
+        "country": "USA",
+        "lat": 44.89,
+        "lon": -110.2,
+        "note": "Open valley where reintroduced packs are watched daily through spotting scopes."
+      },
+      {
+        "name": "Denali National Park",
+        "country": "USA",
+        "lat": 63.33,
+        "lon": -150.5,
+        "note": "Wolves are sometimes seen from the park road in summer."
+      },
+      {
+        "name": "Algonquin Provincial Park",
+        "country": "Canada",
+        "lat": 45.55,
+        "lon": -78.4,
+        "note": "Famous public wolf howls on August evenings."
+      },
+      {
+        "name": "Sierra de la Culebra",
+        "country": "Spain",
+        "lat": 41.9,
+        "lon": -6.35,
+        "note": "Stronghold of the Iberian wolf with guided dawn watches."
+      },
+      {
+        "name": "Abruzzo, Lazio and Molise National Park",
+        "country": "Italy",
+        "lat": 41.8,
+        "lon": 13.8,
+        "note": "Apennine wolves that survived when the species vanished from most of western Europe."
+      }
+    ],
+    "bestMonths": [
+      12,
+      1,
+      2,
+      3
+    ],
+    "tip": "Winter is best in Yellowstone, when snow makes wolves easy to spot against open slopes and elk herds move to lower valleys. Algonquin's howls run in August."
+  },
+  "help": {
+    "actions": [
+      {
+        "title": "Support non-lethal livestock protection",
+        "detail": "Guardian dogs, electric fencing and night pens cut losses without killing wolves."
+      },
+      {
+        "title": "Keep dogs vaccinated and under control",
+        "detail": "Loose dogs spread disease to wolves and can hybridise with them."
+      },
+      {
+        "title": "Watch wolves ethically",
+        "detail": "Keep your distance, never feed wildlife and stay on roads and trails."
+      },
+      {
+        "title": "Back wildlife crossings",
+        "detail": "Overpasses and underpasses on busy roads reduce collisions and reconnect populations."
+      }
+    ],
+    "orgs": [
+      {
+        "name": "International Wolf Center",
+        "url": "https://wolf.org"
+      },
+      {
+        "name": "Large Carnivore Initiative for Europe",
+        "url": "https://www.lcie.org"
+      },
+      {
+        "name": "Defenders of Wildlife",
+        "url": "https://defenders.org"
+      }
+    ]
+  },
+  "next": "bengal-tiger"
+}

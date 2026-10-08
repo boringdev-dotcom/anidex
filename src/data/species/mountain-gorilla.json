@@ -1,0 +1,201 @@
+{
+  "slug": "mountain-gorilla",
+  "commonName": "Mountain gorilla",
+  "scientificName": "Gorilla beringei beringei",
+  "descriptor": "A shaggy-coated great ape living in silverback-led families on the cloud-forested volcanoes of central Africa.",
+  "aliases": [
+    "gorilla",
+    "eastern gorilla",
+    "silverback",
+    "great ape",
+    "ngagi"
+  ],
+  "taxonomy": {
+    "class": "Mammalia",
+    "order": "Primates",
+    "family": "Hominidae"
+  },
+  "gbifTaxonKey": 4267319,
+  "specimen": {
+    "sizeClass": "l",
+    "bodyPlan": "biped",
+    "proportions": {
+      "length": 0.7,
+      "height": 0.7,
+      "bulk": 0.9,
+      "neck": 0.1,
+      "tail": 0
+    }
+  },
+  "range": {
+    "summary": "Two isolated populations: the Virunga volcanoes shared by DRC, Rwanda and Uganda, and Bwindi-Sarambwe in Uganda and DRC.",
+    "centroid": {
+      "lat": -1.45,
+      "lon": 29.5
+    },
+    "bbox": [
+      29.3,
+      -1.6,
+      29.9,
+      -0.8
+    ],
+    "regions": [
+      "Virunga Massif",
+      "Bwindi Impenetrable Forest",
+      "Sarambwe Reserve"
+    ],
+    "countries": [
+      "CD",
+      "RW",
+      "UG"
+    ]
+  },
+  "population": {
+    "unit": "mountain gorillas in the Virunga Massif",
+    "points": [
+      {
+        "year": 1973,
+        "estimate": 275,
+        "low": 260,
+        "high": 290
+      },
+      {
+        "year": 1981,
+        "estimate": 254,
+        "low": 242,
+        "high": 266
+      },
+      {
+        "year": 1989,
+        "estimate": 324
+      },
+      {
+        "year": 2000,
+        "estimate": 359
+      },
+      {
+        "year": 2003,
+        "estimate": 380
+      },
+      {
+        "year": 2010,
+        "estimate": 480
+      },
+      {
+        "year": 2016,
+        "estimate": 604
+      }
+    ],
+    "source": {
+      "label": "Greater Virunga Transboundary Collaboration census 2015-2016, with earlier censuses (Aveling & Harcourt 1984; Kalpers et al. 2003)",
+      "url": "https://igcp.org/content/uploads/2020/09/GVTCpress-release-Gorila-census-31-May18.pdf",
+      "year": 2018
+    },
+    "note": "The 1973 and 1981 values are census estimates allowing for undercounting, and 2000 is a minimum count. Bwindi-Sarambwe held 459 gorillas in 2018, bringing the world total to 1,063."
+  },
+  "status": {
+    "iucn": "EN",
+    "assessed": 2018,
+    "trend": "increasing",
+    "threats": [
+      {
+        "title": "Human-borne disease",
+        "detail": "Gorillas catch respiratory infections from people, and outbreaks can kill several in a group."
+      },
+      {
+        "title": "Snares",
+        "detail": "Traps set for antelope maim and kill gorillas, especially young ones."
+      },
+      {
+        "title": "Tiny, isolated range",
+        "detail": "The whole subspecies lives in two forest islands surrounded by dense farmland."
+      },
+      {
+        "title": "Armed conflict",
+        "detail": "Fighting in eastern DRC has repeatedly cut off patrols and killed rangers in Virunga."
+      }
+    ],
+    "source": {
+      "label": "IUCN Red List: Gorilla beringei ssp. beringei",
+      "url": "https://www.iucnredlist.org/species/39999/176396749",
+      "year": 2018
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Volcanoes National Park",
+        "country": "Rwanda",
+        "lat": -1.47,
+        "lon": 29.49,
+        "note": "Habituated families on bamboo slopes, where Dian Fossey worked."
+      },
+      {
+        "name": "Bwindi Impenetrable National Park",
+        "country": "Uganda",
+        "lat": -1,
+        "lon": 29.65,
+        "note": "Steep rainforest holding nearly half of all mountain gorillas."
+      },
+      {
+        "name": "Mgahinga Gorilla National Park",
+        "country": "Uganda",
+        "lat": -1.36,
+        "lon": 29.64,
+        "note": "Uganda's slice of the Virungas, with one habituated group."
+      },
+      {
+        "name": "Virunga National Park (Mikeno sector)",
+        "country": "DR Congo",
+        "lat": -1.46,
+        "lon": 29.42,
+        "note": "Africa's oldest national park. Check security advice before travel."
+      }
+    ],
+    "bestMonths": [
+      6,
+      7,
+      8,
+      9,
+      12,
+      1,
+      2
+    ],
+    "tip": "The dry seasons, June to September and December to February, make steep trails less muddy and treks shorter, though gorillas can be seen year-round."
+  },
+  "help": {
+    "actions": [
+      {
+        "title": "Buy a trekking permit",
+        "detail": "Permit fees fund rangers, and a share goes to communities living around the parks."
+      },
+      {
+        "title": "Do not trek when sick",
+        "detail": "Stay home with a cold or flu, wear a mask and keep at least 7 m away."
+      },
+      {
+        "title": "Recycle old phones",
+        "detail": "Recycling cuts demand for coltan, whose mining has damaged gorilla habitat in eastern DRC."
+      },
+      {
+        "title": "Fund veterinary care",
+        "detail": "Field vets who remove snares and treat illness have helped drive the recovery."
+      }
+    ],
+    "orgs": [
+      {
+        "name": "Dian Fossey Gorilla Fund",
+        "url": "https://gorillafund.org"
+      },
+      {
+        "name": "Gorilla Doctors",
+        "url": "https://www.gorilladoctors.org"
+      },
+      {
+        "name": "International Gorilla Conservation Programme",
+        "url": "https://igcp.org"
+      }
+    ]
+  },
+  "next": "blue-whale"
+}

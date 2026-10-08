@@ -1,0 +1,75 @@
+{
+  "slug": "black-rhinoceros",
+  "commonName": "Black rhinoceros",
+  "scientificName": "Diceros bicornis",
+  "descriptor": "A solitary, hook-lipped browser of the African bush, slowly recovering after poachers killed nearly all of its kind.",
+  "aliases": ["black rhino", "hook-lipped rhinoceros", "rhino", "kifaru"],
+  "taxonomy": { "class": "Mammalia", "order": "Perissodactyla", "family": "Rhinocerotidae" },
+  "gbifTaxonKey": 5220111,
+  "specimen": {
+    "sizeClass": "xl",
+    "bodyPlan": "quadruped",
+    "proportions": { "length": 0.75, "height": 0.45, "bulk": 0.95, "neck": 0.1, "tail": 0.2 },
+    "features": ["horns"]
+  },
+  "range": {
+    "summary": "Guarded parks, conservancies and fenced sanctuaries across eastern and southern Africa, with most animals in South Africa, Namibia, Kenya and Zimbabwe.",
+    "centroid": { "lat": -21.0, "lon": 25.0 },
+    "bbox": [11.5, -34.5, 40, 1.5],
+    "regions": ["Kunene and Etosha", "KwaZulu-Natal", "Laikipia and Tsavo", "Zimbabwe Lowveld", "Serengeti and Ngorongoro"],
+    "countries": ["ZA", "NA", "KE", "ZW", "TZ", "ZM", "MW", "BW", "SZ", "RW", "MZ", "AO"]
+  },
+  "population": {
+    "unit": "wild black rhinos in Africa (continental estimate)",
+    "points": [
+      { "year": 1960, "estimate": 100000 },
+      { "year": 1973, "estimate": 37807 },
+      { "year": 1995, "estimate": 2410 },
+      { "year": 2015, "estimate": 5261, "low": 5053, "high": 5467 },
+      { "year": 2017, "estimate": 5495 },
+      { "year": 2021, "estimate": 6195 },
+      { "year": 2022, "estimate": 6487 },
+      { "year": 2023, "estimate": 6421 },
+      { "year": 2024, "estimate": 6788 }
+    ],
+    "source": { "label": "IUCN SSC African Rhino Specialist Group, via IUCN", "url": "https://iucn.org/press-release/202508/poaching-african-rhinos-down-drought-and-other-threats-drive-losses-globally", "year": 2025 },
+    "note": "The 1960 and 1973 figures are back-estimates quoted in the 2020 Red List assessment. Later points are year-end AfRSG estimates; revised figures put the mid-1990s low near 2,354."
+  },
+  "status": {
+    "iucn": "CR",
+    "assessed": 2020,
+    "trend": "increasing",
+    "threats": [
+      { "title": "Poaching for horn", "detail": "Organised networks kill rhinos to supply carved and medicinal horn markets in Asia." },
+      { "title": "Rising protection costs", "detail": "Heavy security spending has led some private owners to give up their rhinos, shrinking safe range." },
+      { "title": "Small, isolated populations", "detail": "Most rhinos live in separate sanctuaries, so growth depends on careful translocation between them." },
+      { "title": "Habitat loss", "detail": "Farming and settlement have taken over most of the species' former range across Africa." }
+    ],
+    "source": { "label": "IUCN Red List: Diceros bicornis", "url": "https://www.iucnredlist.org/species/6557/152728945", "year": 2020 }
+  },
+  "sightings": {
+    "places": [
+      { "name": "Etosha National Park", "country": "Namibia", "lat": -19.18, "lon": 15.92, "note": "Floodlit waterholes at Okaukuejo draw black rhinos after dark." },
+      { "name": "Kunene region", "country": "Namibia", "lat": -19.88, "lon": 13.93, "note": "Desert-adapted rhinos tracked on foot with community rhino rangers." },
+      { "name": "Hluhluwe-iMfolozi Park", "country": "South Africa", "lat": -28.22, "lon": 31.95, "note": "The park whose rhinos seeded populations across southern Africa." },
+      { "name": "Ol Pejeta Conservancy", "country": "Kenya", "lat": 0.02, "lon": 36.9, "note": "The largest black rhino sanctuary in East Africa." },
+      { "name": "Ngorongoro Crater", "country": "Tanzania", "lat": -3.17, "lon": 35.58, "note": "A small population often seen on the open crater floor." }
+    ],
+    "bestMonths": [6, 7, 8, 9, 10],
+    "tip": "The dry season thins the bush and pulls rhinos to water, making them far easier to find. Black rhinos are shy, so patience at waterholes pays."
+  },
+  "help": {
+    "actions": [
+      { "title": "Never buy rhino horn", "detail": "Horn is made of keratin, like fingernails, and every purchase funds poaching." },
+      { "title": "Fund rangers and monitoring", "detail": "Well-equipped rangers and tracking teams are the front line against poachers.", "url": "https://www.savetherhino.org" },
+      { "title": "Visit community conservancies", "detail": "Tourism income gives local people a direct stake in keeping rhinos alive." },
+      { "title": "Report wildlife crime", "detail": "Pass tips about horn trafficking to TRAFFIC or local authorities.", "url": "https://www.traffic.org" }
+    ],
+    "orgs": [
+      { "name": "Save the Rhino International", "url": "https://www.savetherhino.org" },
+      { "name": "International Rhino Foundation", "url": "https://rhinos.org" },
+      { "name": "TRAFFIC", "url": "https://www.traffic.org" }
+    ]
+  },
+  "next": "red-panda"
+}

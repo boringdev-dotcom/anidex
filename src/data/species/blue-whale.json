@@ -1,0 +1,68 @@
+{
+  "slug": "blue-whale",
+  "commonName": "Blue whale",
+  "scientificName": "Balaenoptera musculus",
+  "descriptor": "The largest animal known to have ever lived, sustained almost entirely by tiny shrimp-like krill.",
+  "aliases": ["sulphur-bottom", "sibbald's rorqual", "blue rorqual", "great whale", "pygmy blue whale", "antarctic blue whale"],
+  "taxonomy": { "class": "Mammalia", "order": "Artiodactyla", "family": "Balaenopteridae" },
+  "gbifTaxonKey": 2440735,
+  "specimen": {
+    "sizeClass": "xl",
+    "bodyPlan": "aquatic",
+    "proportions": { "length": 1, "height": 0.3, "bulk": 0.6, "neck": 0, "tail": 0.3 }
+  },
+  "range": {
+    "summary": "All the major oceans, from polar feeding grounds to tropical waters, with resident groups off Sri Lanka and in the Gulf of California.",
+    "centroid": { "lat": 5.0, "lon": 80.5 },
+    "bbox": [-180, -75, 180, 75],
+    "regions": ["Southern Ocean", "North Pacific", "North Atlantic", "Northern Indian Ocean", "Eastern South Pacific"],
+    "countries": ["US", "MX", "CA", "CL", "LK", "AU", "NZ", "IS", "PT"]
+  },
+  "population": {
+    "unit": "Antarctic blue whales (B. m. intermedia) in the Southern Ocean",
+    "points": [
+      { "year": 1904, "estimate": 239000, "low": 202000, "high": 311000 },
+      { "year": 1973, "estimate": 360, "low": 150, "high": 840 },
+      { "year": 1981, "estimate": 453 },
+      { "year": 1988, "estimate": 559 },
+      { "year": 1998, "estimate": 2280 }
+    ],
+    "source": { "label": "Branch et al. 2004, Marine Mammal Science; Branch 2007, IDCR/SOWER circumpolar surveys", "url": "https://open.uct.ac.za/handle/11427/17261", "year": 2007 },
+    "note": "The 1904 and 1973 values are model back-estimates of the pre-whaling and lowest populations; later points are survey estimates south of 60°S. Worldwide, IUCN estimates 5,000 to 15,000 mature blue whales."
+  },
+  "status": {
+    "iucn": "EN",
+    "assessed": 2018,
+    "trend": "increasing",
+    "threats": [
+      { "title": "Ship strikes", "detail": "Collisions in busy shipping lanes off California and Sri Lanka kill whales every year." },
+      { "title": "Ocean noise", "detail": "Shipping and seismic surveys mask the low calls blue whales use to find each other." },
+      { "title": "Entanglement", "detail": "Fishing gear and lines can wrap around whales and wound or drown them." },
+      { "title": "Shifting krill supply", "detail": "Warming seas and krill fishing could reduce the swarms the whales need to feed." }
+    ],
+    "source": { "label": "IUCN Red List: Balaenoptera musculus", "url": "https://www.iucnredlist.org/species/2477/156923585", "year": 2018 }
+  },
+  "sightings": {
+    "places": [
+      { "name": "Mirissa", "country": "Sri Lanka", "lat": 5.95, "lon": 80.46, "note": "Blue whales feed a few kilometres offshore, close to a busy shipping lane." },
+      { "name": "Santa Barbara Channel", "country": "United States", "lat": 34.24, "lon": -119.87, "note": "A major summer feeding ground for eastern North Pacific blue whales." },
+      { "name": "Loreto, Gulf of California", "country": "Mexico", "lat": 26.01, "lon": -111.35, "note": "Mothers and calves in calm water inside a marine national park." },
+      { "name": "Les Escoumins, St. Lawrence Estuary", "country": "Canada", "lat": 48.35, "lon": -69.4, "note": "North Atlantic blue whales feed on krill, sometimes seen from shore." }
+    ],
+    "bestMonths": [12, 1, 2, 3, 4, 7, 8, 9],
+    "tip": "Seasons depend on the site: December to April off Sri Lanka, February to April in the Gulf of California, and July to September off California and in the St. Lawrence."
+  },
+  "help": {
+    "actions": [
+      { "title": "Back slower shipping", "detail": "Voluntary speed limits in whale zones cut fatal strikes and also reduce underwater noise.", "url": "https://whalesafe.com" },
+      { "title": "Watch whales responsibly", "detail": "Choose operators that keep their distance and never chase or cut off a whale." },
+      { "title": "Skip krill-oil supplements", "detail": "Antarctic krill is the main food of recovering blue whales, so plant-based omega-3 is the safer choice." },
+      { "title": "Report sightings", "detail": "Logging sightings in citizen science apps helps map where ships and whales overlap." }
+    ],
+    "orgs": [
+      { "name": "Whale and Dolphin Conservation", "url": "https://whales.org" },
+      { "name": "Whale Safe", "url": "https://whalesafe.com" }
+    ]
+  },
+  "next": "polar-bear"
+}
