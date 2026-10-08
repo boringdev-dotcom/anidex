@@ -2525,3 +2525,19 @@
 body:has(.explore) .site-header {
   background: linear-gradient(var(--bg) 55%, transparent);
 }
+
+/* phones: the wordmark, three links and the theme toggle share a narrow bar */
+@media (max-width: 480px) {
+  .site-header__right {
+    gap: 0.95rem;
+  }
+
+  .site-header__right .header-link {
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+  }
+
+  .wordmark {
+    font-size: 1.4rem;
+  }
+}

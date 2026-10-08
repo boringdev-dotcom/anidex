@@ -217,7 +217,7 @@ Fields:
 - threats: the 3 to 5 main threats.
 - help: 3 or 4 concrete things an ordinary person can do, plus 2 or 3 reputable organisations working on this species or its habitat (real URLs).
 - sightings: 3 to 5 real, publicly visitable places where people reliably see it in the wild (national parks, reserves, reefs, birding sites), with coordinates to 2 decimals; best months to see it there (1 to 12); one tip explaining the timing. If wild viewing is not realistic (very rare, deep sea, extinct), return an empty places list and say why in the tip.
-- physical: typical adult ranges, not records. Units: kilograms, metres, years. Shoulder height for four-legged animals, standing height for upright ones, no height (heightM 0 to 0, heightLabel "none") for fish, snakes, insects and similar. Length includes the tail unless lengthLabel says otherwise; wingspan for birds and butterflies is fine. lifespanYrs is lifespan in the wild. fact is one striking, verified fact about its body or physiology. compare is "hand" only if adults are under 0.4 m long.
+- physical: typical adult ranges, not records. Units: kilograms, metres, years. Shoulder height for four-legged animals, standing height for upright ones, no height (heightM 0 to 0, heightLabel "none") for fish, snakes, insects and similar. Length includes the tail unless lengthLabel says otherwise; wingspan for birds and butterflies is fine. lifespanYrs is lifespan in the wild ({"min":0,"max":0} if unknown). fact is one striking, verified fact about its body or physiology. compare is "hand" only if adults are under 0.4 m long.
 - specimen: shape hints for a stylised 3D figure, each 0 to 1: length (body length relative to height), height (leg length), bulk (heaviness), neck, tail; sizeClass xs (insect) to xl (elephant, whale).
 - population: the global wild population over time, built ONLY from published estimates (IUCN assessments past and present, range-wide surveys, census reports, peer-reviewed papers). The point is to show the trend, so search specifically for historical figures: older IUCN assessments, past range-wide surveys, and review papers that tabulate earlier estimates. Most well-studied species have several across decades. One point per year with a real published figure, oldest first, ideally 3 to 8 points. estimate is the published figure, or the midpoint of a published range with low and high set to that range (low and high are 0 when no range was published). Prefer figures that count the same thing; if the record mixes total and mature-individual counts, use what was published and explain it in note. unit is short, under 40 characters, e.g. "lions in the wild" or "mature individuals". note is one sentence on how reliable and comparable the numbers are (empty if there are no points). Use a single point only when no earlier figure was ever published. If no credible global figure exists, return an empty points list. Never interpolate, extrapolate or round an estimate into existence.
 - rangeHistory: places where the species was lost (extirpated, last recorded) or came back (reintroduced, recolonised) since about 1800, for the globe. Each region is a short place name, a centre with coordinates to 1 decimal, a radius in degrees (0.5 to 15) covering the area, the year it was lost (to) and/or the year it returned (from; later than to if it was lost then returned), using 0 for a year that does not apply, and one sentence. Include 2 to 4 regions where it still lives with both years 0, so the map shows what remains. Up to 12 regions. If nothing is documented, return an empty list. source is the main page you used (empty label and url if none).
@@ -320,8 +320,9 @@ export function toFields(sp: Species, o: ResearchOutput): Pick<ResearchResult, '
   const weight = pair(p.weightKg);
   const length = pair(p.lengthM);
   const life = pair(p.lifespanYrs);
+  // weight and length are the core; an unknown wild lifespan (sunfish, dodo) shouldn't drop the rest
   const physical =
-    weight && length && life
+    weight && length
       ? {
           weightKg: weight,
           weightNote: p.weightNote && p.weightNote.length <= 40 ? p.weightNote : undefined,
@@ -329,7 +330,7 @@ export function toFields(sp: Species, o: ResearchOutput): Pick<ResearchResult, '
           heightLabel: pair(p.heightM) && p.heightLabel !== 'none' ? p.heightLabel : null,
           lengthM: length,
           lengthLabel: p.lengthLabel,
-          lifespanYrs: life,
+          lifespanYrs: life ?? undefined,
           fact: short(p.fact, 140),
           compare: p.compare,
           source: o.sources[0] ?? { label: 'Researched sources', url: '' },

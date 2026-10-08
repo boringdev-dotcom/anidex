@@ -134,10 +134,12 @@ export function findings(a: Species, b: Species): Finding[] {
     const lb = realSize(b).metres;
     const l = ratio(la, lb);
     if (l.r >= 1.15) out.push({ label: 'Bigger', who: l.who, detail: `about ${times(l.r)} the size`, weight: Math.log(l.r) * 1.6 });
-    const life = ratio(mid(a.physical.lifespanYrs), mid(b.physical.lifespanYrs));
+    const la2 = a.physical.lifespanYrs;
+    const lb2 = b.physical.lifespanYrs;
+    const life = la2 && lb2 ? ratio(mid(la2), mid(lb2)) : { r: 1, who: 'a' as const };
     if (life.r >= 1.2) {
       const sp = life.who === 'a' ? a : b;
-      out.push({ label: 'Lives longer', who: life.who, detail: `${fmtYears(sp.physical!.lifespanYrs)} in the wild`, weight: Math.log(life.r) });
+      out.push({ label: 'Lives longer', who: life.who, detail: `${fmtYears(sp.physical!.lifespanYrs!)} in the wild`, weight: Math.log(life.r) });
     }
   }
   const ca = latestCount(a);
