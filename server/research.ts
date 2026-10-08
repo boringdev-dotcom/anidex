@@ -14,10 +14,54 @@ export const researchEnabled = () => !!process.env.ANTHROPIC_API_KEY;
 
 const range = { type: 'object', additionalProperties: false, required: ['min', 'max'], properties: { min: { type: 'number' }, max: { type: 'number' } } };
 const nullableRange = { anyOf: [range, { type: 'null' }] };
+const nullableNumber = { anyOf: [{ type: 'number' }, { type: 'null' }] };
+const nullableInt = { anyOf: [{ type: 'integer' }, { type: 'null' }] };
+const source = { type: 'object', additionalProperties: false, required: ['label', 'url'], properties: { label: { type: 'string' }, url: { type: 'string' } } };
+const POPULATION = {
+  anyOf: [
+    { type: 'null' },
+    {
+      type: 'object',
+      additionalProperties: false,
+      required: ['unit', 'points', 'source', 'note'],
+      properties: {
+        unit: { type: 'string' },
+        points: {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['year', 'estimate', 'low', 'high'],
+            properties: { year: { type: 'integer' }, estimate: { type: 'number' }, low: nullableNumber, high: nullableNumber },
+          },
+        },
+        source,
+        note: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+      },
+    },
+  ],
+};
+const RANGE_HISTORY = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['regions', 'source'],
+  properties: {
+    regions: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['name', 'lat', 'lon', 'radius', 'from', 'to', 'note'],
+        properties: { name: { type: 'string' }, lat: { type: 'number' }, lon: { type: 'number' }, radius: { type: 'number' }, from: nullableInt, to: nullableInt, note: { type: 'string' } },
+      },
+    },
+    source: { anyOf: [source, { type: 'null' }] },
+  },
+};
 const SCHEMA = {
   type: 'object',
   additionalProperties: false,
-  required: ['status', 'threats', 'help', 'sightings', 'physical', 'specimen', 'sources'],
+  required: ['status', 'threats', 'help', 'sightings', 'physical', 'specimen', 'population', 'rangeHistory', 'sources'],
   properties: {
     status: {
       type: 'object',
@@ -99,11 +143,18 @@ const SCHEMA = {
         tail: { type: 'number' },
       },
     },
-    sources: {
-      type: 'array',
-      items: { type: 'object', additionalProperties: false, required: ['label', 'url'], properties: { label: { type: 'string' }, url: { type: 'string' } } },
-    },
+    population: POPULATION,
+    rangeHistory: RANGE_HISTORY,
+    sources: { type: 'array', items: source },
   },
+} as const;
+
+/** The population-only research (backfills species researched before population was added). */
+const POPULATION_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['population', 'rangeHistory', 'sources'],
+  properties: { population: POPULATION, rangeHistory: RANGE_HISTORY, sources: { type: 'array', items: source } },
 } as const;
 
 interface Range {
@@ -124,13 +175,29 @@ export interface ResearchOutput {
     weightNote: string | null;
   };
   specimen: { sizeClass: Species['specimen']['sizeClass']; length: number; height: number; bulk: number; neck: number; tail: number };
+  population: PopulationOutput | null;
+  rangeHistory: RangeHistoryOutput;
   sources: { label: string; url: string }[];
+}
+
+interface PopulationOutput {
+  unit: string;
+  points: { year: number; estimate: number; low: number | null; high: number | null }[];
+  source: { label: string; url: string };
+  note: string | null;
+}
+
+interface RangeHistoryOutput {
+  regions: { name: string; lat: number; lon: number; radius: number; from: number | null; to: number | null; note: string }[];
+  source: { label: string; url: string } | null;
 }
 
 export interface ResearchResult {
   at: string;
   model: string;
   costUsd: number;
+  /** set once population and range history have been researched */
+  historyAt?: string;
   fields: Partial<Species>;
   sources: { label: string; url: string }[];
 }
@@ -148,19 +215,22 @@ Fields:
 - sightings: 3 to 5 real, publicly visitable places where people reliably see it in the wild (national parks, reserves, reefs, birding sites), with coordinates to 2 decimals; best months to see it there (1 to 12); one tip explaining the timing. If wild viewing is not realistic (very rare, deep sea, extinct), return an empty places list and say why in the tip.
 - physical: typical adult ranges, not records. Units: kilograms, metres, years. Shoulder height for four-legged animals, standing height for upright ones, null height for fish, snakes, insects and similar. Length includes the tail unless lengthLabel says otherwise; wingspan for birds and butterflies is fine. lifespanYrs is lifespan in the wild. fact is one striking, verified fact about its body or physiology. compare is "hand" only if adults are under 0.4 m long.
 - specimen: shape hints for a stylised 3D figure, each 0 to 1: length (body length relative to height), height (leg length), bulk (heaviness), neck, tail; sizeClass xs (insect) to xl (elephant, whale).
+- population: the global wild population over time, built ONLY from published estimates (IUCN assessments past and present, range-wide surveys, census reports, peer-reviewed papers). The point is to show the trend, so search specifically for historical figures: older IUCN assessments, past range-wide surveys, and review papers that tabulate earlier estimates. Most well-studied species have several across decades. One point per year with a real published figure, oldest first, ideally 3 to 8 points. estimate is the published figure, or the midpoint of a published range with low and high set to that range. Prefer figures that count the same thing; if the record mixes total and mature-individual counts, use what was published and explain it in note. unit is short, under 40 characters, e.g. "lions in the wild" or "mature individuals". note is one sentence on how reliable and comparable the numbers are. Use a single point only when no earlier figure was ever published. If no credible global figure exists, return null. Never interpolate, extrapolate or round an estimate into existence.
+- rangeHistory: places where the species was lost (extirpated, last recorded) or came back (reintroduced, recolonised) since about 1800, for the globe. Each region is a short place name, a centre with coordinates to 1 decimal, a radius in degrees (0.5 to 15) covering the area, the year it was lost (to) and/or the year it returned (from; later than to if it was lost then returned), and one sentence. Include 2 to 4 regions where it still lives with both years null, so the map shows what remains. Up to 12 regions. If nothing is documented, return an empty list. source is the main page you used, or null.
 - sources: every page you relied on, label plus URL.`;
 
-export async function researchSpecies(sp: Species & { summary?: { text: string } | null }): Promise<ResearchResult> {
-  const client = new Anthropic();
-  const user = `Research this species and fill every field.
+type ResearchInput = Species & { summary?: { text: string } | null };
 
-Common name: ${sp.commonName}
+const describe = (sp: ResearchInput) => `Common name: ${sp.commonName}
 Scientific name: ${sp.scientificName}
 Class / order / family: ${sp.taxonomy.class} / ${sp.taxonomy.order} / ${sp.taxonomy.family}
 IUCN category already on the page: ${sp.status.iucn}
 Range summary: ${sp.range.summary}
 ${sp.summary?.text ? `Wikipedia summary: ${sp.summary.text}` : ''}`;
 
+/** One structured research call with web search; resumes server-side pauses and totals the cost. */
+async function ask<T>(user: string, schema: unknown, maxSearches: number): Promise<{ out: T; costUsd: number; model: string }> {
+  const client = new Anthropic();
   const messages: Anthropic.Beta.BetaMessageParam[] = [{ role: 'user', content: user }];
   let response: Anthropic.Beta.BetaMessage | null = null;
   let cost = 0;
@@ -173,8 +243,8 @@ ${sp.summary?.text ? `Wikipedia summary: ${sp.summary.text}` : ''}`;
       fallbacks: 'default',
       system: SYSTEM,
       thinking: { type: 'adaptive' },
-      output_config: { effort: (process.env.RESEARCH_EFFORT as 'low' | 'medium' | 'high' | undefined) ?? 'medium', format: { type: 'json_schema', schema: SCHEMA as unknown as Record<string, unknown> } },
-      tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: 12 }],
+      output_config: { effort: (process.env.RESEARCH_EFFORT as 'low' | 'medium' | 'high' | undefined) ?? 'medium', format: { type: 'json_schema', schema: schema as Record<string, unknown> } },
+      tools: [{ type: 'web_search_20260209', name: 'web_search', max_uses: maxSearches }],
       messages,
     });
     response = await stream.finalMessage();
@@ -191,14 +261,28 @@ ${sp.summary?.text ? `Wikipedia summary: ${sp.summary.text}` : ''}`;
   if (!response) throw new Error('no response');
   if (response.stop_reason === 'refusal') throw new Error('research declined by the model');
   if (response.stop_reason === 'max_tokens') throw new Error('research output was cut off');
-
   const text = response.content
     .filter((b): b is Anthropic.Beta.BetaTextBlock => b.type === 'text')
     .map((b) => b.text)
     .join('')
     .trim();
-  const out = JSON.parse(text) as ResearchOutput;
-  return { at: new Date().toISOString(), model: response.model, costUsd: Math.round(cost * 1000) / 1000, ...toFields(sp, out) };
+  return { out: JSON.parse(text) as T, costUsd: Math.round(cost * 1000) / 1000, model: response.model };
+}
+
+export async function researchSpecies(sp: ResearchInput): Promise<ResearchResult> {
+  const { out, costUsd, model } = await ask<ResearchOutput>(`Research this species and fill every field.\n\n${describe(sp)}`, SCHEMA, 14);
+  const at = new Date().toISOString();
+  return { at, historyAt: at, model, costUsd, ...toFields(sp, out) };
+}
+
+/** Population and range history only, for species researched before those fields existed. */
+export async function researchPopulation(sp: ResearchInput) {
+  const { out, costUsd, model } = await ask<Pick<ResearchOutput, 'population' | 'rangeHistory' | 'sources'>>(
+    `Research only the population and rangeHistory fields for this species (plus the sources you used).\n\n${describe(sp)}`,
+    POPULATION_SCHEMA,
+    8,
+  );
+  return { at: new Date().toISOString(), model, costUsd, fields: historyFields(out), sources: cleanSources(out.sources) };
 }
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, Number.isFinite(v) ? v : 0.5));
@@ -257,6 +341,64 @@ export function toFields(sp: Species, o: ResearchOutput): Pick<ResearchResult, '
       },
     },
   };
-  const sources = o.sources.filter((s) => /^https?:\/\//.test(s.url)).slice(0, 12);
-  return { fields, sources };
+  return { fields: { ...fields, ...historyFields(o) }, sources: cleanSources(o.sources) };
+}
+
+const isUrl = (u: string | undefined | null): u is string => !!u && /^https?:\/\//.test(u);
+const cleanSources = (list: { label: string; url: string }[]) => list.filter((s) => isUrl(s.url)).slice(0, 14);
+const num = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? v : null);
+
+/** Validate the population series and range history (drop anything that can't be drawn honestly). */
+export function historyFields(o: Pick<ResearchOutput, 'population' | 'rangeHistory'>): Pick<Species, 'population' | 'rangeHistory'> {
+  const thisYear = new Date().getFullYear();
+  const out: Pick<Species, 'population' | 'rangeHistory'> = {};
+  const p = o.population;
+  if (p && isUrl(p.source?.url)) {
+    const byYear = new Map<number, NonNullable<Species['population']>['points'][number]>();
+    for (const pt of p.points ?? []) {
+      const year = num(pt.year);
+      const est = num(pt.estimate);
+      if (year == null || est == null || est <= 0 || year < 1700 || year > thisYear) continue;
+      const low = num(pt.low);
+      const high = num(pt.high);
+      byYear.set(Math.round(year), {
+        year: Math.round(year),
+        estimate: est,
+        ...(low != null && high != null && low <= est && est <= high && low > 0 ? { low, high } : {}),
+      });
+    }
+    const points = [...byYear.values()].sort((a, b) => a.year - b.year).slice(-12);
+    if (points.length && p.unit?.trim()) {
+      out.population = {
+        // long units carry their caveats in parentheses; the note already says that
+        unit: short(p.unit.trim().length > 40 ? p.unit.replace(/\s*\([^)]*\)/g, '').trim() : p.unit.trim(), 48),
+        points,
+        source: { label: short(p.source.label || 'Published estimates', 160), url: p.source.url },
+        ...(p.note ? { note: short(p.note, 220) } : {}),
+      };
+    }
+  }
+  const h = o.rangeHistory;
+  const regions = (h?.regions ?? [])
+    .filter((r) => r.name && Math.abs(r.lat) <= 90 && Math.abs(r.lon) <= 180)
+    .map((r) => {
+      const from = num(r.from);
+      const to = num(r.to);
+      return {
+        name: short(r.name, 40),
+        lat: Math.round(r.lat * 10) / 10,
+        lon: Math.round(r.lon * 10) / 10,
+        radius: Math.min(15, Math.max(0.5, num(r.radius) ?? 2)),
+        ...(from != null && from >= 1700 && from <= thisYear ? { from: Math.round(from) } : {}),
+        ...(to != null && to >= 1700 && to <= thisYear ? { to: Math.round(to) } : {}),
+        note: short(r.note, 140),
+      };
+    })
+    .slice(0, 12);
+  // only worth a map when something actually changed
+  if (regions.some((r) => r.from != null || r.to != null)) {
+    const src = h.source && isUrl(h.source.url) ? h.source : out.population?.source;
+    if (src) out.rangeHistory = { regions, source: { label: short(src.label, 160), url: src.url } };
+  }
+  return out;
 }
