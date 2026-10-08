@@ -85,16 +85,53 @@ export async function generateImage(prompt: string): Promise<{ url: string; requ
   return { url: (r.data as { images: { url: string }[] }).images[0].url, requestId: r.requestId };
 }
 
-export async function generateModel(imageUrl: string, onProgress?: () => void): Promise<{ glbUrl: string; thumbnailUrl?: string; requestId: string }> {
-  const r = await (await client()).subscribe('fal-ai/hunyuan-3d/v3.1/pro/image-to-3d', {
-    input: { input_image_url: imageUrl, generate_type: 'Normal', enable_pbr: false, face_count: 60000 },
-    logs: false,
-    onQueueUpdate: (u: { status: string }) => {
-      if (u.status === 'IN_PROGRESS') onProgress?.();
-    },
-  });
+const HUNYUAN = 'fal-ai/hunyuan-3d/v3.1/pro/image-to-3d';
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * Image to textured GLB with Hunyuan 3D. Submits to fal's queue and polls, so a dropped connection
+ * (fal's long-poll can answer 504) doesn't lose a job that is already paid for: pass the saved
+ * request id back as `resumeId` to collect the result instead of submitting again.
+ */
+export async function generateModel(
+  imageUrl: string,
+  opts: { resumeId?: string; onSubmitted?: (requestId: string) => void; onProgress?: () => void } = {},
+): Promise<{ glbUrl: string; thumbnailUrl?: string; requestId: string }> {
+  const fal = await client();
+  let requestId = opts.resumeId;
+  if (!requestId) {
+    const q = await fal.queue.submit(HUNYUAN, {
+      input: { input_image_url: imageUrl, generate_type: 'Normal', enable_pbr: false, face_count: 60000 },
+    });
+    requestId = q.request_id;
+    opts.onSubmitted?.(requestId);
+  }
+  const deadline = Date.now() + 20 * 60_000;
+  let errors = 0;
+  for (;;) {
+    try {
+      const st = await fal.queue.status(HUNYUAN, { requestId, logs: false });
+      errors = 0;
+      if (st.status === 'COMPLETED') break;
+      if (st.status === 'IN_PROGRESS') opts.onProgress?.();
+    } catch (err) {
+      // transient gateway errors while polling; give up only after a run of them
+      if (++errors >= 12) throw err;
+    }
+    if (Date.now() > deadline) throw new Error(`Hunyuan request ${requestId} did not finish in 20 minutes`);
+    await sleep(5000);
+  }
+  let r: Awaited<ReturnType<typeof fal.queue.result>> | null = null;
+  for (let attempt = 0; !r; attempt++) {
+    try {
+      r = await fal.queue.result(HUNYUAN, { requestId });
+    } catch (err) {
+      if (attempt >= 4) throw err;
+      await sleep(3000 * (attempt + 1));
+    }
+  }
   const data = r.data as { model_glb: { url: string }; thumbnail?: { url: string } };
-  return { glbUrl: data.model_glb.url, thumbnailUrl: data.thumbnail?.url, requestId: r.requestId };
+  return { glbUrl: data.model_glb.url, thumbnailUrl: data.thumbnail?.url, requestId };
 }
 
 export async function download(url: string): Promise<Uint8Array> {
