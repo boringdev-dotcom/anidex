@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { allSpecies, STATUS_SHORT } from '../../data';
-import { useStore } from '../../store/useStore';
+import { live, useStore } from '../../store/useStore';
 import { useChapterTracking } from '../../scroll/useChapterTracking';
 import { Reveal } from '../ui/Reveal';
 import { SearchBox } from './SearchBox';
@@ -10,6 +10,7 @@ import { scrollToEl } from '../../scroll/smoothScroll';
 export default function Landing() {
   const go = useTransitionNavigate();
   useEffect(() => {
+    live.chapterKeys = ['landing-hero', 'landing-index'];
     useStore.setState({ page: 'landing', slug: null, shape: 'ambient', previewShape: null, activePlace: -1 });
     document.title = 'AniDex — A field guide to the animals we might lose';
   }, []);

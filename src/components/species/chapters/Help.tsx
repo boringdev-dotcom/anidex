@@ -2,14 +2,14 @@ import type { Species } from '../../../data/types';
 import { ChapterLabel } from '../../ui/ChapterLabel';
 import { Reveal } from '../../ui/Reveal';
 
-export function Help({ sp }: { sp: Species }) {
+export function Help({ sp, n }: { sp: Species; n: number }) {
   const { actions, orgs } = sp.help;
   return (
     <section className="chapter ch-help" aria-labelledby="help-title">
       <div className="stage help">
         <div className="help__head">
           <Reveal split="fade">
-            <ChapterLabel n={6}>How you can help</ChapterLabel>
+            <ChapterLabel n={n}>How you can help</ChapterLabel>
           </Reveal>
           <Reveal as="h2" id="help-title" className="display h2" split="lines">
             Small acts, <em>multiplied.</em>

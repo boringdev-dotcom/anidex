@@ -51,6 +51,16 @@ interface Sp {
   commonName: string;
   scientificName: string;
   specimen: { bodyPlan: string; promptDetail?: string; model?: { url: string; yaw?: number } };
+  /** set for subspecies tasks: "<species>--<variant>" lives inside the parent species file */
+  parent?: { file: string; variant: string; extinct: boolean };
+}
+
+interface VariantJson {
+  slug: string;
+  name: string;
+  trinomial: string;
+  alive: boolean;
+  specimen?: { promptDetail?: string; model?: { url: string; yaw?: number } };
 }
 
 const POSE: Record<string, string> = {
@@ -64,7 +74,7 @@ const POSE: Record<string, string> = {
 };
 
 const DETAIL: Record<string, string> = {
-  'bengal-tiger': 'bold black stripes on orange fur, white belly and face markings',
+  tiger: 'bold black stripes on orange fur, white belly and face markings',
   'snow-leopard': 'smoky grey-white fur with dark rosettes and a very long thick tail',
   'african-savanna-elephant': 'large fan-shaped ears, long trunk reaching the ground, ivory tusks',
   'giant-panda': 'crisp black and white coat with black eye patches, ears, legs and shoulder band',
@@ -86,6 +96,9 @@ function prompt(sp: Sp): string {
   return [
     `A single ${sp.commonName} (${sp.scientificName}), ${POSE[sp.specimen.bodyPlan] ?? POSE.quadruped}.`,
     detail ? `${detail[0].toUpperCase()}${detail.slice(1)}.` : '',
+    sp.parent?.extinct
+      ? 'This subspecies is extinct: show a careful, scientifically plausible reconstruction based on museum specimens and archival photographs.'
+      : '',
     'The entire animal is fully visible and centered with generous margin, nothing cropped: every leg, foot, the tail and ears are in frame.',
     'Isolated on a pure plain white background, soft even studio lighting, no cast shadow, no ground, no props, no text.',
     'Photorealistic museum-quality wildlife reference photograph, accurate anatomy, natural coloration and markings, sharp focus.',
@@ -167,23 +180,44 @@ async function optimize(sp: Sp, raw: string) {
 
 /** Point the species JSON at its model if it isn't already (keeps any hand-tuned yaw/tilt). */
 function wire(sp: Sp) {
-  const file = join(speciesDir, `${sp.slug}.json`);
+  const file = sp.parent?.file ?? join(speciesDir, `${sp.slug}.json`);
   const json = JSON.parse(readFileSync(file, 'utf8'));
-  if (json.specimen.model?.url) return;
-  json.specimen.model = { url: `/models/${sp.slug}.glb`, yaw: Math.PI / 2 };
+  const target = sp.parent
+    ? ((json.variants as VariantJson[]).find((v) => v.slug === sp.parent!.variant)!.specimen ??= {})
+    : json.specimen;
+  if (target.model?.url) return;
+  target.model = { url: `/models/${sp.slug}.glb`, yaw: Math.PI / 2 };
   writeFileSync(file, JSON.stringify(json, null, 2) + '\n');
-  log(sp.slug, `wired model into src/data/species/${sp.slug}.json (yaw pi/2, check orientation)`);
+  log(sp.slug, `wired model into ${file.replace(root + '/', '')} (yaw pi/2, check orientation)`);
 }
 
 // ---------- main ----------
 mkdirSync(cacheDir, { recursive: true });
 mkdirSync(outDir, { recursive: true });
-const all = readdirSync(speciesDir)
-  .filter((f) => f.endsWith('.json'))
-  .map((f) => JSON.parse(readFileSync(join(speciesDir, f), 'utf8')) as Sp)
-  .filter((s) => !only || only.includes(s.slug));
+// one task per species, plus one per subspecies ("tiger--amur"); --only accepts either form,
+// and a species slug selects its subspecies too
+const all: Sp[] = [];
+for (const f of readdirSync(speciesDir).filter((x) => x.endsWith('.json'))) {
+  const file = join(speciesDir, f);
+  const json = JSON.parse(readFileSync(file, 'utf8')) as Sp & { variants?: VariantJson[] };
+  all.push(json);
+  for (const v of json.variants ?? []) {
+    all.push({
+      slug: `${json.slug}--${v.slug}`,
+      commonName: v.name,
+      scientificName: v.trinomial,
+      specimen: { bodyPlan: json.specimen.bodyPlan, promptDetail: v.specimen?.promptDetail, model: v.specimen?.model },
+      parent: { file, variant: v.slug, extinct: !v.alive },
+    });
+  }
+}
+const selected = all.filter((s) => !only || only.includes(s.slug) || only.some((o) => s.slug.startsWith(`${o}--`)));
+all.length = 0;
+all.push(...selected);
 
-const pending = all.filter((sp) => force.size || !existsSync(join(outDir, `${sp.slug}.glb`)));
+// a task is done when its GLB exists, or its JSON already points at some other model
+const done = (sp: Sp) => existsSync(join(outDir, `${sp.slug}.glb`)) || (!!sp.specimen.model?.url && sp.specimen.model.url !== `/models/${sp.slug}.glb`);
+const pending = all.filter((sp) => force.size || !done(sp));
 console.log(
   `${all.length} species selected, ${pending.length} need work. ` +
     (imageOnly ? 'Images only (about $0.15 each).' : 'Roughly $0.15 per image and $0.38 per Hunyuan Pro model on fal.'),
@@ -191,6 +225,7 @@ console.log(
 
 const results = await Promise.allSettled(
   all.map(async (sp) => {
+    if (!force.size && done(sp)) return;
     const dir = join(cacheDir, sp.slug);
     mkdirSync(dir, { recursive: true });
     const img = await makeImage(sp, dir);

@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { useStore } from '../../store/useStore';
-import { getSpecies } from '../../data';
+import { getSpecimenSource } from '../../data';
 import { getAmbientShape, loadSpecimenShape, POINT_COUNT } from '../specimen/Specimen';
 import type { Shape } from './sample';
 import { palette } from '../palette';
@@ -26,8 +26,8 @@ export const stippleUniforms = {
 
 function resolveShape(key: string): Promise<Shape> {
   if (key === 'ambient') return Promise.resolve(getAmbientShape());
-  const sp = getSpecies(key);
-  return sp ? loadSpecimenShape(sp) : Promise.resolve(getAmbientShape());
+  const src = getSpecimenSource(key);
+  return src ? loadSpecimenShape(src) : Promise.resolve(getAmbientShape());
 }
 
 /** Bounds of the current target shape, used to seat the plinth ring under the specimen. */

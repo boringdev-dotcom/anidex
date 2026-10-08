@@ -19,7 +19,7 @@ function fmtLon(lon: number) {
   return `${Math.abs(lon).toFixed(1)}°${lon >= 0 ? 'E' : 'W'}`;
 }
 
-export function Range({ sp }: { sp: Species }) {
+export function Range({ sp, n }: { sp: Species; n: number }) {
   const source = useStore((s) => s.rangeSource);
   const { regions, countries, summary, centroid } = sp.range;
   const headline = regions.length > 1 ? `From ${regions[0]} to ${regions[regions.length - 1]}` : regions[0] ?? 'Where it lives';
@@ -28,7 +28,7 @@ export function Range({ sp }: { sp: Species }) {
       <div className="stage split">
         <div className="col-text">
           <Reveal split="fade">
-            <ChapterLabel n={2}>Where they live</ChapterLabel>
+            <ChapterLabel n={n}>Where they live</ChapterLabel>
           </Reveal>
           <Reveal as="h2" id="range-title" className="display h2" split="lines">
             {headline}

@@ -9,9 +9,7 @@ import { Reveal } from '../../ui/Reveal';
 import { Timeline } from './Timeline';
 import { estimateAt, rangeCounts, rangeEvents, type RangeEvent } from './popMath';
 
-const CH = 2;
-
-export function Population({ sp }: { sp: Species }) {
+export function Population({ sp, n }: { sp: Species; n: number }) {
   const pts = sp.population.points;
   const events = useMemo(() => rangeEvents(sp), [sp]);
   const single = pts.length < 2;
@@ -22,10 +20,12 @@ export function Population({ sp }: { sp: Species }) {
   const [year, setYear] = useState(single ? y1 : y0);
   const override = useRef(false);
   const chapter = useStore((s) => s.chapter);
+  // this chapter's index among the page's chapters (it moves when a species has extra chapters)
+  const CH = n - 1;
 
   useEffect(() => {
     if (chapter !== CH) override.current = false;
-  }, [chapter]);
+  }, [chapter, CH]);
 
   useEffect(() => {
     if (single) return;
@@ -37,7 +37,7 @@ export function Population({ sp }: { sp: Species }) {
     };
     gsap.ticker.add(tick);
     return () => gsap.ticker.remove(tick);
-  }, [y0, y1, single]);
+  }, [y0, y1, single, CH]);
 
   // latest range event at or before the scrubbed year drives the globe focus and the caption
   const current: RangeEvent | null = useMemo(() => {
@@ -69,6 +69,24 @@ export function Population({ sp }: { sp: Species }) {
         ? `${(est / first).toFixed(est / first < 10 ? 1 : 0)}× since ${pts[0].year}`
         : `${change >= 0 ? '+' : '−'}${Math.abs(change).toFixed(change > -10 && change < 10 ? 1 : 0)}% since ${pts[0].year}`;
   const counts = rangeCounts(sp, year);
+  // headline follows the chart's own recent direction (IUCN's trend label can lag the latest counts)
+  const peakEst = Math.max(...pts.map((p) => p.estimate));
+  const lastPt = pts[pts.length - 1].estimate;
+  const prevPt = pts.length > 1 ? pts[pts.length - 2].estimate : lastPt;
+  const headline =
+    pts.length < 2
+      ? sp.status.trend === 'increasing'
+        ? 'Slowly coming back'
+        : sp.status.trend === 'decreasing'
+          ? 'Still slipping away'
+          : 'Holding on, for now'
+      : lastPt > prevPt * 1.05
+        ? lastPt < peakEst * 0.6
+          ? 'Slowly coming back'
+          : 'Coming back'
+        : lastPt < prevPt * 0.95
+          ? 'Still slipping away'
+          : 'Holding on, for now';
   const hasHistory = events.length > 0 || (sp.rangeHistory?.regions.length ?? 0) > 0;
 
   return (
@@ -76,10 +94,10 @@ export function Population({ sp }: { sp: Species }) {
       <div className="stage pop">
         <div className="pop__head">
           <Reveal split="fade">
-            <ChapterLabel n={3}>Population over time</ChapterLabel>
+            <ChapterLabel n={n}>Population over time</ChapterLabel>
           </Reveal>
           <Reveal as="h2" id="pop-title" className="display h2 pop__title" split="lines">
-            {sp.status.trend === 'increasing' ? 'Slowly coming back' : sp.status.trend === 'decreasing' ? 'Still slipping away' : 'Holding on, for now'}
+            {headline}
           </Reveal>
           <div className="pop__readout" aria-live="polite" aria-atomic="true">
             <p className="display pop__number num">

@@ -44,7 +44,7 @@ Vite, React 19, TypeScript, React Three Fiber on three.js, GSAP with ScrollTrigg
 
 ## Add a species
 
-1. Create `src/data/species/<slug>.json` matching the `Species` type in `src/data/types.ts`. `bengal-tiger.json` is a good template.
+1. Create `src/data/species/<slug>.json` matching the `Species` type in `src/data/types.ts`. `tiger.json` is a good template, including optional `variants` for subspecies.
 2. Set `gbifTaxonKey` from `https://api.gbif.org/v1/species/match?name=<scientific name>`, then run `npm run gbif:check`.
 3. Point another species' `next` at the new slug so it joins the chain.
 

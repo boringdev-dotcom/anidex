@@ -13,6 +13,8 @@ Pipeline (all in `scripts/generate-models.ts`, run with `npm run models`):
 3. **Optimize.** glTF-Transform welds, simplifies, converts textures to 1024px WebP and applies meshopt, giving roughly 0.35 to 0.55 MB.
 4. **Wire.** If the species JSON has no `specimen.model`, the script adds `{ "url": "/models/<slug>.glb", "yaw": 1.5708 }`.
 
+**Subspecies.** A species can list `variants` in its JSON, like the tiger's nine subspecies. Each variant becomes its own task with key `<species>--<variant>` (e.g. `tiger--amur`). It writes `public/models/tiger--amur.glb` and wires the model into that variant's `specimen.model` inside the parent JSON. `--only tiger` selects the species and all its variants; `--only tiger--amur` selects one. Variant prompts use `variants[].specimen.promptDetail`. Extinct variants (`alive: false`) get a "careful reconstruction" line in the prompt. A variant that already points at a model (e.g. Bengal reusing `bengal-tiger.glb`) is skipped.
+
 Every stage is cached in `scripts/.cache/<slug>/` (`reference.png`, `raw.glb`, `thumbnail.png`), so reruns only pay for missing steps.
 
 ## Before you start
@@ -59,6 +61,8 @@ Check `scripts/.cache/<slug>/thumbnail.png` for broken geometry: fused or missin
 ```bash
 node .claude/skills/generate-specimen/scripts/preview.mjs <slug>
 ```
+
+For a variant, the preview shows the species page's main specimen. Check variants in the species' Subspecies chapter in the browser instead, where scrolling or hovering each row morphs the specimen.
 
 This renders the specimen at four angles in dark (top row) and light (bottom row) themes, writes `scripts/.cache/<slug>/preview.png`, and prints any console errors. Read the image and check:
 - **Upright.** Feet on the plinth ring, not on its side or upside down. Hunyuan outputs are Y-up, so this is rare.

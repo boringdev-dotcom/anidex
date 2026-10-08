@@ -5,14 +5,14 @@ import { Reveal } from '../../ui/Reveal';
 import { useTransitionNavigate } from '../../ui/useTransitionNavigate';
 import { useStore } from '../../../store/useStore';
 
-export function FooterNext({ sp }: { sp: Species }) {
+export function FooterNext({ sp, n }: { sp: Species; n: number }) {
   const next = nextSpecies(sp);
   const go = useTransitionNavigate();
   return (
     <section className="chapter ch-next" aria-labelledby="next-title">
       <div className="stage next">
         <Reveal split="fade">
-          <ChapterLabel n={7}>Next specimen</ChapterLabel>
+          <ChapterLabel n={n}>Next specimen</ChapterLabel>
         </Reveal>
         <a
           href={`/species/${next.slug}`}

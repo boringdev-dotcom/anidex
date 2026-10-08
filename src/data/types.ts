@@ -49,6 +49,35 @@ export interface RangeRegion {
   note: string;
 }
 
+/** A subspecies or distinct population shown in the species' "family" chapter. */
+export interface Variant {
+  slug: string;
+  name: string;
+  /** Traditional scientific name, e.g. "Panthera tigris altaica". */
+  trinomial: string;
+  /** Modern grouping, e.g. "mainland" or "sunda" for tigers. */
+  group?: string;
+  alive: boolean;
+  /** Approximate year it was gone (extinct ones). */
+  extinctBy?: number | null;
+  wild?: { estimate: number | null; year: number | null; label: string };
+  /** Short status label, e.g. "Critically endangered". */
+  status: string;
+  /** Adult male total length in metres [min, max]. Also scales the specimen. */
+  lengthM: [number, number];
+  weightKg: [number, number];
+  coat: string;
+  range: string;
+  centroid?: LatLon;
+  source?: Source;
+  /** Overrides on top of the parent species' specimen (its own GLB, prompt detail, tilt). */
+  specimen?: {
+    model?: { url: string; scale?: number; yaw?: number };
+    promptDetail?: string;
+    tilt?: number;
+  };
+}
+
 export interface Species {
   slug: string;
   commonName: string;
@@ -122,6 +151,11 @@ export interface Species {
     actions: { title: string; detail: string; url?: string }[];
     orgs: { name: string; url: string }[];
   };
+
+  /** Subspecies or populations, shown in their own chapter when present. */
+  variants?: Variant[];
+  /** Short taxonomy note shown above the variants. */
+  taxonomyNote?: string;
 
   /** Slug of the species shown in the footer. */
   next: string;

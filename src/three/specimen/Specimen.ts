@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import type { Species } from '../../data/types';
+import type { SpecimenSource } from '../../data';
 import { buildBody, type Proportions } from './bodyPlans';
 import { ambientShape, hashString, sampleParts, sampleTextured, type Shape, type TexturedPart } from '../stipple/sample';
 
@@ -18,10 +18,10 @@ export const POINT_COUNT = typeof window !== 'undefined' && window.matchMedia('(
 
 const DEFAULTS: Proportions = { length: 0.6, height: 0.5, bulk: 0.5, neck: 0.3, tail: 0.5 };
 
-function procedural(sp: Species): Shape {
+function procedural(sp: SpecimenSource): Shape {
   const p = { ...DEFAULTS, ...sp.specimen.proportions };
   const parts = buildBody(sp.specimen.bodyPlan, p, sp.specimen.features);
-  return sampleParts(parts, POINT_COUNT, hashString(sp.slug));
+  return sampleParts(parts, POINT_COUNT, hashString(sp.key));
 }
 
 /** Copy an attribute into a plain Float32 one (GLB attributes are often quantized int16). */
@@ -47,7 +47,7 @@ function readPixels(tex: THREE.Texture | null | undefined): TexturedPart['pixels
   return { data: ctx.getImageData(0, 0, width, height).data, width, height };
 }
 
-async function fromModel(sp: Species): Promise<Shape> {
+async function fromModel(sp: SpecimenSource): Promise<Shape> {
   const [{ GLTFLoader }, { MeshoptDecoder }] = await Promise.all([
     import('three/examples/jsm/loaders/GLTFLoader.js'),
     import('three/examples/jsm/libs/meshopt_decoder.module.js'),
@@ -71,19 +71,19 @@ async function fromModel(sp: Species): Promise<Shape> {
     parts.push({ geometry: g, pixels: readPixels(mat?.map) });
   });
   if (!parts.length) throw new Error('GLB has no meshes');
-  return sampleTextured(parts, POINT_COUNT, hashString(sp.slug));
+  return sampleTextured(parts, POINT_COUNT, hashString(sp.key));
 }
 
-export function loadSpecimenShape(sp: Species): Promise<Shape> {
-  let p = cache.get(sp.slug);
+export function loadSpecimenShape(sp: SpecimenSource): Promise<Shape> {
+  let p = cache.get(sp.key);
   if (!p) {
     p = sp.specimen.model
       ? fromModel(sp).catch((err) => {
-          console.warn(`[anidex] model for ${sp.slug} failed, using procedural specimen`, err);
+          console.warn(`[anidex] model for ${sp.key} failed, using procedural specimen`, err);
           return procedural(sp);
         })
       : Promise.resolve(procedural(sp));
-    cache.set(sp.slug, p);
+    cache.set(sp.key, p);
   }
   return p;
 }
