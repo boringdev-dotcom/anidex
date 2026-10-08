@@ -1,7 +1,6 @@
 import { useEffect, type ReactNode } from 'react';
-import { Navigate, useParams } from 'react-router';
-import { getSpecies, REDIRECTS } from '../../data';
-import type { Species } from '../../data/types';
+import { useLoaderData } from 'react-router';
+import type { SpeciesRecord } from '../../data/api';
 import { live, useStore } from '../../store/useStore';
 import { useChapterTracking } from '../../scroll/useChapterTracking';
 import { ProgressRail } from '../ui/ProgressRail';
@@ -18,7 +17,7 @@ import { FooterNext } from './chapters/FooterNext';
 interface Chapter {
   key: string;
   label: string;
-  render: (sp: Species, n: number) => ReactNode;
+  render: (sp: SpeciesRecord, n: number) => ReactNode;
 }
 
 const CHAPTERS: Chapter[] = [
@@ -32,7 +31,7 @@ const CHAPTERS: Chapter[] = [
   { key: 'next', label: 'Next', render: (sp, n) => <FooterNext sp={sp} n={n} /> },
 ];
 
-function Story({ sp }: { sp: Species }) {
+function Story({ sp }: { sp: SpeciesRecord }) {
   const chapters = CHAPTERS.filter((c) => c.key !== 'family' || (sp.variants?.length ?? 0) > 0);
   const keys = chapters.map((c) => c.key);
 
@@ -58,11 +57,6 @@ function Story({ sp }: { sp: Species }) {
 }
 
 export default function SpeciesPage() {
-  const { slug } = useParams();
-  const sp = getSpecies(slug);
-  if (!sp) {
-    const moved = slug ? REDIRECTS[slug] : undefined;
-    return <Navigate to={moved ? `/species/${moved}` : '/'} replace />;
-  }
+  const sp = useLoaderData() as SpeciesRecord;
   return <Story key={sp.slug} sp={sp} />;
 }

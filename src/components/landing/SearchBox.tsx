@@ -1,6 +1,6 @@
-import { useId, useMemo, useRef, useState } from 'react';
-import { allSpecies } from '../../data';
-import { searchSpecies } from '../../lib/fuzzy';
+import { useEffect, useId, useRef, useState } from 'react';
+import { prefetchSpecies, searchSpecies } from '../../data';
+import type { SpeciesSummary } from '../../data/api';
 import { useStore } from '../../store/useStore';
 import { useTransitionNavigate } from '../ui/useTransitionNavigate';
 
@@ -13,7 +13,33 @@ export function SearchBox() {
   const inputRef = useRef<HTMLInputElement>(null);
   const listId = useId();
   const go = useTransitionNavigate();
-  const results = useMemo(() => searchSpecies(allSpecies, q), [q]);
+  const [results, setResults] = useState<SpeciesSummary[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // server-side search, debounced; the top hit previews in 3D
+  useEffect(() => {
+    const term = q.trim();
+    if (!term) {
+      setResults([]);
+      return;
+    }
+    const ctrl = new AbortController();
+    setLoading(true);
+    const t = setTimeout(() => {
+      searchSpecies(term, ctrl.signal)
+        .then((items) => {
+          setResults(items);
+          setActive(0);
+          if (items[0] && document.activeElement === inputRef.current) useStore.setState({ previewShape: items[0].slug });
+        })
+        .catch(() => {})
+        .finally(() => setLoading(false));
+    }, 140);
+    return () => {
+      clearTimeout(t);
+      ctrl.abort();
+    };
+  }, [q]);
   const showList = open && q.trim().length > 0;
 
   const preview = (slug: string | null) => useStore.setState({ previewShape: slug });
@@ -66,8 +92,7 @@ export function SearchBox() {
             setQ(e.target.value);
             setActive(0);
             setOpen(true);
-            const r = searchSpecies(allSpecies, e.target.value)[0];
-            preview(r ? r.slug : null);
+            if (!e.target.value.trim()) preview(null);
           }}
           onFocus={() => setOpen(true)}
           onBlur={() => setTimeout(() => setOpen(false), 150)}
@@ -80,7 +105,7 @@ export function SearchBox() {
 
       {showList ? (
         <ul id={listId} role="listbox" className="search__results" onMouseLeave={() => preview(results[active]?.slug ?? null)}>
-          {results.length === 0 && <li className="search__empty label">Not in the index yet</li>}
+          {results.length === 0 && <li className="search__empty label">{loading ? 'Searching…' : 'Not in the index yet'}</li>}
           {results.map((s, i) => (
             <li
               key={s.slug}
@@ -91,6 +116,7 @@ export function SearchBox() {
               onMouseEnter={() => {
                 setActive(i);
                 preview(s.slug);
+                prefetchSpecies(s.slug);
               }}
               onMouseDown={(e) => {
                 e.preventDefault();
@@ -99,9 +125,11 @@ export function SearchBox() {
             >
               <span className="search__name">{s.commonName}</span>
               <span className="search__sci italic">{s.scientificName}</span>
-              <span className="status-chip" style={{ ['--status' as string]: `var(--st-${s.status.iucn})` }}>
-                {s.status.iucn}
-              </span>
+              {s.iucn && (
+                <span className="status-chip" style={{ ['--status' as string]: `var(--st-${s.iucn})` }}>
+                  {s.iucn}
+                </span>
+              )}
             </li>
           ))}
         </ul>
@@ -116,8 +144,7 @@ export function SearchBox() {
                   setQ(w);
                   setOpen(true);
                   inputRef.current?.focus();
-                  const r = searchSpecies(allSpecies, w)[0];
-                  preview(r ? r.slug : null);
+
                 }}
               >
                 {w}

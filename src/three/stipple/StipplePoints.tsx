@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { useStore } from '../../store/useStore';
-import { getSpecimenSource } from '../../data';
+import { fetchSpecies, getSpecimenSource } from '../../data';
 import { getAmbientShape, loadEarthShape, loadSpecimenShape, POINT_COUNT } from '../specimen/Specimen';
 import type { Shape } from './sample';
 import { palette } from '../palette';
@@ -32,9 +32,13 @@ export const stippleUniforms = {
   uInk: palette.uInk,
 };
 
-function resolveShape(key: string): Promise<Shape> {
+async function resolveShape(key: string): Promise<Shape> {
   if (key === 'ambient') return loadEarthShape();
-  const src = getSpecimenSource(key);
+  let src = getSpecimenSource(key);
+  if (!src) {
+    await fetchSpecies(key.split('--')[0]).catch(() => null);
+    src = getSpecimenSource(key);
+  }
   return src ? loadSpecimenShape(src) : loadEarthShape();
 }
 

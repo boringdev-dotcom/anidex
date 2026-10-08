@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { useStore } from '../../store/useStore';
 import { resetScroll, stopScroll } from '../../scroll/smoothScroll';
 import { prefersReducedMotion } from '../../hooks/useMediaQuery';
+import { prefetchSpecies } from '../../data';
 
 /**
  * Page transitions: fade the current page out while the point cloud morphs to the next shape,
@@ -15,6 +16,8 @@ export function useTransitionNavigate() {
     (to: string, shape: string) => {
       const st = useStore.getState();
       if (st.transitioning) return;
+      const m = to.match(/^\/species\/([^/?#]+)/);
+      if (m) prefetchSpecies(m[1]);
       useStore.setState({ transitioning: true, shape, previewShape: null });
       stopScroll(true);
       const page = document.querySelector('[data-page]');
