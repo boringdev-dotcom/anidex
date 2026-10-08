@@ -7,6 +7,7 @@ import { fmt } from '../../../lib/format';
 import { smoothstep } from '../../../lib/math';
 import { ChapterLabel } from '../../ui/ChapterLabel';
 import { Reveal } from '../../ui/Reveal';
+import { StageSlot } from '../../ui/StageSlot';
 
 const WORDS = ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
 const GROUP: Record<string, string> = { mainland: 'Mainland · P. t. tigris', sunda: 'Sunda Islands · P. t. sondaica' };
@@ -66,6 +67,18 @@ export function Family({ sp, n }: { sp: Species; n: number }) {
   return (
     <section className="chapter ch-family" aria-labelledby="family-title">
       <div className="stage family">
+        <StageSlot kind="specimen" chapter="family" className="m-slot--family" reserve={58}>
+          <div>
+            <p className="slot-title">{v.name}</p>
+            <p className={`slot-sub${v.alive ? '' : ' is-extinct'}`}>
+              {v.lengthM[1].toFixed(1)} m ·{' '}
+              {v.alive ? (v.wild?.estimate ? `≈ ${fmt(v.wild.estimate)} wild` : v.wild?.estimate === 0 ? 'none in the wild' : 'numbers unknown') : `gone by ${v.extinctBy ?? '?'}`}
+            </p>
+          </div>
+          <span className="slot-tag num">
+            {String(sel + 1).padStart(2, '0')} / {String(variants.length).padStart(2, '0')}
+          </span>
+        </StageSlot>
         <div className="family__head">
           <Reveal split="fade">
             <ChapterLabel n={n}>Subspecies</ChapterLabel>

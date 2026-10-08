@@ -3,6 +3,7 @@ import { useStore } from '../../../store/useStore';
 import { countryName } from '../../../lib/format';
 import { ChapterLabel } from '../../ui/ChapterLabel';
 import { Reveal } from '../../ui/Reveal';
+import { RotateIcon, StageSlot } from '../../ui/StageSlot';
 
 const SOURCE_TEXT: Record<string, string> = {
   'gbif-density': 'Dots: GBIF occurrence density, wild range only',
@@ -26,6 +27,12 @@ export function Range({ sp, n }: { sp: Species; n: number }) {
   return (
     <section className="chapter ch-range" aria-labelledby="range-title">
       <div className="stage split">
+        <StageSlot kind="globe" chapter="range" className="m-slot--range" reserve={30}>
+          <span className="slot-tag">Wild range · GBIF</span>
+          <span className="slot-tag">
+            <RotateIcon /> Drag to spin
+          </span>
+        </StageSlot>
         <div className="col-text">
           <Reveal split="fade">
             <ChapterLabel n={n}>Where they live</ChapterLabel>

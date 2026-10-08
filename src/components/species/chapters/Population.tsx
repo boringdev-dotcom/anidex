@@ -7,6 +7,7 @@ import { fmtEstimate } from '../../../lib/format';
 import { ChapterLabel } from '../../ui/ChapterLabel';
 import { Reveal } from '../../ui/Reveal';
 import { Timeline } from './Timeline';
+import { StageSlot } from '../../ui/StageSlot';
 import { estimateAt, rangeCounts, rangeEvents, type RangeEvent } from './popMath';
 
 export function Population({ sp, n }: { sp: Species; n: number }) {
@@ -50,6 +51,12 @@ export function Population({ sp, n }: { sp: Species; n: number }) {
     live.year = year;
     live.historyFocus = current ? current.region : -1;
   }, [year, current]);
+
+  const lastEvent = useRef<RangeEvent | null>(null);
+  useEffect(() => {
+    if (current !== lastEvent.current && override.current) navigator.vibrate?.(8);
+    lastEvent.current = current;
+  }, [current]);
   useEffect(
     () => () => {
       live.year = null;
@@ -99,6 +106,12 @@ export function Population({ sp, n }: { sp: Species; n: number }) {
           <Reveal as="h2" id="pop-title" className="display h2 pop__title" split="lines">
             {headline}
           </Reveal>
+        </div>
+
+        {/* one unit: on phones it stays in view (globe, number, story, timeline) while you scrub */}
+        <div className="pop__unit">
+          <StageSlot kind="globe" chapter="population" className="m-slot--pop" />
+          <div className="pop__row">
           <div className="pop__readout" aria-live="polite" aria-atomic="true">
             <p className="display pop__number num">
               <span className="pop__approx">≈</span>
@@ -145,7 +158,7 @@ export function Population({ sp, n }: { sp: Species; n: number }) {
               </ul>
             </div>
           )}
-        </div>
+          </div>
 
         {!single ? (
           <Timeline
@@ -164,6 +177,8 @@ export function Population({ sp, n }: { sp: Species; n: number }) {
             <p className="label">One estimate, no time series. Nobody has counted this species consistently enough to draw a line.</p>
           </div>
         )}
+        </div>
+
         <p className="label pop__source">
           Population:{' '}
           <a className="link label--ink" href={sp.population.source.url} target="_blank" rel="noreferrer">

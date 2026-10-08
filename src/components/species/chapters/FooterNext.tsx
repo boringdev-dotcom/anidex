@@ -4,16 +4,33 @@ import { ChapterLabel } from '../../ui/ChapterLabel';
 import { Reveal } from '../../ui/Reveal';
 import { useTransitionNavigate } from '../../ui/useTransitionNavigate';
 import { useStore } from '../../../store/useStore';
+import { useEffect } from 'react';
+import { StageSlot } from '../../ui/StageSlot';
 
 export function FooterNext({ sp, n }: { sp: Species; n: number }) {
   const next = nextSpecies(sp);
   const go = useTransitionNavigate();
+  const chapter = useStore((s) => s.chapter);
+  const active = chapter === n - 1;
+
+  // phones have no hover: when this chapter is on screen, the specimen morphs into the next animal as a teaser
+  useEffect(() => {
+    if (!window.matchMedia('(max-width: 768px)').matches) return;
+    const { previewShape, transitioning } = useStore.getState();
+    if (transitioning) return;
+    if (active && previewShape !== next.slug) useStore.setState({ previewShape: next.slug });
+    if (!active && previewShape === next.slug) useStore.setState({ previewShape: null });
+  }, [active, next.slug]);
   return (
     <section className="chapter ch-next" aria-labelledby="next-title">
       <div className="stage next">
         <Reveal split="fade">
           <ChapterLabel n={n}>Next specimen</ChapterLabel>
         </Reveal>
+        <StageSlot kind="specimen" chapter="next" className="m-slot--next" reserve={30}>
+          <span className="slot-tag">Up next</span>
+          <span className="slot-tag">{next.taxonomy.class}</span>
+        </StageSlot>
         <a
           href={`/species/${next.slug}`}
           className="next__link"
