@@ -10,6 +10,11 @@ import { plinthUniforms } from './Plinth';
 import { facingQuaternion, latLonToVec3, meanLatLon } from './globe/geo';
 import { palette } from './palette';
 import { prefersReducedMotion } from '../hooks/useMediaQuery';
+import { interaction } from './interaction';
+
+const wrap = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
+const tmpV = new THREE.Vector3();
+const tmpE = new THREE.Euler();
 
 /**
  * Poses per chapter. x/y are fractions of the viewport, scales are fractions of viewport height.
@@ -81,6 +86,9 @@ export function SceneDirector({ specimen, globe, root }: Props) {
   const qTarget = useRef(new THREE.Quaternion());
   const v = useRef(new THREE.Vector3());
   const started = useRef(false);
+  const baseTilt = useRef(0.08);
+  const focusQ = useRef(new THREE.Quaternion());
+  const userQ = useRef(new THREE.Quaternion());
 
   useFrame((state, rawDt) => {
     const dt = Math.min(rawDt, 1 / 20);
@@ -113,10 +121,28 @@ export function SceneDirector({ specimen, globe, root }: Props) {
     const sScale = Math.min(c.ss * vh, c.ss * vw * 0.95);
     sp.position.set(c.sx * vw, c.sy * vh, 0);
     sp.scale.setScalar(sScale);
-    if (!reduced) sp.rotation.y += dt * c.spin;
+    // specimen rotation: user drag with momentum, then the slow auto-spin takes over again
+    const si = interaction.specimen;
+    const now = performance.now();
+    if (interaction.active === 'specimen') {
+      sp.rotation.y += si.dYaw;
+      si.pitch = clamp(si.pitch + si.dPitch, -0.55, 0.9);
+    } else {
+      if (!reduced) {
+        sp.rotation.y += si.vYaw * dt;
+        si.pitch = clamp(si.pitch + si.vPitch * dt, -0.55, 0.9);
+      }
+      si.vYaw *= Math.exp(-2.4 * dt);
+      si.vPitch *= Math.exp(-5 * dt);
+      const settled = Math.abs(si.vYaw) < 0.25;
+      if (!reduced && settled) sp.rotation.y += dt * c.spin * clamp((now - si.last - 600) / 1200);
+      if (now - si.last > 1200) si.pitch = damp(si.pitch, 0, 1.6, dt);
+    }
+    si.dYaw = si.dPitch = 0;
     const { previewShape, shape } = useStore.getState();
     const shown = getSpecies(previewShape ?? shape);
-    sp.rotation.x = damp(sp.rotation.x, shown?.specimen.tilt ?? 0.08, 3, dt);
+    baseTilt.current = damp(baseTilt.current, shown?.specimen.tilt ?? 0.08, 3, dt);
+    sp.rotation.x = baseTilt.current + si.pitch;
 
     // globe transform
     const gScale = Math.min(c.gs * vh, c.gs * vw * 0.9) / 2;
@@ -141,13 +167,48 @@ export function SceneDirector({ specimen, globe, root }: Props) {
     // gentle idle sway
     const sway = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, Math.sin(state.clock.elapsedTime * 0.25) * 0.12, 0));
     qTarget.current.premultiply(sway);
-    spin.quaternion.slerp(qTarget.current, 1 - Math.exp(-dt * (reduced ? 60 : 2.4)));
+    focusQ.current.slerp(qTarget.current, 1 - Math.exp(-dt * (reduced ? 60 : 2.4)));
+
+    // globe: the reader's drag rotates on top of the story focus, then eases back after a pause
+    const gi = interaction.globe;
+    if (interaction.active === 'globe') {
+      gi.yaw += gi.dYaw;
+      gi.pitch = clamp(gi.pitch + gi.dPitch, -1.2, 1.2);
+    } else {
+      if (!reduced) {
+        gi.yaw += gi.vYaw * dt;
+        gi.pitch = clamp(gi.pitch + gi.vPitch * dt, -1.2, 1.2);
+      }
+      gi.vYaw *= Math.exp(-2.2 * dt);
+      gi.vPitch *= Math.exp(-2.2 * dt);
+      if (now - gi.last > 2600) {
+        gi.yaw = damp(wrap(gi.yaw), 0, 1.1, dt);
+        gi.pitch = damp(gi.pitch, 0, 1.1, dt);
+      }
+    }
+    gi.dYaw = gi.dPitch = 0;
+    userQ.current.setFromEuler(tmpE.set(gi.pitch, gi.yaw, 0, 'XYZ'));
+    spin.quaternion.copy(userQ.current).multiply(focusQ.current);
 
     // parallax on the whole rig
     if (root.current && !reduced) {
       root.current.rotation.y = damp(root.current.rotation.y, live.pointer.x * 0.07, 3, dt);
       root.current.rotation.x = damp(root.current.rotation.x, -live.pointer.y * 0.045, 3, dt);
     }
+
+    // publish on-screen hit circles for drag-to-rotate (CSS px)
+    const toScreen = (obj: THREE.Object3D, rWorld: number, out: { x: number; y: number; r: number }) => {
+      obj.getWorldPosition(tmpV).project(state.camera);
+      out.x = (tmpV.x * 0.5 + 0.5) * size.width;
+      out.y = (-tmpV.y * 0.5 + 0.5) * size.height;
+      out.r = (rWorld / vh) * size.height;
+    };
+    const hs = interaction.hit.specimen;
+    const hg = interaction.hit.globe;
+    hs.on = c.so > 0.35 && c.coll < 0.4;
+    hg.on = c.go > 0.6;
+    if (hs.on) toScreen(sp, sScale * 0.48, hs);
+    if (hg.on) toScreen(gl, gScale * 1.02, hg);
 
     // collapse target: the focus point on the globe surface, in specimen-local space
     root.current?.updateMatrixWorld(true);

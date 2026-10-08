@@ -7,6 +7,7 @@ import { Plinth } from './Plinth';
 import { SceneDirector } from './SceneDirector';
 import { ThemeBridge } from './ThemeBridge';
 import { live } from '../store/useStore';
+import { attachInteraction } from './interaction';
 
 function Rig() {
   const root = useRef<THREE.Group>(null);
@@ -34,7 +35,11 @@ export default function SceneRoot() {
       live.pointer.y = (e.clientY / window.innerHeight) * 2 - 1;
     };
     window.addEventListener('pointermove', onMove, { passive: true });
-    return () => window.removeEventListener('pointermove', onMove);
+    const detach = attachInteraction();
+    return () => {
+      window.removeEventListener('pointermove', onMove);
+      detach();
+    };
   }, []);
 
   return (

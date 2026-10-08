@@ -68,6 +68,8 @@ export interface Species {
     proportions?: { length?: number; height?: number; bulk?: number; neck?: number; tail?: number };
     /** Optional silhouette details for the procedural specimen. */
     features?: SpecimenFeature[];
+    /** Extra visual detail for the model-generation prompt (scripts/generate-models.ts). */
+    promptDetail?: string;
     /** Camera tilt in radians so flat animals (butterflies, whales) are seen partly from above. Default 0.08. */
     tilt?: number;
     /** Drop a GLB at /public/models/<slug>.glb and reference it here. Nothing else changes. */

@@ -10,7 +10,7 @@ A field guide to the animals we might lose. Search a species and scroll through 
 6. **How you can help.** Concrete actions and organisations to support.
 7. **Next specimen.** The point cloud morphs into the next animal.
 
-Light and dark themes follow the OS setting until you pick one.
+Drag the animal or the globe to spin it. Light and dark themes follow the OS setting until you pick one.
 
 ## Run it
 
@@ -38,6 +38,7 @@ Vite, React 19, TypeScript, React Three Fiber on three.js, GSAP with ScrollTrigg
 - **Scroll drives the scene.** Each chapter is a tall section with a sticky stage. `src/scroll/useChapterTracking.ts` turns scroll into a continuous chapter position. `src/three/SceneDirector.tsx` blends a pose per chapter for the specimen and the globe.
 - **One point cloud.** `src/three/stipple/` holds a single `Points` object. Its shader handles the morph between shapes and the collapse into a dot on the globe.
 - **Theme tokens.** `src/styles/tokens.css` is the only place colours live. `src/three/ThemeBridge.tsx` reads the same tokens and fades the WebGL colours to match.
+- **Drag to rotate.** `src/three/interaction.ts` reads window pointer events, because the canvas sits behind the page. The director publishes each object's on-screen circle every frame, and a press inside one starts a drag with momentum. Links, buttons, search and the timeline are left alone.
 - **Range history.** Each species has curated `rangeHistory` regions with the year they were lost (`to`) or regained (`from`). `src/data/rangeState.ts` turns a year into present, lost or not yet. If `from` is later than `to`, the area was lost and later returned.
 - **Range layer.** `src/lib/gbif.ts` stitches two GBIF density tiles into a world texture. It falls back to raw occurrence records, then to the curated bounding box. The globe masks records outside the curated wild range, which hides zoo animals.
 
@@ -53,7 +54,7 @@ The index and search pick it up automatically.
 
 Each species has a textured GLB in `public/models/`, generated with fal.ai and sampled into the stipple point cloud. The texture sets each point's size and strength like a halftone, so stripes, patches and wing veins show through.
 
-To regenerate or add one:
+With Claude Code, the project skill in `.claude/skills/generate-specimen/` walks through this end to end, including a visual check. Ask it to "generate the specimen for <species>". By hand:
 
 ```bash
 npm run models -- --only <slug>

@@ -50,7 +50,7 @@ interface Sp {
   slug: string;
   commonName: string;
   scientificName: string;
-  specimen: { bodyPlan: string };
+  specimen: { bodyPlan: string; promptDetail?: string; model?: { url: string; yaw?: number } };
 }
 
 const POSE: Record<string, string> = {
@@ -81,9 +81,11 @@ const DETAIL: Record<string, string> = {
 };
 
 function prompt(sp: Sp): string {
+  // a species can override the built-in detail with specimen.promptDetail in its JSON
+  const detail = sp.specimen.promptDetail ?? DETAIL[sp.slug];
   return [
     `A single ${sp.commonName} (${sp.scientificName}), ${POSE[sp.specimen.bodyPlan] ?? POSE.quadruped}.`,
-    DETAIL[sp.slug] ? `${DETAIL[sp.slug][0].toUpperCase()}${DETAIL[sp.slug].slice(1)}.` : '',
+    detail ? `${detail[0].toUpperCase()}${detail.slice(1)}.` : '',
     'The entire animal is fully visible and centered with generous margin, nothing cropped: every leg, foot, the tail and ears are in frame.',
     'Isolated on a pure plain white background, soft even studio lighting, no cast shadow, no ground, no props, no text.',
     'Photorealistic museum-quality wildlife reference photograph, accurate anatomy, natural coloration and markings, sharp focus.',
@@ -163,6 +165,16 @@ async function optimize(sp: Sp, raw: string) {
   return out;
 }
 
+/** Point the species JSON at its model if it isn't already (keeps any hand-tuned yaw/tilt). */
+function wire(sp: Sp) {
+  const file = join(speciesDir, `${sp.slug}.json`);
+  const json = JSON.parse(readFileSync(file, 'utf8'));
+  if (json.specimen.model?.url) return;
+  json.specimen.model = { url: `/models/${sp.slug}.glb`, yaw: Math.PI / 2 };
+  writeFileSync(file, JSON.stringify(json, null, 2) + '\n');
+  log(sp.slug, `wired model into src/data/species/${sp.slug}.json (yaw pi/2, check orientation)`);
+}
+
 // ---------- main ----------
 mkdirSync(cacheDir, { recursive: true });
 mkdirSync(outDir, { recursive: true });
@@ -170,6 +182,12 @@ const all = readdirSync(speciesDir)
   .filter((f) => f.endsWith('.json'))
   .map((f) => JSON.parse(readFileSync(join(speciesDir, f), 'utf8')) as Sp)
   .filter((s) => !only || only.includes(s.slug));
+
+const pending = all.filter((sp) => force.size || !existsSync(join(outDir, `${sp.slug}.glb`)));
+console.log(
+  `${all.length} species selected, ${pending.length} need work. ` +
+    (imageOnly ? 'Images only (about $0.15 each).' : 'Roughly $0.15 per image and $0.38 per Hunyuan Pro model on fal.'),
+);
 
 const results = await Promise.allSettled(
   all.map(async (sp) => {
@@ -179,6 +197,7 @@ const results = await Promise.allSettled(
     if (imageOnly) return;
     const raw = await makeModel(sp, dir, img);
     await optimize(sp, raw);
+    wire(sp);
   }),
 );
 results.forEach((r, i) => {
