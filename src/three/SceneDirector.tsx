@@ -65,7 +65,7 @@ const mobileSpecies = (key: string, p: Pose): Pose => ({
   sy: BAND_Y,
   gy: BAND_Y,
   ss: key === 'next' ? 0.3 : 0.36,
-  gs: 0.37,
+  gs: 0.35,
   so: p.so * (key === 'help' ? 0.7 : 1),
 });
 const MOBILE_SPECIES: Record<string, Pose> = Object.fromEntries(Object.entries(SPECIES).map(([k, p]) => [k, mobileSpecies(k, p)]));

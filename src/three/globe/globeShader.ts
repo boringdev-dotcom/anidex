@@ -101,6 +101,9 @@ void main() {
   // soft halo around range cells
   ink = max(ink, (1.0 - smoothstep(0.0, stepDeg * 0.9, dist)) * isRange * 0.12);
 
+  // story layers (ripple, history regions, pins) only on the near side; through the glass they read as clutter
+  bool nearSide = uBack < 0.5;
+
   // ripple out from the range centre
   float rip = 0.0;
   for (int k = 0; k < 2; k++) {
@@ -109,12 +112,12 @@ void main() {
     float dd = greatCircle(ll, uCentroid);
     rip += (1.0 - smoothstep(0.0, 0.35 + fwidth(dd), abs(dd - rad))) * (1.0 - t) * 0.5;
   }
-  ink = max(ink, rip * uRipple);
+  if (nearSide) ink = max(ink, rip * uRipple);
 
   // range history: present regions solid, lost regions as accent rings, new ones pulse in
   float acc = 0.0;
   for (int i = 0; i < MAX_REGIONS; i++) {
-    if (i >= uRegCount) break;
+    if (i >= uRegCount || !nearSide) break;
     vec4 g = uReg[i];
     float rad = max(g.z, 2.2);
     float d = greatCircle(c, g.xy);
@@ -148,10 +151,11 @@ void main() {
   vec2 gq = abs(fract(ll / 30.0 + 0.5) - 0.5) * 30.0;
   vec2 gw = fwidth(ll) * 0.7;
   float grat = max(1.0 - smoothstep(0.0, gw.x, gq.x * cos(radians(ll.y))), 1.0 - smoothstep(0.0, gw.y, gq.y));
+  grat *= 1.0 - smoothstep(62.0, 78.0, abs(ll.y));
   ink = max(ink, grat * 0.06);
 
   for (int i = 0; i < 6; i++) {
-    if (i >= uPinCount) break;
+    if (i >= uPinCount || !nearSide) break;
     float d = greatCircle(ll, uPins[i]);
     float isActive = 1.0 - min(1.0, abs(float(i) - uPinActive));
     float pr = 2.0 + isActive * (0.8 + 0.5 * sin(uTime * 3.0));

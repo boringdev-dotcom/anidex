@@ -171,7 +171,8 @@ export const Globe = forwardRef<THREE.Group>(function Globe(_, ref) {
     const o = globeUniforms.uOpacity.value;
     const light = useStore.getState().theme === 'light';
     haloUniforms.uOpacity.value = o * (light ? 0.45 : 0.8);
-    orbitUniforms.uOpacity.value = o * 0.2;
+    // the orbit ring spills past the phone's 3D stage, so it only shows on wider screens
+    orbitUniforms.uOpacity.value = state.size.width <= 768 ? 0 : o * 0.2;
     if (orbitRef.current) {
       orbitRef.current.rotation.y = t * 0.05;
     }
