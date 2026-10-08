@@ -99,21 +99,43 @@ export async function generateModel(
 ): Promise<{ glbUrl: string; thumbnailUrl?: string; requestId: string }> {
   const fal = await client();
   let requestId = opts.resumeId;
-  if (!requestId) {
-    const q = await fal.queue.submit(HUNYUAN, {
-      input: { input_image_url: imageUrl, generate_type: 'Normal', enable_pbr: false, face_count: 60000 },
-    });
-    requestId = q.request_id;
-    opts.onSubmitted?.(requestId);
+  let lastError: unknown = null;
+  // Hunyuan's upstream sometimes fails a job ("downstream service unavailable"); fal reports it as
+  // completed with an error result, which is not billed, so a failed job is simply resubmitted
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (!requestId) {
+      const q = await fal.queue.submit(HUNYUAN, {
+        input: { input_image_url: imageUrl, generate_type: 'Normal', enable_pbr: false, face_count: 60000 },
+      });
+      requestId = q.request_id;
+      opts.onSubmitted?.(requestId);
+    }
+    await waitForCompletion(fal, requestId, opts.onProgress);
+    for (let tries = 0; tries < 2; tries++) {
+      try {
+        const r = await fal.queue.result(HUNYUAN, { requestId });
+        const data = r.data as { model_glb: { url: string }; thumbnail?: { url: string } };
+        return { glbUrl: data.model_glb.url, thumbnailUrl: data.thumbnail?.url, requestId };
+      } catch (err) {
+        lastError = err;
+        await sleep(3000);
+      }
+    }
+    console.warn(`[specimens] Hunyuan request ${requestId} failed (${(lastError as Error).message}); resubmitting`);
+    requestId = undefined;
   }
+  throw lastError ?? new Error('Hunyuan generation failed');
+}
+
+async function waitForCompletion(fal: Awaited<ReturnType<typeof client>>, requestId: string, onProgress?: () => void) {
   const deadline = Date.now() + 20 * 60_000;
   let errors = 0;
   for (;;) {
     try {
       const st = await fal.queue.status(HUNYUAN, { requestId, logs: false });
       errors = 0;
-      if (st.status === 'COMPLETED') break;
-      if (st.status === 'IN_PROGRESS') opts.onProgress?.();
+      if (st.status === 'COMPLETED') return;
+      if (st.status === 'IN_PROGRESS') onProgress?.();
     } catch (err) {
       // transient gateway errors while polling; give up only after a run of them
       if (++errors >= 12) throw err;
@@ -121,17 +143,6 @@ export async function generateModel(
     if (Date.now() > deadline) throw new Error(`Hunyuan request ${requestId} did not finish in 20 minutes`);
     await sleep(5000);
   }
-  let r: Awaited<ReturnType<typeof fal.queue.result>> | null = null;
-  for (let attempt = 0; !r; attempt++) {
-    try {
-      r = await fal.queue.result(HUNYUAN, { requestId });
-    } catch (err) {
-      if (attempt >= 4) throw err;
-      await sleep(3000 * (attempt + 1));
-    }
-  }
-  const data = r.data as { model_glb: { url: string }; thumbnail?: { url: string } };
-  return { glbUrl: data.model_glb.url, thumbnailUrl: data.thumbnail?.url, requestId };
 }
 
 export async function download(url: string): Promise<Uint8Array> {
