@@ -1,4 +1,4 @@
-export type IUCNStatus = 'LC' | 'NT' | 'VU' | 'EN' | 'CR' | 'EW' | 'EX';
+export type IUCNStatus = 'LC' | 'NT' | 'VU' | 'EN' | 'CR' | 'EW' | 'EX' | 'DD' | 'NE';
 export type SizeClass = 'xs' | 's' | 'm' | 'l' | 'xl';
 export type BodyPlan = 'quadruped' | 'biped' | 'serpentine' | 'avian' | 'aquatic' | 'arthropod' | 'amphibian';
 export type SpecimenFeature =
@@ -141,7 +141,8 @@ export interface Species {
     note?: string;
   };
 
-  population: {
+  /** Absent when no published time series exists (most auto pages). */
+  population?: {
     unit: string;
     points: PopulationPoint[];
     source: Source;
@@ -150,20 +151,20 @@ export interface Species {
 
   status: {
     iucn: IUCNStatus;
-    assessed: number;
+    assessed?: number;
     trend: Trend;
     threats: { title: string; detail: string }[];
     source: Source;
   };
 
-  sightings: {
+  sightings?: {
     places: { name: string; country: string; lat: number; lon: number; note?: string }[];
     /** 1..12 */
     bestMonths: number[];
     tip?: string;
   };
 
-  help: {
+  help?: {
     actions: { title: string; detail: string; url?: string }[];
     orgs: { name: string; url: string }[];
   };
@@ -175,6 +176,6 @@ export interface Species {
   /** Short taxonomy note shown above the variants. */
   taxonomyNote?: string;
 
-  /** Slug of the species shown in the footer. */
-  next: string;
+  /** Slug of the species shown in the footer (curated pages); auto pages use the closest relative. */
+  next?: string;
 }

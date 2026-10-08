@@ -12,7 +12,7 @@ export function Sightings({ sp, n }: { sp: Species; n: number }) {
   const active = useStore((s) => s.activePlace);
   const chapter = useStore((s) => s.chapter);
   const set = (i: number) => useStore.setState({ activePlace: i });
-  const { places, bestMonths, tip } = sp.sightings;
+  const { places, bestMonths, tip } = sp.sightings!;
   const listRef = useRef<HTMLOListElement>(null);
   const lastTap = useRef(0);
   const CH = n - 1;

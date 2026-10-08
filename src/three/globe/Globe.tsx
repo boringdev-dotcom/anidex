@@ -137,7 +137,7 @@ export const Globe = forwardRef<THREE.Group>(function Globe(_, ref) {
     const [w, s, e, n] = sp.range.bbox;
     globeUniforms.uBbox.value.set(w, s, e, n);
     globeUniforms.uCentroid.value.set(sp.range.centroid.lon, sp.range.centroid.lat);
-    const places = sp.sightings.places.slice(0, 6);
+    const places = (sp.sightings?.places ?? []).slice(0, 6);
     places.forEach((p, i) => globeUniforms.uPins.value[i].set(p.lon, p.lat));
     globeUniforms.uPinCount.value = places.length;
     const regions = sp.rangeHistory?.regions.slice(0, MAX_REGIONS) ?? [];

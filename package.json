@@ -13,9 +13,11 @@
     "start": "node server/index.ts",
     "db:seed": "node --experimental-strip-types scripts/db/seed-deep.ts",
     "dev:site": "vite",
-    "dev:api": "node --watch server/index.ts"
+    "dev:api": "node --watch server/index.ts",
+    "ingest": "node --experimental-strip-types scripts/ingest/index.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.132.1",
     "compression": "^1.8.2",
     "express": "^5.2.1",
     "pg": "^8.23.1"

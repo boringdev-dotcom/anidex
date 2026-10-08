@@ -61,10 +61,10 @@ export default function Landing() {
       <section className="chapter landing-index" aria-labelledby="index-title">
         <div className="landing-index__head">
           <Reveal as="p" className="label label--dot" split="fade">
-            The index
+            Best known
           </Reveal>
           <Reveal as="h2" id="index-title" className="display h2" split="lines">
-            {total.toLocaleString('en-US')} species, one planet. Hover to preview, click to explore.
+            The animals people look up most. Hover to preview, click to explore.
           </Reveal>
         </div>
         <ol className="index-list">
@@ -98,6 +98,9 @@ export default function Landing() {
             </li>
           ))}
         </ol>
+        <a href="/explore" className="compare-btn landing-explore" onClick={(e) => { e.preventDefault(); go('/explore', 'ambient'); }}>
+          Explore all {total.toLocaleString('en-US')} species →
+        </a>
         <footer className="landing-foot label">
           <span>Ranges from GBIF occurrence data. Status from the IUCN Red List. Figures sourced per species.</span>
           <span>Specimens are stipple renderings of 3D models generated with Hunyuan 3D.</span>

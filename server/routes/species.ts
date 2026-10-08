@@ -1,5 +1,7 @@
 import { Router, type Request, type Response } from 'express';
 import { repo } from '../repo.ts';
+import { pool } from '../db/pool.ts';
+import { requestResearch, researchState } from '../jobs.ts';
 
 export const species = Router();
 
@@ -57,7 +59,8 @@ species.get(
     if (moved) return res.status(301).json({ redirect: moved });
     const sp = await repo.get(slug);
     if (!sp) return res.status(404).json({ error: 'Not found' });
-    res.set('Cache-Control', 'public, max-age=120');
+    // pages still waiting for research change soon, so browsers must revalidate them
+    res.set('Cache-Control', sp.tier === 'auto' && !sp.research ? 'no-cache' : 'public, max-age=120');
     res.json(sp);
   }),
 );
@@ -67,5 +70,36 @@ species.get(
   h(async (req, res) => {
     res.set('Cache-Control', 'public, max-age=300');
     res.json({ items: await repo.related(String(req.params.slug), Math.min(Number(req.query.limit) || 6, 24)) });
+  }),
+);
+
+// ---- on-demand research ----
+
+// a light per-IP limit on research requests (the daily cap is the real cost guard)
+const hits = new Map<string, number[]>();
+function limited(ip: string) {
+  const now = Date.now();
+  const list = (hits.get(ip) ?? []).filter((t) => now - t < 3600_000);
+  list.push(now);
+  hits.set(ip, list);
+  return list.length > 20;
+}
+
+species.get(
+  '/species/:slug/research',
+  h(async (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    if (!pool) return res.json({ state: 'unavailable' });
+    res.json(await researchState(pool, String(req.params.slug)));
+  }),
+);
+
+species.post(
+  '/species/:slug/research',
+  h(async (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    if (!pool) return res.json({ state: 'unavailable' });
+    if (limited(req.ip ?? 'unknown')) return res.status(429).json({ state: 'capped' });
+    res.json(await requestResearch(pool, String(req.params.slug)));
   }),
 );

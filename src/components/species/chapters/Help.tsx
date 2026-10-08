@@ -3,7 +3,7 @@ import { ChapterLabel } from '../../ui/ChapterLabel';
 import { Reveal } from '../../ui/Reveal';
 
 export function Help({ sp, n }: { sp: Species; n: number }) {
-  const { actions, orgs } = sp.help;
+  const { actions, orgs } = sp.help!;
   return (
     <section className="chapter ch-help" aria-labelledby="help-title">
       <div className="stage help">

@@ -43,7 +43,7 @@ const P = (p: Partial<Pose>): Pose => ({
 const LANDING: Record<string, Pose> = {
   // the Earth sits in the open space right of "Search the", above "living planet"
   'landing-hero': P({ sx: 0.19, sy: 0.085, ss: 0.5, so: 1, spin: 0.07 }),
-  'landing-index': P({ sx: 0.3, sy: 0.04, ss: 0.6, so: 0.28, spin: 0.06 }),
+  'landing-index': P({ sx: 0.3, sy: 0.04, ss: 0.6, so: 0.14, spin: 0.06 }),
 };
 
 /** Keyed by chapter, so species with extra chapters (e.g. subspecies) just add a key. */
@@ -53,6 +53,7 @@ const SPECIES: Record<string, Pose> = {
   range: P({ sx: 0, sy: 0.05, ss: 0.64, so: 0, coll: 1, gx: 0.17, gs: 0.68, go: 1, reveal: 1, ripple: 1 }),
   population: P({ sx: 0.24, sy: 0.1, ss: 0.46, so: 0, coll: 1, gx: 0.26, gy: 0.14, gs: 0.5, go: 1, reveal: 1, hist: 1 }),
   status: P({ sx: 0.3, sy: 0.03, ss: 0.4, so: 0.95, gx: 0.21 }),
+  about: P({ sx: 0.27, sy: 0.04, ss: 0.48, so: 0.95, gx: 0.21, spin: 0.12 }),
   sightings: P({ sx: 0.3, sy: 0.03, ss: 0.4, so: 0, coll: 1, gx: 0.2, gs: 0.66, go: 1, reveal: 1, pins: 1 }),
   help: P({ sx: 0.25, sy: 0.0, ss: 0.56, so: 0.55, spin: 0.1 }),
   next: P({ sx: 0, sy: 0.14, ss: 0.4, so: 0.85, spin: 0.22 }),
@@ -77,7 +78,7 @@ const mobileSpecies = (key: string, p: Pose): Pose => ({
 const MOBILE_SPECIES: Record<string, Pose> = Object.fromEntries(Object.entries(SPECIES).map(([k, p]) => [k, mobileSpecies(k, p)]));
 const MOBILE_LANDING: Record<string, Pose> = {
   'landing-hero': { ...LANDING['landing-hero'], sx: 0, sy: 0.1, ss: 0.31 },
-  'landing-index': { ...LANDING['landing-index'], sx: 0, sy: 0.3, ss: 0.24, so: 0.3 },
+  'landing-index': { ...LANDING['landing-index'], sx: 0, sy: 0.3, ss: 0.24, so: 0.08 },
 };
 
 /** Ordered poses for the chapters on the current page. */
@@ -128,7 +129,7 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     const dt = Math.min(rawDt, 1 / 20);
     const reduced = prefersReducedMotion();
     palette.uTime.value = state.clock.elapsedTime;
-    const { page, slug, activePlace, transitioning } = useStore.getState();
+    const { page, slug, activePlace } = useStore.getState();
     const mobile = size.width <= 768; // matches the CSS breakpoint for the phone stage band
     const poseMap = page === 'species' ? (mobile ? MOBILE_SPECIES : SPECIES) : mobile ? MOBILE_LANDING : LANDING;
     samplePoses(posesFor(poseMap, live.chapterKeys), live.pos, tgt.current);
@@ -138,7 +139,8 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     tgt.current.ss *= lerp(1, live.variantScale, wFamily);
     tgt.current.so *= 1 - 0.68 * live.variantGhost * wFamily;
     const T = tgt.current;
-    if (transitioning) T.so *= 1; // specimen stays visible through a morph
+    // browse pages keep the planet faint behind the list; a hovered row's animal comes forward
+    if (page !== 'species' && useStore.getState().previewShape) T.so = Math.max(T.so, mobile ? 0.5 : 0.9);
 
     // damp everything toward the target pose
     const c = cur.current;
@@ -313,8 +315,9 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
       if (eff.hist > 0.5 && regions?.length) {
         focus = live.historyFocus >= 0 && regions[live.historyFocus] ? regions[live.historyFocus] : meanLatLon(regions);
       }
-      if (eff.pins > 0.5 && species.sightings.places.length) {
-        focus = activePlace >= 0 ? species.sightings.places[activePlace] : meanLatLon(species.sightings.places);
+      const places = species.sightings?.places ?? [];
+      if (eff.pins > 0.5 && places.length) {
+        focus = activePlace >= 0 && places[activePlace] ? places[activePlace] : meanLatLon(places);
       }
     }
     facingQuaternion(focus.lat - 8, focus.lon, qTarget.current);

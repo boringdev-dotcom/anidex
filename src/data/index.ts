@@ -3,11 +3,13 @@
  * which fills an in-memory cache. Rendering and the 3D scene then read synchronously with `getSpecies`.
  */
 import type { Species, Variant } from './types';
-import type { ListResponse, SpeciesRecord, SpeciesSummary, Stats } from './api';
+import type { ListResponse, ResearchStatusResponse, SpeciesRecord, SpeciesSummary, Stats } from './api';
 
 const full = new Map<string, SpeciesRecord>();
 const summaries = new Map<string, SpeciesSummary>();
 const inflight = new Map<string, Promise<SpeciesRecord | null>>();
+/** slugs whose next load must bypass the browser's HTTP cache (research just landed) */
+const stale = new Set<string>();
 
 export class Moved extends Error {
   constructor(public to: string) {
@@ -32,7 +34,8 @@ export function fetchSpecies(slug: string): Promise<SpeciesRecord | null> {
   if (hit) return Promise.resolve(hit);
   let p = inflight.get(slug);
   if (!p) {
-    p = getJSON<SpeciesRecord>(`/api/species/${encodeURIComponent(slug)}`)
+    const reload = stale.delete(slug);
+    p = getJSON<SpeciesRecord>(`/api/species/${encodeURIComponent(slug)}`, reload ? { cache: 'reload' } : undefined)
       .then((sp) => {
         full.set(sp.slug, sp);
         rememberSummaries([sp.nextSummary]);
@@ -47,6 +50,16 @@ export function fetchSpecies(slug: string): Promise<SpeciesRecord | null> {
     inflight.set(slug, p);
   }
   return p;
+}
+
+/** Drop a cached species so the next load refetches it (after research lands). */
+export function forgetSpecies(slug: string) {
+  full.delete(slug);
+  stale.add(slug);
+}
+
+export async function researchStatus(slug: string, start = false): Promise<ResearchStatusResponse> {
+  return getJSON<ResearchStatusResponse>(`/api/species/${encodeURIComponent(slug)}/research`, start ? { method: 'POST' } : undefined);
 }
 
 /** Warm the cache, e.g. on hover, so the page opens instantly. */
