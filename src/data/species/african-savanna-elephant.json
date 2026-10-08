@@ -352,5 +352,18 @@
       }
     ]
   },
-  "next": "giant-panda"
+  "next": "giant-panda",
+  "summary": {
+    "text": "The African bush elephant, also known as the African savanna elephant, is a species of elephant native to sub-Saharan Africa and the largest living terrestrial animal, with fully grown bulls reaching an average shoulder height of 3.04–3.36 m (10.0–11.0 ft) and a body mass of 5.2–6.9 t ; the largest recorded specimen had a shoulder height of 3.96 m (13.0 ft) and an estimated body mass of 10.4 t. It is characterised by its long prehensile trunk with two finger-like processes; a concave back; large ears which help reduce body heat; and sturdy tusks that are noticeably curved. Its skin is grey with scanty hairs, and bending cracks which support thermoregulation by retaining water.",
+    "source": "Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/African_bush_elephant",
+    "license": "CC BY-SA 4.0"
+  },
+  "photo": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/94/178_Male_African_bush_elephant_in_Etosha_National_Park_Photo_by_Giles_Laurent.jpg/3840px-178_Male_African_bush_elephant_in_Etosha_National_Park_Photo_by_Giles_Laurent.jpg",
+    "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/94/178_Male_African_bush_elephant_in_Etosha_National_Park_Photo_by_Giles_Laurent.jpg/330px-178_Male_African_bush_elephant_in_Etosha_National_Park_Photo_by_Giles_Laurent.jpg",
+    "credit": "Giles Laurent",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:178_Male_African_bush_elephant_in_Etosha_National_Park_Photo_by_Giles_Laurent.jpg"
+  }
 }

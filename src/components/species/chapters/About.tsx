@@ -3,7 +3,7 @@ import { ChapterLabel } from '../../ui/ChapterLabel';
 import { Reveal } from '../../ui/Reveal';
 import { ResearchStatus } from '../ResearchStatus';
 
-/** Summary, photo and attribution for open-data species, plus the on-demand research state. */
+/** Wikipedia summary and photo with attribution, plus the on-demand research state on open-data pages. */
 export function About({ sp, n }: { sp: SpeciesRecord; n: number }) {
   const s = sp.summary;
   const photo = sp.photo;

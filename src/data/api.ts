@@ -1,13 +1,7 @@
 /** Shapes returned by the /api endpoints (shared by the server and the client). */
-import type { IUCNStatus, Species } from './types';
+import type { IUCNStatus, Photo, Species } from './types';
 
-export interface Photo {
-  url: string;
-  thumb?: string;
-  credit?: string;
-  license?: string;
-  source?: string;
-}
+export type { Photo };
 
 /** Lightweight species row for search, lists and previews. */
 export interface SpeciesSummary {
@@ -29,8 +23,6 @@ export interface SpeciesRecord extends Species {
   tier: 'deep' | 'auto';
   photo: Photo | null;
   needsReview: boolean;
-  /** text summary and its attribution, for auto pages */
-  summary?: { text: string; source: string; url: string; license: string } | null;
   sources?: { label: string; url: string }[];
   /** on-demand research (auto pages): present once it has run */
   research?: { state: 'done'; at: string };

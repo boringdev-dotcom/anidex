@@ -292,5 +292,18 @@
       }
     ]
   },
-  "next": "blue-whale"
+  "next": "blue-whale",
+  "summary": {
+    "text": "The mountain gorilla is one of the two subspecies of the eastern gorilla. It is listed as endangered by the IUCN as of 2018.",
+    "source": "Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Mountain_gorilla",
+    "license": "CC BY-SA 4.0"
+  },
+  "photo": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/a/a0/Susa_group%2C_mountain_gorilla.jpg",
+    "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a0/Susa_group%2C_mountain_gorilla.jpg/330px-Susa_group%2C_mountain_gorilla.jpg",
+    "credit": "https://www.flickr.com/photos/deepphoto/ d_proffer",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Susa_group,_mountain_gorilla.jpg"
+  }
 }

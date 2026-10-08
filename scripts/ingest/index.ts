@@ -161,6 +161,8 @@ function firstSentences(text: string, max = 190): string {
   return out.length > max + 40 ? out.slice(0, max).replace(/\s+\S*$/, '') + '…' : out;
 }
 
+// image URLs now carry tracking parameters (?utm_source=...); keep the bare file URL
+const bare = (u?: string) => u?.split('?')[0];
 const stripHtml = (s?: string) => (s ?? '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 
 // ------------------------------------------------------------------------------------------
@@ -236,7 +238,7 @@ async function build(c: Candidate, t: GbifSpecies): Promise<SpeciesRecord | null
 
   // photo credit from Wikimedia Commons
   let photo: Photo | null = null;
-  const img = summary.originalimage?.source;
+  const img = bare(summary.originalimage?.source);
   if (img) {
     const file = decodeURIComponent(img.split('/').pop()!.replace(/^\d+px-/, ''));
     const meta = await getJSON<{ query?: { pages?: Record<string, { imageinfo?: { extmetadata?: Record<string, { value: string }>; descriptionurl?: string }[] }> } }>(
@@ -247,7 +249,7 @@ async function build(c: Candidate, t: GbifSpecies): Promise<SpeciesRecord | null
     const em = info?.extmetadata ?? {};
     photo = {
       url: img,
-      thumb: summary.thumbnail?.source,
+      thumb: bare(summary.thumbnail?.source),
       credit: stripHtml(em.Artist?.value) || undefined,
       license: em.LicenseShortName?.value,
       source: info?.descriptionurl,

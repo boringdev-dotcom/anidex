@@ -176,7 +176,7 @@ function jsonRepo(): Repo {
     order: s.taxonomy?.order ?? null,
     family: s.taxonomy?.family ?? null,
     tier: 'deep',
-    photo: null,
+    photo: s.photo ?? null,
     specimen: s.specimen,
   });
   const match = (s: Species, q: string) => searchText(s).includes(q.toLowerCase());
@@ -186,7 +186,7 @@ function jsonRepo(): Repo {
       const s = all.find((x) => x.slug === slug);
       if (!s) return null;
       const n = all.find((x) => x.slug === s.next) ?? all.find((x) => x.slug !== slug);
-      return { ...s, tier: 'deep', photo: null, needsReview: false, nextSummary: n ? sum(n) : null };
+      return { ...s, tier: 'deep', photo: s.photo ?? null, needsReview: false, nextSummary: n ? sum(n) : null };
     },
     async search(q, limit = 8) {
       const t = q.trim().toLowerCase();

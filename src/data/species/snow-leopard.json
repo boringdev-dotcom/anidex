@@ -330,5 +330,18 @@
       }
     ]
   },
-  "next": "african-savanna-elephant"
+  "next": "african-savanna-elephant",
+  "summary": {
+    "text": "The snow leopard is a felid species in the genus Panthera. It has a thick whitish to grey fur with black spots on the head and neck, with larger rosettes on the back, flanks and bushy tail. Males are larger than the females, and both sexes have long canine teeth. Its small rounded ears, broad paws, and thick tails are adaptations for living in cold, mountainous environments.",
+    "source": "Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Snow_leopard",
+    "license": "CC BY-SA 4.0"
+  },
+  "photo": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Irbis4.JPG",
+    "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a5/Irbis4.JPG/330px-Irbis4.JPG",
+    "credit": "Irbis1983",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Irbis4.JPG"
+  }
 }

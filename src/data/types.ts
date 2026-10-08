@@ -21,6 +21,15 @@ export interface Source {
   year?: number;
 }
 
+/** A Wikimedia Commons photo with its attribution. */
+export interface Photo {
+  url: string;
+  thumb?: string;
+  credit?: string;
+  license?: string;
+  source?: string;
+}
+
 export interface LatLon {
   lat: number;
   lon: number;
@@ -178,4 +187,8 @@ export interface Species {
 
   /** Slug of the species shown in the footer (curated pages); auto pages use the closest relative. */
   next?: string;
+
+  /** Lead photo and summary from Wikipedia, shown in the About chapter. */
+  photo?: Photo | null;
+  summary?: { text: string; source: string; url: string; license: string } | null;
 }
