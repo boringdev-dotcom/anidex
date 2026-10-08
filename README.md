@@ -25,8 +25,21 @@ npm run dev
 | `npm run build` | Type-check, then build to `dist/` |
 | `npm run preview` | Serve the production build |
 | `npm run gbif:check` | Check every species' GBIF key against the GBIF backbone |
+| `npm start` | Serve `dist/` and the `/api` routes with the Node server (`server/`) |
+| `npm run models` | Generate 3D specimens with fal.ai (see below) |
 
-`dist/` is a static single-page app. Any host works if unknown paths fall back to `index.html`, so `/species/<slug>` deep links load.
+## Server and deployment
+
+`server/index.ts` is a small Express server. It serves the built site with long caching for hashed assets and an `index.html` fallback so `/species/<slug>` deep links load. Backend routes live under `/api` in `server/api.ts`; `/api/health` reports the running commit. It runs on Node 24's built-in TypeScript support, with no compile step.
+
+The `Dockerfile` builds the site in a Debian stage, then ships only `dist/`, `server/` and the two server dependencies on Alpine, running as the unprivileged `node` user on `$PORT` (10000 by default). `.dockerignore` keeps `.env` files out of the build context.
+
+```bash
+docker build -t anidex .
+docker run -p 10000:10000 anidex
+```
+
+It is deployed on Render as a Docker web service that auto-deploys from `master`.
 
 ## Stack
 
