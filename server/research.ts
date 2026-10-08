@@ -287,6 +287,7 @@ export async function researchSpecies(sp: ResearchInput): Promise<ResearchResult
     }),
   ]);
   const at = new Date().toISOString();
+  if (process.env.RESEARCH_DEBUG) console.log('[research] raw physical', JSON.stringify(main.out.physical));
   const base = toFields(sp, main.out);
   const seen = new Set<string>();
   const sources = [...base.sources, ...cleanSources(history?.out.sources ?? [])].filter((x) => !seen.has(x.url) && seen.add(x.url));
@@ -318,7 +319,9 @@ const short = (s: string, n = 160) => (s.length > n ? s.slice(0, n).replace(/\s+
 export function toFields(sp: Species, o: ResearchOutput): Pick<ResearchResult, 'fields' | 'sources'> {
   const p = o.physical;
   const weight = pair(p.weightKg);
-  const length = pair(p.lengthM);
+  // upright animals sometimes come back with a standing height but no length: measure them by height
+  const standingOnly = !pair(p.lengthM) && p.heightLabel === 'standing' && !!pair(p.heightM);
+  const length = pair(p.lengthM) ?? (standingOnly ? pair(p.heightM) : null);
   const life = pair(p.lifespanYrs);
   // weight and length are the core; an unknown wild lifespan (sunfish, dodo) shouldn't drop the rest
   const physical =
@@ -329,7 +332,7 @@ export function toFields(sp: Species, o: ResearchOutput): Pick<ResearchResult, '
           heightM: pair(p.heightM),
           heightLabel: pair(p.heightM) && p.heightLabel !== 'none' ? p.heightLabel : null,
           lengthM: length,
-          lengthLabel: p.lengthLabel,
+          lengthLabel: standingOnly ? 'standing height' : p.lengthLabel,
           lifespanYrs: life ?? undefined,
           fact: short(p.fact, 140),
           compare: p.compare,
