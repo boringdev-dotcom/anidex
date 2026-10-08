@@ -47,7 +47,7 @@ const LANDING: Record<string, Pose> = {
 
 /** Keyed by chapter, so species with extra chapters (e.g. subspecies) just add a key. */
 const SPECIES: Record<string, Pose> = {
-  hero: P({ sx: -0.05, sy: 0.09, ss: 0.6, so: 1, gx: 0.2 }),
+  hero: P({ sx: -0.1, sy: 0.1, ss: 0.58, so: 1, gx: 0.2 }),
   family: P({ sx: 0.21, sy: 0.19, ss: 0.5, so: 1, gx: 0.2, spin: 0.2 }),
   range: P({ sx: 0, sy: 0.05, ss: 0.64, so: 0, coll: 1, gx: 0.17, gs: 0.68, go: 1, reveal: 1, ripple: 1 }),
   population: P({ sx: 0.24, sy: 0.1, ss: 0.46, so: 0, coll: 1, gx: 0.26, gy: 0.14, gs: 0.5, go: 1, reveal: 1, hist: 1 }),
@@ -191,7 +191,8 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     const cmp = M.cmp;
     // composition in the animal's normalised units: animal, gap, then the reference at true scale
     const ref = REFERENCES[refKind];
-    const refU = ref.sizeM / Math.max(measureLocal.mPerUnit, 1e-4); // reference's largest dimension, in animal units
+    const refSizeM = refKind === 'human' ? useStore.getState().userHeightM : ref.sizeM;
+    const refU = refSizeM / Math.max(measureLocal.mPerUnit, 1e-4); // reference's largest dimension, in animal units
     const rw = figureInfo.w * refU;
     const rh = figureInfo.h * refU;
     const aw = measureLocal.aw;
@@ -218,6 +219,33 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     }
     // make room for the reference on the left (the tail end; the height line sits at the front)
     sp.position.x += ((gap + rw) / 2) * sScale * cmp;
+    // desktop hero: keep the whole composition (animal, height label, reference) left of the text column
+    if (!slotMode && heroW > 0.01) {
+      const meta = document.querySelector('.hero__meta');
+      const safeRight = meta ? meta.getBoundingClientRect().left - 28 : size.width;
+      const toPx = (wx: number) => (wx / vw + 0.5) * size.width;
+      const labelPx = measureLocal.hasHt ? 96 : 24;
+      const rightPx = toPx(sp.position.x + (aw / 2 + 0.07) * sScale) + labelPx;
+      const leftWorld = sp.position.x - (aw / 2 + (gap + rw) * cmp) * sScale;
+      const leftPx = toPx(leftWorld);
+      const over = rightPx - safeRight;
+      if (over > 0) {
+        const room = leftPx - 32; // how far we can slide left before leaving the screen
+        const slide = Math.min(over, Math.max(0, room));
+        sp.position.x -= (slide / size.width) * vw * heroW;
+        const still = over - slide;
+        if (still > 0) {
+          // shrink about the left edge so the right side clears the text column
+          const widthPx = rightPx - labelPx - leftPx;
+          const k = clamp(1 - still / Math.max(widthPx, 1), 0.6, 1);
+          const kk = lerp(1, k, heroW);
+          const lw = sp.position.x - (aw / 2 + (gap + rw) * cmp) * sScale;
+          sScale *= kk;
+          sp.scale.setScalar(sScale);
+          sp.position.x = lw + (aw / 2 + (gap + rw) * cmp) * sScale;
+        }
+      }
+    }
     // phones: shift left so the height line's label (to its right) stays on screen
     if (slotMode && measureLocal.hasHt) sp.position.x -= lerp(46, 30, cmp) * pxToWorld * heroW;
     // a reference taller than the animal grows upward from the shared floor: recentre vertically

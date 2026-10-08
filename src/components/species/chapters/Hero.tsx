@@ -4,12 +4,14 @@ import { ChapterLabel } from '../../ui/ChapterLabel';
 import { Reveal } from '../../ui/Reveal';
 import { RotateIcon, StageSlot } from '../../ui/StageSlot';
 import { Vitals } from '../Vitals';
+import { useStore } from '../../../store/useStore';
 
 export function Hero({ sp }: { sp: Species }) {
   const long = sp.commonName.length > 16;
+  const comparing = useStore((s) => s.compare);
   return (
     <section className="chapter ch-hero" aria-labelledby="sp-title">
-      <div className="stage hero">
+      <div className={`stage hero${comparing ? ' is-comparing' : ''}`}>
         <StageSlot kind="specimen" chapter="hero" className="m-slot--hero" reserve={30}>
           <span className="slot-tag">
             <RotateIcon /> Drag to spin

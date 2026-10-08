@@ -50,21 +50,48 @@ export function countryName(code: string): string {
   }
 }
 
+export type Units = 'metric' | 'imperial';
+
 const trim = (n: number, d = 1) => {
   const r = Number(n.toFixed(d));
   return r >= 100 ? fmt(r) : String(r);
 };
 const span = (a: string, b: string, unit: string) => (a === b ? `${a} ${unit}` : `${a} to ${b} ${unit}`);
 
-export function fmtWeight([a, b]: [number, number]): string {
+const LB = 2.20462;
+const FT = 3.28084;
+
+export function fmtWeight([a, b]: [number, number], units: Units = 'metric'): string {
+  if (units === 'imperial') {
+    const [la, lb] = [a * LB, b * LB];
+    if (lb >= 10000) return span(trim(la / 2000, 0), trim(lb / 2000, 0), 'tons');
+    if (lb < 1) return span(trim(la * 16, 2), trim(lb * 16, 2), 'oz');
+    return span(trim(la, la < 10 ? 1 : 0), trim(lb, lb < 10 ? 1 : 0), 'lb');
+  }
   if (b >= 1000) return span(trim(a / 1000), trim(b / 1000), 't');
   if (b < 1) return span(trim(a * 1000, 2), trim(b * 1000, 2), 'g');
   return span(trim(a, a < 10 ? 1 : 0), trim(b, b < 10 ? 1 : 0), 'kg');
 }
 
-export function fmtLength([a, b]: [number, number]): string {
+export function fmtLength([a, b]: [number, number], units: Units = 'metric'): string {
+  if (units === 'imperial') {
+    if (b * FT < 3) {
+      const [ia, ib] = [a * FT * 12, b * FT * 12];
+      return span(trim(ia, ia < 10 ? 1 : 0), trim(ib, ib < 10 ? 1 : 0), 'in');
+    }
+    return span(trim(a * FT, a * FT < 10 ? 1 : 0), trim(b * FT, b * FT < 10 ? 1 : 0), 'ft');
+  }
   if (b < 1) return span(trim(a * 100, 0), trim(b * 100, 0), 'cm');
   return span(trim(a), trim(b), 'm');
+}
+
+/** A single height, e.g. "1.70 m" or "5 ft 7 in". */
+export function fmtHeight(m: number, units: Units = 'metric'): string {
+  if (units === 'imperial') {
+    const inches = Math.round(m * FT * 12);
+    return `${Math.floor(inches / 12)} ft ${inches % 12} in`;
+  }
+  return `${m.toFixed(2)} m`;
 }
 
 export function fmtYears([a, b]: [number, number]): string {
