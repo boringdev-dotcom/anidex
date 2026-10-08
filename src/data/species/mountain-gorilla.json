@@ -25,6 +25,10 @@
       "bulk": 0.9,
       "neck": 0.1,
       "tail": 0
+    },
+    "model": {
+      "url": "/models/mountain-gorilla.glb",
+      "yaw": 1.5707963267948966
     }
   },
   "range": {

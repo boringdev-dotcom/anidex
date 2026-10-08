@@ -5,3 +5,9 @@ dist-ssr
 .DS_Store
 *.tsbuildinfo
 .vite
+
+# secrets
+.env
+.env.*
+!.env.example
+scripts/.cache

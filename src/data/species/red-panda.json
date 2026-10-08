@@ -3,46 +3,177 @@
   "commonName": "Red panda",
   "scientificName": "Ailurus fulgens",
   "descriptor": "A bamboo-eating tree dweller of the eastern Himalaya, with a ringed tail and no close living relatives.",
-  "aliases": ["lesser panda", "firefox", "cat bear", "himalayan red panda", "chinese red panda"],
-  "taxonomy": { "class": "Mammalia", "order": "Carnivora", "family": "Ailuridae" },
+  "aliases": [
+    "lesser panda",
+    "firefox",
+    "cat bear",
+    "himalayan red panda",
+    "chinese red panda"
+  ],
+  "taxonomy": {
+    "class": "Mammalia",
+    "order": "Carnivora",
+    "family": "Ailuridae"
+  },
   "gbifTaxonKey": 5219446,
   "specimen": {
     "sizeClass": "s",
     "bodyPlan": "quadruped",
-    "proportions": { "length": 0.55, "height": 0.25, "bulk": 0.45, "neck": 0.15, "tail": 0.85 },
-    "features": ["pointyEars"]
+    "proportions": {
+      "length": 0.55,
+      "height": 0.25,
+      "bulk": 0.45,
+      "neck": 0.15,
+      "tail": 0.85
+    },
+    "features": [
+      "pointyEars"
+    ],
+    "model": {
+      "url": "/models/red-panda.glb",
+      "yaw": 1.5707963267948966
+    }
   },
   "range": {
     "summary": "Temperate mountain forests with a dense bamboo understorey, from Nepal through India, Bhutan and northern Myanmar to southwest China.",
-    "centroid": { "lat": 27.5, "lon": 92.0 },
-    "bbox": [81, 24.5, 104.5, 33.5],
-    "regions": ["Eastern Nepal", "Sikkim and Darjeeling", "Bhutan", "Arunachal Pradesh", "Yunnan and Sichuan mountains"],
-    "countries": ["NP", "IN", "BT", "MM", "CN"]
+    "centroid": {
+      "lat": 27.5,
+      "lon": 92
+    },
+    "bbox": [
+      81,
+      24.5,
+      104.5,
+      33.5
+    ],
+    "regions": [
+      "Eastern Nepal",
+      "Sikkim and Darjeeling",
+      "Bhutan",
+      "Arunachal Pradesh",
+      "Yunnan and Sichuan mountains"
+    ],
+    "countries": [
+      "NP",
+      "IN",
+      "BT",
+      "MM",
+      "CN"
+    ]
   },
   "rangeHistory": {
     "regions": [
-      { "name": "Western Nepal", "lat": 29, "lon": 82.6, "radius": 1, "note": "The western edge of the global range, in forests from Rara National Park to Dhorpatan." },
-      { "name": "Eastern Nepal", "lat": 27.4, "lon": 87.8, "radius": 0.8, "note": "Bamboo forests of Taplejung, Panchthar and Ilam hold much of the Nepal population." },
-      { "name": "Sikkim and Darjeeling", "lat": 27.2, "lon": 88.6, "radius": 0.5, "note": "Singalila National Park, where Darjeeling Zoo began releasing captive-bred red pandas in 2003." },
-      { "name": "Bhutan", "lat": 27.4, "lon": 90.4, "radius": 1.2, "note": "Bhutan keeps some of the least fragmented red panda forest in the Himalaya." },
-      { "name": "Arunachal Pradesh", "lat": 27.8, "lon": 93.5, "radius": 1.5, "note": "Arunachal Pradesh holds the largest share of red pandas in India." },
-      { "name": "Northern Myanmar", "lat": 27, "lon": 97.6, "radius": 1.2, "note": "Kachin State forests near Hkakabo Razi, where hunting for trade is a documented threat." },
-      { "name": "Western Sichuan", "lat": 30.5, "lon": 102.8, "radius": 2, "note": "Minshan, Qionglai, Liangshan and Xiangling mountains hold most Chinese red pandas." },
-      { "name": "Northwest Yunnan", "lat": 26.8, "lon": 99.5, "radius": 1.5, "note": "The Gaoligong and Hengduan mountains of Yunnan are a second Chinese stronghold." },
-      { "name": "Southern Gansu", "lat": 33.4, "lon": 104, "radius": 0.7, "to": 1999, "note": "Red pandas were reported extinct in Gansu by 1999 (Wei et al.)." },
-      { "name": "Southern Shaanxi", "lat": 33.5, "lon": 107.5, "radius": 1, "to": 1999, "note": "Red pandas were reported extinct in Shaanxi by 1999 (Wei et al.)." },
-      { "name": "Southern Qinghai", "lat": 32.9, "lon": 100.8, "radius": 1, "to": 1999, "note": "Red pandas were reported extinct in Qinghai by 1999 (Wei et al.)." },
-      { "name": "Northern Guizhou", "lat": 28, "lon": 107.3, "radius": 1, "to": 1999, "note": "Red pandas were reported extinct in Guizhou by 1999 (Wei et al.)." }
+      {
+        "name": "Western Nepal",
+        "lat": 29,
+        "lon": 82.6,
+        "radius": 1,
+        "note": "The western edge of the global range, in forests from Rara National Park to Dhorpatan."
+      },
+      {
+        "name": "Eastern Nepal",
+        "lat": 27.4,
+        "lon": 87.8,
+        "radius": 0.8,
+        "note": "Bamboo forests of Taplejung, Panchthar and Ilam hold much of the Nepal population."
+      },
+      {
+        "name": "Sikkim and Darjeeling",
+        "lat": 27.2,
+        "lon": 88.6,
+        "radius": 0.5,
+        "note": "Singalila National Park, where Darjeeling Zoo began releasing captive-bred red pandas in 2003."
+      },
+      {
+        "name": "Bhutan",
+        "lat": 27.4,
+        "lon": 90.4,
+        "radius": 1.2,
+        "note": "Bhutan keeps some of the least fragmented red panda forest in the Himalaya."
+      },
+      {
+        "name": "Arunachal Pradesh",
+        "lat": 27.8,
+        "lon": 93.5,
+        "radius": 1.5,
+        "note": "Arunachal Pradesh holds the largest share of red pandas in India."
+      },
+      {
+        "name": "Northern Myanmar",
+        "lat": 27,
+        "lon": 97.6,
+        "radius": 1.2,
+        "note": "Kachin State forests near Hkakabo Razi, where hunting for trade is a documented threat."
+      },
+      {
+        "name": "Western Sichuan",
+        "lat": 30.5,
+        "lon": 102.8,
+        "radius": 2,
+        "note": "Minshan, Qionglai, Liangshan and Xiangling mountains hold most Chinese red pandas."
+      },
+      {
+        "name": "Northwest Yunnan",
+        "lat": 26.8,
+        "lon": 99.5,
+        "radius": 1.5,
+        "note": "The Gaoligong and Hengduan mountains of Yunnan are a second Chinese stronghold."
+      },
+      {
+        "name": "Southern Gansu",
+        "lat": 33.4,
+        "lon": 104,
+        "radius": 0.7,
+        "to": 1999,
+        "note": "Red pandas were reported extinct in Gansu by 1999 (Wei et al.)."
+      },
+      {
+        "name": "Southern Shaanxi",
+        "lat": 33.5,
+        "lon": 107.5,
+        "radius": 1,
+        "to": 1999,
+        "note": "Red pandas were reported extinct in Shaanxi by 1999 (Wei et al.)."
+      },
+      {
+        "name": "Southern Qinghai",
+        "lat": 32.9,
+        "lon": 100.8,
+        "radius": 1,
+        "to": 1999,
+        "note": "Red pandas were reported extinct in Qinghai by 1999 (Wei et al.)."
+      },
+      {
+        "name": "Northern Guizhou",
+        "lat": 28,
+        "lon": 107.3,
+        "radius": 1,
+        "to": 1999,
+        "note": "Red pandas were reported extinct in Guizhou by 1999 (Wei et al.)."
+      }
     ],
-    "source": { "label": "IUCN Red List: Ailurus fulgens (Glatston et al. 2015)", "url": "https://www.iucnredlist.org/species/714/110023718", "year": 2015 },
+    "source": {
+      "label": "IUCN Red List: Ailurus fulgens (Glatston et al. 2015)",
+      "url": "https://www.iucnredlist.org/species/714/110023718",
+      "year": 2015
+    },
     "note": "The Chinese losses are dated to when Wei et al. reported them in 1999; the animals disappeared earlier, on undated timelines."
   },
   "population": {
     "unit": "wild red pandas worldwide (all ages)",
     "points": [
-      { "year": 2001, "estimate": 18000, "low": 16000, "high": 20000 }
+      {
+        "year": 2001,
+        "estimate": 18000,
+        "low": 16000,
+        "high": 20000
+      }
     ],
-    "source": { "label": "Choudhury 2001, Oryx 35(3)", "url": "https://doi.org/10.1046/j.1365-3008.2001.00181.x", "year": 2001 },
+    "source": {
+      "label": "Choudhury 2001, Oryx 35(3)",
+      "url": "https://doi.org/10.1046/j.1365-3008.2001.00181.x",
+      "year": 2001
+    },
     "note": "No global time series exists. This extrapolation from density and habitat area is the only published global total; the estimate is the midpoint of its range. Later Red List assessments put mature individuals below 10,000 and suspect a decline of up to 50% over about two decades."
   },
   "status": {
@@ -50,32 +181,97 @@
     "assessed": 2015,
     "trend": "decreasing",
     "threats": [
-      { "title": "Habitat loss and fragmentation", "detail": "Logging, farming and roads break up the bamboo forests red pandas depend on." },
-      { "title": "Poaching and trapping", "detail": "Red pandas are hunted for pelts and the pet trade and caught in snares set for other animals." },
-      { "title": "Livestock and dogs", "detail": "Grazing herds trample bamboo, and herding dogs kill red pandas and can spread canine distemper." }
+      {
+        "title": "Habitat loss and fragmentation",
+        "detail": "Logging, farming and roads break up the bamboo forests red pandas depend on."
+      },
+      {
+        "title": "Poaching and trapping",
+        "detail": "Red pandas are hunted for pelts and the pet trade and caught in snares set for other animals."
+      },
+      {
+        "title": "Livestock and dogs",
+        "detail": "Grazing herds trample bamboo, and herding dogs kill red pandas and can spread canine distemper."
+      }
     ],
-    "source": { "label": "IUCN Red List: Ailurus fulgens", "url": "https://www.iucnredlist.org/species/714/110023718", "year": 2015 }
+    "source": {
+      "label": "IUCN Red List: Ailurus fulgens",
+      "url": "https://www.iucnredlist.org/species/714/110023718",
+      "year": 2015
+    }
   },
   "sightings": {
     "places": [
-      { "name": "Singalila National Park", "country": "India", "lat": 27.1, "lon": 88.0, "note": "Ridge-top forest on the Nepal border, one of India's most reliable red panda sites." },
-      { "name": "Taplejung and Panchthar forests", "country": "Nepal", "lat": 27.3, "lon": 87.9, "note": "Community forests where local guardians lead small-group red panda treks." },
-      { "name": "Phrumsengla National Park", "country": "Bhutan", "lat": 27.25, "lon": 91.1, "note": "Fir and bamboo forest along the high road across central Bhutan." },
-      { "name": "Labahe Nature Reserve", "country": "China", "lat": 30.13, "lon": 102.4, "note": "Sichuan reserve where wild red pandas are seen near forest trails." }
+      {
+        "name": "Singalila National Park",
+        "country": "India",
+        "lat": 27.1,
+        "lon": 88,
+        "note": "Ridge-top forest on the Nepal border, one of India's most reliable red panda sites."
+      },
+      {
+        "name": "Taplejung and Panchthar forests",
+        "country": "Nepal",
+        "lat": 27.3,
+        "lon": 87.9,
+        "note": "Community forests where local guardians lead small-group red panda treks."
+      },
+      {
+        "name": "Phrumsengla National Park",
+        "country": "Bhutan",
+        "lat": 27.25,
+        "lon": 91.1,
+        "note": "Fir and bamboo forest along the high road across central Bhutan."
+      },
+      {
+        "name": "Labahe Nature Reserve",
+        "country": "China",
+        "lat": 30.13,
+        "lon": 102.4,
+        "note": "Sichuan reserve where wild red pandas are seen near forest trails."
+      }
     ],
-    "bestMonths": [3, 4, 5, 10, 11, 12],
+    "bestMonths": [
+      3,
+      4,
+      5,
+      10,
+      11,
+      12
+    ],
     "tip": "Spring and late autumn bring clear skies and thinner foliage. Monsoon months mean leeches, cloud and seasonal park closures, including at Singalila."
   },
   "help": {
     "actions": [
-      { "title": "Sponsor a forest guardian", "detail": "Local guardians monitor red pandas and reduce threats in community forests.", "url": "https://redpandanetwork.org/forest-guardians" },
-      { "title": "Book community-run treks", "detail": "Ecotrips led by local guides turn living red pandas into village income.", "url": "https://redpandanetwork.org/ecotrips" },
-      { "title": "Never buy red panda products", "detail": "Pelts, hats and pet red pandas all come from animals taken from the wild." },
-      { "title": "Choose certified wood and paper", "detail": "FSC-certified products reduce pressure on Himalayan forests.", "url": "https://fsc.org" }
+      {
+        "title": "Sponsor a forest guardian",
+        "detail": "Local guardians monitor red pandas and reduce threats in community forests.",
+        "url": "https://redpandanetwork.org/forest-guardians"
+      },
+      {
+        "title": "Book community-run treks",
+        "detail": "Ecotrips led by local guides turn living red pandas into village income.",
+        "url": "https://redpandanetwork.org/ecotrips"
+      },
+      {
+        "title": "Never buy red panda products",
+        "detail": "Pelts, hats and pet red pandas all come from animals taken from the wild."
+      },
+      {
+        "title": "Choose certified wood and paper",
+        "detail": "FSC-certified products reduce pressure on Himalayan forests.",
+        "url": "https://fsc.org"
+      }
     ],
     "orgs": [
-      { "name": "Red Panda Network", "url": "https://redpandanetwork.org" },
-      { "name": "WWF Red Panda", "url": "https://www.worldwildlife.org/species/red-panda" }
+      {
+        "name": "Red Panda Network",
+        "url": "https://redpandanetwork.org"
+      },
+      {
+        "name": "WWF Red Panda",
+        "url": "https://www.worldwildlife.org/species/red-panda"
+      }
     ]
   },
   "next": "emperor-penguin"

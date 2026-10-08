@@ -29,7 +29,11 @@
     "features": [
       "beak",
       "flippers"
-    ]
+    ],
+    "model": {
+      "url": "/models/emperor-penguin.glb",
+      "yaw": 1.5707963267948966
+    }
   },
   "range": {
     "summary": "Circumpolar around the Antarctic coast, breeding in more than 60 known colonies on fast ice and foraging in the surrounding Southern Ocean.",

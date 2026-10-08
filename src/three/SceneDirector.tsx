@@ -114,7 +114,9 @@ export function SceneDirector({ specimen, globe, root }: Props) {
     sp.position.set(c.sx * vw, c.sy * vh, 0);
     sp.scale.setScalar(sScale);
     if (!reduced) sp.rotation.y += dt * c.spin;
-    sp.rotation.x = 0.08;
+    const { previewShape, shape } = useStore.getState();
+    const shown = getSpecies(previewShape ?? shape);
+    sp.rotation.x = damp(sp.rotation.x, shown?.specimen.tilt ?? 0.08, 3, dt);
 
     // globe transform
     const gScale = Math.min(c.gs * vh, c.gs * vw * 0.9) / 2;
@@ -159,8 +161,10 @@ export function SceneDirector({ specimen, globe, root }: Props) {
     stippleUniforms.uCollapse.value = c.coll;
     stippleUniforms.uOpacity.value = c.so;
     stippleUniforms.uDpr.value = state.viewport.dpr;
-    stippleUniforms.uSize.value = clamp(size.height / 900, 0.75, 1.3) * (mobile ? 2.0 : 2.3);
+    stippleUniforms.uSize.value = clamp(size.height / 900, 0.75, 1.3) * (mobile ? 1.35 : 1.35);
     stippleUniforms.uDrift.value = reduced ? 0 : 1;
+    const invert = useStore.getState().theme === 'light' ? 1 : 0;
+    stippleUniforms.uToneInvert.value = damp(stippleUniforms.uToneInvert.value, invert, reduced ? 60 : 5, dt);
     plinthUniforms.uOpacity.value = c.so * (1 - c.coll) * (page === 'species' ? 0.28 : 0);
 
     globeUniforms.uOpacity.value = c.go;

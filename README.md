@@ -49,16 +49,19 @@ Vite, React 19, TypeScript, React Three Fiber on three.js, GSAP with ScrollTrigg
 
 The index and search pick it up automatically.
 
-## Swap in a real 3D model
+## 3D specimens
 
-Specimens are procedural for now. They are built from simple body plans in `src/three/specimen/bodyPlans.ts`, tuned per species by `specimen.proportions` and `specimen.features`.
+Each species has a textured GLB in `public/models/`, generated with fal.ai and sampled into the stipple point cloud. The texture sets each point's size and strength like a halftone, so stripes, patches and wing veins show through.
 
-To use a real model:
+To regenerate or add one:
 
-1. Put the file at `public/models/<slug>.glb`.
-2. Add `"model": { "url": "/models/<slug>.glb" }` to that species' `specimen` block. An optional `yaw` in radians turns it to face +X.
+```bash
+npm run models -- --only <slug>
+```
 
-The model is sampled into the same point cloud, so every animation keeps working. If the file fails to load, the procedural specimen is used.
+The script reads `FAL_KEY` from the environment or a `.env` file. It draws a reference image with Nano Banana Pro, turns it into a model with Hunyuan 3D v3.1 Pro, then shrinks it with glTF-Transform. Every step is cached in `scripts/.cache/`, so a rerun only pays for missing steps. Pass `--force image` to start over, or `--image-only` to review references first.
+
+Then add `"model": { "url": "/models/<slug>.glb", "yaw": 1.5708 }` to the species' `specimen` block. Use `yaw` to turn the model and `specimen.tilt` to view flat animals from above. If a model fails to load, the procedural body plan in `src/three/specimen/bodyPlans.ts` is used instead.
 
 ## Data sources
 

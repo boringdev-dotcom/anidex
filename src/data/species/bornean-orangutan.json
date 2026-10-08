@@ -3,45 +3,165 @@
   "commonName": "Bornean orangutan",
   "scientificName": "Pongo pygmaeus",
   "descriptor": "A slow-breeding great ape of Borneo's lowland and peat-swamp forests, and the largest tree-dwelling mammal.",
-  "aliases": ["orangutan", "orang-utan", "orang hutan", "red ape", "great ape"],
-  "taxonomy": { "class": "Mammalia", "order": "Primates", "family": "Hominidae" },
+  "aliases": [
+    "orangutan",
+    "orang-utan",
+    "orang hutan",
+    "red ape",
+    "great ape"
+  ],
+  "taxonomy": {
+    "class": "Mammalia",
+    "order": "Primates",
+    "family": "Hominidae"
+  },
   "gbifTaxonKey": 5219532,
   "specimen": {
     "sizeClass": "m",
     "bodyPlan": "biped",
-    "proportions": { "length": 0.9, "height": 0.45, "bulk": 0.7, "neck": 0.1, "tail": 0 }
+    "proportions": {
+      "length": 0.9,
+      "height": 0.45,
+      "bulk": 0.7,
+      "neck": 0.1,
+      "tail": 0
+    },
+    "model": {
+      "url": "/models/bornean-orangutan.glb",
+      "yaw": 1.5707963267948966
+    }
   },
   "range": {
     "summary": "Lowland, hill and peat-swamp forests of Borneo, split among three subspecies in Indonesian Kalimantan and Malaysian Sabah and Sarawak.",
-    "centroid": { "lat": -1.5, "lon": 113.0 },
-    "bbox": [108.8, -3.6, 119.3, 6.5],
-    "regions": ["Central Kalimantan", "West Kalimantan", "East Kalimantan", "Sabah", "Sarawak"],
-    "countries": ["ID", "MY"]
+    "centroid": {
+      "lat": -1.5,
+      "lon": 113
+    },
+    "bbox": [
+      108.8,
+      -3.6,
+      119.3,
+      6.5
+    ],
+    "regions": [
+      "Central Kalimantan",
+      "West Kalimantan",
+      "East Kalimantan",
+      "Sabah",
+      "Sarawak"
+    ],
+    "countries": [
+      "ID",
+      "MY"
+    ]
   },
   "rangeHistory": {
     "regions": [
-      { "name": "Sabangau", "lat": -2.5, "lon": 113.8, "radius": 0.5, "note": "The Sabangau peat swamp holds the largest single population, about 6,900 orangutans by a 2003 estimate." },
-      { "name": "Mawas, ex Mega Rice area", "lat": -2, "lon": 114.7, "radius": 0.5, "note": "From 1995 the Mega Rice Project drained and cleared peat forest; orangutans survive in its remnants." },
-      { "name": "Tanjung Puting", "lat": -2.9, "lon": 111.9, "radius": 0.6, "note": "Orangutan research and rehabilitation at Camp Leakey began in 1971." },
-      { "name": "Gunung Palung", "lat": -1.2, "lon": 110.1, "radius": 0.5, "note": "Gunung Palung National Park in West Kalimantan protects lowland and hill forest orangutans." },
-      { "name": "Batang Ai, Lanjak Entimau", "lat": 1.4, "lon": 112.2, "radius": 0.8, "note": "Sarawak's main population, where Iban taboos against killing orangutans helped them survive." },
-      { "name": "Lower Kinabatangan", "lat": 5.5, "lon": 118.3, "radius": 0.4, "note": "Orangutans survive in riverside forest fragments along Sabah's Kinabatangan River." },
-      { "name": "Ulu Segama Malua", "lat": 5, "lon": 117.6, "radius": 0.4, "note": "Logged forests of eastern Sabah that hold one of the state's largest orangutan populations." },
-      { "name": "Kutai", "lat": 0.4, "lon": 117.3, "radius": 0.4, "note": "Fires in 1983 and 1998 burned much of Kutai National Park and sharply cut its orangutans." },
-      { "name": "Sungai Wain", "lat": -1.1, "lon": 116.8, "radius": 0.3, "from": 1992, "note": "From 1992 to 1997, 82 ex-captive orangutans were released here; 1998 fires left about 15." },
-      { "name": "Bukit Batikap", "lat": 0.3, "lon": 113.4, "radius": 0.4, "from": 2012, "note": "BOS Foundation began releasing rehabilitated orangutans into Bukit Batikap forest in 2012." },
-      { "name": "Kehje Sewen", "lat": 1, "lon": 116.5, "radius": 0.4, "from": 2012, "note": "BOS Foundation began releasing rehabilitated orangutans into Kehje Sewen forest in 2012." }
+      {
+        "name": "Sabangau",
+        "lat": -2.5,
+        "lon": 113.8,
+        "radius": 0.5,
+        "note": "The Sabangau peat swamp holds the largest single population, about 6,900 orangutans by a 2003 estimate."
+      },
+      {
+        "name": "Mawas, ex Mega Rice area",
+        "lat": -2,
+        "lon": 114.7,
+        "radius": 0.5,
+        "note": "From 1995 the Mega Rice Project drained and cleared peat forest; orangutans survive in its remnants."
+      },
+      {
+        "name": "Tanjung Puting",
+        "lat": -2.9,
+        "lon": 111.9,
+        "radius": 0.6,
+        "note": "Orangutan research and rehabilitation at Camp Leakey began in 1971."
+      },
+      {
+        "name": "Gunung Palung",
+        "lat": -1.2,
+        "lon": 110.1,
+        "radius": 0.5,
+        "note": "Gunung Palung National Park in West Kalimantan protects lowland and hill forest orangutans."
+      },
+      {
+        "name": "Batang Ai, Lanjak Entimau",
+        "lat": 1.4,
+        "lon": 112.2,
+        "radius": 0.8,
+        "note": "Sarawak's main population, where Iban taboos against killing orangutans helped them survive."
+      },
+      {
+        "name": "Lower Kinabatangan",
+        "lat": 5.5,
+        "lon": 118.3,
+        "radius": 0.4,
+        "note": "Orangutans survive in riverside forest fragments along Sabah's Kinabatangan River."
+      },
+      {
+        "name": "Ulu Segama Malua",
+        "lat": 5,
+        "lon": 117.6,
+        "radius": 0.4,
+        "note": "Logged forests of eastern Sabah that hold one of the state's largest orangutan populations."
+      },
+      {
+        "name": "Kutai",
+        "lat": 0.4,
+        "lon": 117.3,
+        "radius": 0.4,
+        "note": "Fires in 1983 and 1998 burned much of Kutai National Park and sharply cut its orangutans."
+      },
+      {
+        "name": "Sungai Wain",
+        "lat": -1.1,
+        "lon": 116.8,
+        "radius": 0.3,
+        "from": 1992,
+        "note": "From 1992 to 1997, 82 ex-captive orangutans were released here; 1998 fires left about 15."
+      },
+      {
+        "name": "Bukit Batikap",
+        "lat": 0.3,
+        "lon": 113.4,
+        "radius": 0.4,
+        "from": 2012,
+        "note": "BOS Foundation began releasing rehabilitated orangutans into Bukit Batikap forest in 2012."
+      },
+      {
+        "name": "Kehje Sewen",
+        "lat": 1,
+        "lon": 116.5,
+        "radius": 0.4,
+        "from": 2012,
+        "note": "BOS Foundation began releasing rehabilitated orangutans into Kehje Sewen forest in 2012."
+      }
     ],
-    "source": { "label": "IUCN Red List: Pongo pygmaeus (Ancrenaz et al. 2016)", "url": "https://www.iucnredlist.org/species/17975/259043172", "year": 2016 },
+    "source": {
+      "label": "IUCN Red List: Pongo pygmaeus (Ancrenaz et al. 2016)",
+      "url": "https://www.iucnredlist.org/species/17975/259043172",
+      "year": 2016
+    },
     "note": "Losses were gradual thinning rather than dated local extinctions, with over 100,000 orangutans lost from 1999 to 2015 (Voigt et al. 2018)."
   },
   "population": {
     "unit": "wild Bornean orangutans (modelled total)",
     "points": [
-      { "year": 1973, "estimate": 288500 },
-      { "year": 2012, "estimate": 104700 }
+      {
+        "year": 1973,
+        "estimate": 288500
+      },
+      {
+        "year": 2012,
+        "estimate": 104700
+      }
     ],
-    "source": { "label": "IUCN Red List assessment, Ancrenaz et al. 2016", "url": "https://www.iucnredlist.org/species/17975/259043172", "year": 2016 },
+    "source": {
+      "label": "IUCN Red List assessment, Ancrenaz et al. 2016",
+      "url": "https://www.iucnredlist.org/species/17975/259043172",
+      "year": 2016
+    },
     "note": "Both figures are modelled from habitat loss and hunting rates, not censuses. The 2016 Population and Habitat Viability Assessment counted about 57,350 using a different method, and the Red List projects around 47,000 by 2025."
   },
   "status": {
@@ -49,34 +169,104 @@
     "assessed": 2016,
     "trend": "decreasing",
     "threats": [
-      { "title": "Deforestation", "detail": "Oil palm, pulpwood plantations and logging have cleared much of Borneo's lowland forest." },
-      { "title": "Hunting and killing", "detail": "Orangutans are killed for meat and in conflicts with farmers, losses a slow-breeding ape cannot absorb." },
-      { "title": "Fire", "detail": "Fires in drained peatlands, worst in El Nino years, destroy huge areas of habitat." },
-      { "title": "Pet trade", "detail": "Infants are taken for sale as pets, usually after their mothers are killed." }
+      {
+        "title": "Deforestation",
+        "detail": "Oil palm, pulpwood plantations and logging have cleared much of Borneo's lowland forest."
+      },
+      {
+        "title": "Hunting and killing",
+        "detail": "Orangutans are killed for meat and in conflicts with farmers, losses a slow-breeding ape cannot absorb."
+      },
+      {
+        "title": "Fire",
+        "detail": "Fires in drained peatlands, worst in El Nino years, destroy huge areas of habitat."
+      },
+      {
+        "title": "Pet trade",
+        "detail": "Infants are taken for sale as pets, usually after their mothers are killed."
+      }
     ],
-    "source": { "label": "IUCN Red List: Pongo pygmaeus", "url": "https://www.iucnredlist.org/species/17975/259043172", "year": 2016 }
+    "source": {
+      "label": "IUCN Red List: Pongo pygmaeus",
+      "url": "https://www.iucnredlist.org/species/17975/259043172",
+      "year": 2016
+    }
   },
   "sightings": {
     "places": [
-      { "name": "Tanjung Puting National Park", "country": "Indonesia", "lat": -2.76, "lon": 111.94, "note": "Reached by klotok riverboat; Camp Leakey has studied orangutans since 1971." },
-      { "name": "Sebangau National Park", "country": "Indonesia", "lat": -2.55, "lon": 113.75, "note": "Peat-swamp forest holding one of the largest wild populations." },
-      { "name": "Danum Valley Conservation Area", "country": "Malaysia", "lat": 4.96, "lon": 117.8, "note": "Unlogged lowland rainforest with fully wild orangutans." },
-      { "name": "Lower Kinabatangan", "country": "Malaysia", "lat": 5.52, "lon": 118.28, "note": "River cruises past forest fragments where orangutans nest near the banks." }
+      {
+        "name": "Tanjung Puting National Park",
+        "country": "Indonesia",
+        "lat": -2.76,
+        "lon": 111.94,
+        "note": "Reached by klotok riverboat; Camp Leakey has studied orangutans since 1971."
+      },
+      {
+        "name": "Sebangau National Park",
+        "country": "Indonesia",
+        "lat": -2.55,
+        "lon": 113.75,
+        "note": "Peat-swamp forest holding one of the largest wild populations."
+      },
+      {
+        "name": "Danum Valley Conservation Area",
+        "country": "Malaysia",
+        "lat": 4.96,
+        "lon": 117.8,
+        "note": "Unlogged lowland rainforest with fully wild orangutans."
+      },
+      {
+        "name": "Lower Kinabatangan",
+        "country": "Malaysia",
+        "lat": 5.52,
+        "lon": 118.28,
+        "note": "River cruises past forest fragments where orangutans nest near the banks."
+      }
     ],
-    "bestMonths": [4, 5, 6, 7, 8, 9],
+    "bestMonths": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
     "tip": "The drier months make trails and river trips easier. During heavy fruiting seasons orangutans range widely and visit feeding platforms less often."
   },
   "help": {
     "actions": [
-      { "title": "Choose certified palm oil", "detail": "Look for RSPO-certified products so your shopping does not drive new forest clearance.", "url": "https://rspo.org" },
-      { "title": "Choose certified wood and paper", "detail": "FSC-certified products reduce pressure on Borneo's remaining forests.", "url": "https://fsc.org" },
-      { "title": "Never pay for photos with apes", "detail": "Selfies and shows with orangutans keep the pet trade profitable." },
-      { "title": "Support peat-swamp protection", "detail": "Rewetting and patrolling peatlands prevents the fires that destroy orangutan habitat." }
+      {
+        "title": "Choose certified palm oil",
+        "detail": "Look for RSPO-certified products so your shopping does not drive new forest clearance.",
+        "url": "https://rspo.org"
+      },
+      {
+        "title": "Choose certified wood and paper",
+        "detail": "FSC-certified products reduce pressure on Borneo's remaining forests.",
+        "url": "https://fsc.org"
+      },
+      {
+        "title": "Never pay for photos with apes",
+        "detail": "Selfies and shows with orangutans keep the pet trade profitable."
+      },
+      {
+        "title": "Support peat-swamp protection",
+        "detail": "Rewetting and patrolling peatlands prevents the fires that destroy orangutan habitat."
+      }
     ],
     "orgs": [
-      { "name": "Orangutan Foundation International", "url": "https://orangutan.org" },
-      { "name": "Borneo Nature Foundation", "url": "https://www.borneonaturefoundation.org" },
-      { "name": "BOS Foundation", "url": "https://www.orangutan.or.id" }
+      {
+        "name": "Orangutan Foundation International",
+        "url": "https://orangutan.org"
+      },
+      {
+        "name": "Borneo Nature Foundation",
+        "url": "https://www.borneonaturefoundation.org"
+      },
+      {
+        "name": "BOS Foundation",
+        "url": "https://www.orangutan.or.id"
+      }
     ]
   },
   "next": "black-rhinoceros"

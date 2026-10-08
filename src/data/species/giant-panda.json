@@ -28,7 +28,11 @@
     },
     "features": [
       "roundEars"
-    ]
+    ],
+    "model": {
+      "url": "/models/giant-panda.glb",
+      "yaw": 1.5707963267948966
+    }
   },
   "range": {
     "summary": "Temperate bamboo forests between about 1,200 and 3,500 m in six mountain ranges of Sichuan, Shaanxi and Gansu.",

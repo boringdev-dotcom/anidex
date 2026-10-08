@@ -28,7 +28,11 @@
     },
     "features": [
       "roundEars"
-    ]
+    ],
+    "model": {
+      "url": "/models/bengal-tiger.glb",
+      "yaw": 1.5707963267948966
+    }
   },
   "range": {
     "summary": "Fragmented populations across India, Bangladesh, Nepal and Bhutan, from Himalayan foothills to the Sundarbans delta.",

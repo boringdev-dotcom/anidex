@@ -29,7 +29,11 @@
     },
     "features": [
       "roundEars"
-    ]
+    ],
+    "model": {
+      "url": "/models/snow-leopard.glb",
+      "yaw": 1.5707963267948966
+    }
   },
   "range": {
     "summary": "Rugged mountains of 12 Central and South Asian countries, mostly between 3,000 and 5,500 m, with about 60% of the range in China.",

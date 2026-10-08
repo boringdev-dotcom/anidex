@@ -18,6 +18,8 @@ export const stippleUniforms = {
   uOpacity: { value: 0 },
   uDrift: { value: 1 },
   uTarget: { value: new THREE.Vector3() },
+  /** 0 in dark theme (light fur = bright points), 1 in light theme (dark fur = dark points). */
+  uToneInvert: { value: 0 },
   uTime: palette.uTime,
   uInk: palette.uInk,
 };
@@ -45,6 +47,8 @@ export function StipplePoints() {
     g.setAttribute('aNFrom', new THREE.BufferAttribute(amb.normals.slice(), 3));
     g.setAttribute('aNTo', new THREE.BufferAttribute(amb.normals.slice(), 3));
     g.setAttribute('aSeed', new THREE.BufferAttribute(seeds, 1));
+    g.setAttribute('aToneFrom', new THREE.BufferAttribute(amb.tones.slice(), 1));
+    g.setAttribute('aToneTo', new THREE.BufferAttribute(amb.tones.slice(), 1));
     g.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 2);
     return g;
   }, []);
@@ -73,6 +77,10 @@ export function StipplePoints() {
       const nTo = geometry.getAttribute('aNTo') as THREE.BufferAttribute;
       const seed = geometry.getAttribute('aSeed') as THREE.BufferAttribute;
       const pos = geometry.getAttribute('position') as THREE.BufferAttribute;
+      const tFrom = geometry.getAttribute('aToneFrom') as THREE.BufferAttribute;
+      const tTo = geometry.getAttribute('aToneTo') as THREE.BufferAttribute;
+      const tfa = tFrom.array as Float32Array;
+      const tta = tTo.array as Float32Array;
       const m = stippleUniforms.uMorph.value;
       const fa = from.array as Float32Array;
       const ta = to.array as Float32Array;
@@ -81,6 +89,7 @@ export function StipplePoints() {
       // freeze the current visual state (replicating the shader's stagger) as the new "from"
       for (let i = 0; i < POINT_COUNT; i++) {
         const st = ease(Math.min(1, Math.max(0, m * 1.6 - seed.getX(i) * 0.6)));
+        tfa[i] = tfa[i] + (tta[i] - tfa[i]) * st;
         for (let k = 0; k < 3; k++) {
           const j = i * 3 + k;
           fa[j] = fa[j] + (ta[j] - fa[j]) * st;
@@ -100,8 +109,10 @@ export function StipplePoints() {
       specimenInfo.radius = maxR;
       ta.set(shape.positions);
       nta.set(shape.normals);
+      tta.set(shape.tones);
       (pos.array as Float32Array).set(shape.positions);
       from.needsUpdate = to.needsUpdate = nFrom.needsUpdate = nTo.needsUpdate = pos.needsUpdate = true;
+      tFrom.needsUpdate = tTo.needsUpdate = true;
 
       gsap.killTweensOf(stippleUniforms.uMorph);
       stippleUniforms.uMorph.value = 0;

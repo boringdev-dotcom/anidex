@@ -30,7 +30,11 @@
     "features": [
       "trunk",
       "bigEars"
-    ]
+    ],
+    "model": {
+      "url": "/models/african-savanna-elephant.glb",
+      "yaw": 1.5707963267948966
+    }
   },
   "range": {
     "summary": "Savannas, woodlands, floodplains and semi-deserts across sub-Saharan Africa, with most elephants now in southern and eastern Africa.",

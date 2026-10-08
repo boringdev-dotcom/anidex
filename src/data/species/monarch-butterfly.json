@@ -3,35 +3,104 @@
   "commonName": "Monarch butterfly",
   "scientificName": "Danaus plexippus",
   "descriptor": "An orange-and-black butterfly that flies thousands of kilometres to spend winter in Mexican fir forests.",
-  "aliases": ["monarch", "milkweed butterfly", "mariposa monarca", "wanderer", "eastern monarch"],
-  "taxonomy": { "class": "Insecta", "order": "Lepidoptera", "family": "Nymphalidae" },
+  "aliases": [
+    "monarch",
+    "milkweed butterfly",
+    "mariposa monarca",
+    "wanderer",
+    "eastern monarch"
+  ],
+  "taxonomy": {
+    "class": "Insecta",
+    "order": "Lepidoptera",
+    "family": "Nymphalidae"
+  },
   "gbifTaxonKey": 5133088,
   "specimen": {
     "sizeClass": "xs",
     "bodyPlan": "arthropod",
-    "proportions": { "length": 0.3, "height": 0.15, "bulk": 0.15, "neck": 0.05, "tail": 0 }
+    "proportions": {
+      "length": 0.3,
+      "height": 0.15,
+      "bulk": 0.15,
+      "neck": 0.05,
+      "tail": 0
+    },
+    "model": {
+      "url": "/models/monarch-butterfly.glb",
+      "yaw": 1.5707963267948966
+    },
+    "tilt": 0.85
   },
   "range": {
     "summary": "Breeds across southern Canada and the United States wherever milkweed grows. Eastern monarchs overwinter in central Mexico and western monarchs on the California coast.",
-    "centroid": { "lat": 41.5, "lon": -93.5 },
-    "bbox": [-125, 18, -60, 52],
-    "regions": ["Midwest and Great Lakes breeding range", "Texas and the central flyway", "Oyamel fir forests of Michoacan and Mexico State", "California coastal groves"],
-    "countries": ["US", "CA", "MX"]
+    "centroid": {
+      "lat": 41.5,
+      "lon": -93.5
+    },
+    "bbox": [
+      -125,
+      18,
+      -60,
+      52
+    ],
+    "regions": [
+      "Midwest and Great Lakes breeding range",
+      "Texas and the central flyway",
+      "Oyamel fir forests of Michoacan and Mexico State",
+      "California coastal groves"
+    ],
+    "countries": [
+      "US",
+      "CA",
+      "MX"
+    ]
   },
   "population": {
     "unit": "hectares of forest occupied by overwintering eastern monarchs in Mexico (December survey)",
     "points": [
-      { "year": 1993, "estimate": 6.25 },
-      { "year": 1996, "estimate": 18.19 },
-      { "year": 2004, "estimate": 2.19 },
-      { "year": 2008, "estimate": 5.06 },
-      { "year": 2013, "estimate": 0.67 },
-      { "year": 2018, "estimate": 6.05 },
-      { "year": 2023, "estimate": 0.9 },
-      { "year": 2024, "estimate": 1.79 },
-      { "year": 2025, "estimate": 2.93 }
+      {
+        "year": 1993,
+        "estimate": 6.25
+      },
+      {
+        "year": 1996,
+        "estimate": 18.19
+      },
+      {
+        "year": 2004,
+        "estimate": 2.19
+      },
+      {
+        "year": 2008,
+        "estimate": 5.06
+      },
+      {
+        "year": 2013,
+        "estimate": 0.67
+      },
+      {
+        "year": 2018,
+        "estimate": 6.05
+      },
+      {
+        "year": 2023,
+        "estimate": 0.9
+      },
+      {
+        "year": 2024,
+        "estimate": 1.79
+      },
+      {
+        "year": 2025,
+        "estimate": 2.93
+      }
     ],
-    "source": { "label": "WWF Mexico and CONANP overwintering survey", "url": "https://www.wwf.org.mx", "year": 2026 },
+    "source": {
+      "label": "WWF Mexico and CONANP overwintering survey",
+      "url": "https://www.wwf.org.mx",
+      "year": 2026
+    },
     "note": "Each year is the winter season that starts that December, so 2025 means 2025 to 2026. Surveys before 2004 were made by the Monarch Butterfly Biosphere Reserve. Researchers suggest about 6 hectares is needed for a resilient eastern population."
   },
   "status": {
@@ -39,35 +108,109 @@
     "assessed": 2022,
     "trend": "decreasing",
     "threats": [
-      { "title": "Migratory subspecies at risk", "detail": "The species is Least Concern worldwide, but the migratory North American subspecies, D. p. plexippus, is listed separately as Vulnerable (2023)." },
-      { "title": "Milkweed loss", "detail": "Herbicide use and land conversion have stripped milkweed, the only food of monarch caterpillars, from much of the breeding range." },
-      { "title": "Forest degradation in Mexico", "detail": "Logging and drought thin the oyamel fir canopy that shelters the winter colonies from cold." },
-      { "title": "Climate extremes", "detail": "Heat, drought and winter storms along the migration route kill butterflies and dry up nectar sources." }
+      {
+        "title": "Migratory subspecies at risk",
+        "detail": "The species is Least Concern worldwide, but the migratory North American subspecies, D. p. plexippus, is listed separately as Vulnerable (2023)."
+      },
+      {
+        "title": "Milkweed loss",
+        "detail": "Herbicide use and land conversion have stripped milkweed, the only food of monarch caterpillars, from much of the breeding range."
+      },
+      {
+        "title": "Forest degradation in Mexico",
+        "detail": "Logging and drought thin the oyamel fir canopy that shelters the winter colonies from cold."
+      },
+      {
+        "title": "Climate extremes",
+        "detail": "Heat, drought and winter storms along the migration route kill butterflies and dry up nectar sources."
+      }
     ],
-    "source": { "label": "IUCN Red List: Danaus plexippus", "url": "https://www.iucnredlist.org/species/159971/219149911", "year": 2022 }
+    "source": {
+      "label": "IUCN Red List: Danaus plexippus",
+      "url": "https://www.iucnredlist.org/species/159971/219149911",
+      "year": 2022
+    }
   },
   "sightings": {
     "places": [
-      { "name": "El Rosario Sanctuary", "country": "Mexico", "lat": 19.59, "lon": -100.27, "note": "The largest colony of the 2025 to 2026 season, high in the oyamel forest of Michoacan." },
-      { "name": "Sierra Chincua Sanctuary", "country": "Mexico", "lat": 19.67, "lon": -100.3, "note": "Quieter sanctuary in the Monarch Butterfly Biosphere Reserve, reached on foot or horseback." },
-      { "name": "Point Pelee National Park", "country": "Canada", "lat": 41.93, "lon": -82.51, "note": "Monarchs gather at the tip of the point in September before crossing Lake Erie." },
-      { "name": "Cape May Point", "country": "USA", "lat": 38.93, "lon": -74.96, "note": "Autumn migrants pile up here before crossing Delaware Bay." },
-      { "name": "Pismo Beach Monarch Butterfly Grove", "country": "USA", "lat": 35.13, "lon": -120.63, "note": "Eucalyptus grove used by the separate western population." }
+      {
+        "name": "El Rosario Sanctuary",
+        "country": "Mexico",
+        "lat": 19.59,
+        "lon": -100.27,
+        "note": "The largest colony of the 2025 to 2026 season, high in the oyamel forest of Michoacan."
+      },
+      {
+        "name": "Sierra Chincua Sanctuary",
+        "country": "Mexico",
+        "lat": 19.67,
+        "lon": -100.3,
+        "note": "Quieter sanctuary in the Monarch Butterfly Biosphere Reserve, reached on foot or horseback."
+      },
+      {
+        "name": "Point Pelee National Park",
+        "country": "Canada",
+        "lat": 41.93,
+        "lon": -82.51,
+        "note": "Monarchs gather at the tip of the point in September before crossing Lake Erie."
+      },
+      {
+        "name": "Cape May Point",
+        "country": "USA",
+        "lat": 38.93,
+        "lon": -74.96,
+        "note": "Autumn migrants pile up here before crossing Delaware Bay."
+      },
+      {
+        "name": "Pismo Beach Monarch Butterfly Grove",
+        "country": "USA",
+        "lat": 35.13,
+        "lon": -120.63,
+        "note": "Eucalyptus grove used by the separate western population."
+      }
     ],
-    "bestMonths": [9, 12, 1, 2],
+    "bestMonths": [
+      9,
+      12,
+      1,
+      2
+    ],
     "tip": "Mexican sanctuaries are at their best from December to February, on sunny afternoons when clusters break into flight. Autumn migration peaks along the Great Lakes and Atlantic coast in September."
   },
   "help": {
     "actions": [
-      { "title": "Plant native milkweed", "detail": "Grow a milkweed species native to your region, plus late-blooming nectar flowers for migrants.", "url": "https://xerces.org/milkweed" },
-      { "title": "Garden without pesticides", "detail": "Insecticides and herbicides kill caterpillars directly and remove the plants they need." },
-      { "title": "Tag and report monarchs", "detail": "Community science tagging and sighting reports track the migration each year.", "url": "https://monarchwatch.org/tagging" },
-      { "title": "Visit sanctuaries with local guides", "detail": "Tourism income gives the ejidos that own the forests a reason to protect them." }
+      {
+        "title": "Plant native milkweed",
+        "detail": "Grow a milkweed species native to your region, plus late-blooming nectar flowers for migrants.",
+        "url": "https://xerces.org/milkweed"
+      },
+      {
+        "title": "Garden without pesticides",
+        "detail": "Insecticides and herbicides kill caterpillars directly and remove the plants they need."
+      },
+      {
+        "title": "Tag and report monarchs",
+        "detail": "Community science tagging and sighting reports track the migration each year.",
+        "url": "https://monarchwatch.org/tagging"
+      },
+      {
+        "title": "Visit sanctuaries with local guides",
+        "detail": "Tourism income gives the ejidos that own the forests a reason to protect them."
+      }
     ],
     "orgs": [
-      { "name": "Monarch Watch", "url": "https://monarchwatch.org" },
-      { "name": "Xerces Society", "url": "https://xerces.org" },
-      { "name": "Monarch Joint Venture", "url": "https://monarchjointventure.org" }
+      {
+        "name": "Monarch Watch",
+        "url": "https://monarchwatch.org"
+      },
+      {
+        "name": "Xerces Society",
+        "url": "https://xerces.org"
+      },
+      {
+        "name": "Monarch Joint Venture",
+        "url": "https://monarchjointventure.org"
+      }
     ]
   },
   "next": "grey-wolf",

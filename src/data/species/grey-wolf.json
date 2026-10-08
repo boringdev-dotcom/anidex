@@ -28,7 +28,11 @@
     },
     "features": [
       "pointyEars"
-    ]
+    ],
+    "model": {
+      "url": "/models/grey-wolf.glb",
+      "yaw": 1.5707963267948966
+    }
   },
   "range": {
     "summary": "Across much of North America, Europe and Asia, from Arctic tundra to deserts. Wolves are recolonising western Europe and parts of the United States after near extermination.",

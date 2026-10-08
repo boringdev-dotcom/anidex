@@ -4,6 +4,13 @@ import { MeshSurfaceSampler } from 'three/examples/jsm/math/MeshSurfaceSampler.j
 export interface Shape {
   positions: Float32Array; // N * 3
   normals: Float32Array; // N * 3
+  /** Surface brightness 0..1 per point (0.5 = neutral). Drives halftone point size and alpha. */
+  tones: Float32Array; // N
+}
+
+export interface TexturedPart {
+  geometry: THREE.BufferGeometry;
+  pixels?: { data: Uint8ClampedArray; width: number; height: number };
 }
 
 function area(g: THREE.BufferGeometry): number {
@@ -81,7 +88,71 @@ export function sampleParts(parts: THREE.BufferGeometry[], N: number, seed = 1):
   });
   material.dispose();
   normalize(positions);
-  return { positions, normals };
+  return { positions, normals, tones: new Float32Array(N).fill(0.5) };
+}
+
+function luminanceAt(px: NonNullable<TexturedPart['pixels']>, u: number, v: number): number {
+  // glTF UVs: (0,0) is the top-left of the image
+  const x = Math.min(px.width - 1, Math.max(0, Math.floor((((u % 1) + 1) % 1) * px.width)));
+  const y = Math.min(px.height - 1, Math.max(0, Math.floor((((v % 1) + 1) % 1) * px.height)));
+  const i = (y * px.width + x) * 4;
+  const d = px.data;
+  return (0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]) / 255;
+}
+
+/**
+ * Sample a textured model. Points favour strongly light and strongly dark areas, so stripes,
+ * patches and wing veins come through as density as well as tone.
+ */
+export function sampleTextured(parts: TexturedPart[], N: number, seed = 1): Shape {
+  const random = rng(seed);
+  const areas = parts.map((p) => Math.max(area(p.geometry), 1e-6));
+  const total = areas.reduce((a, b) => a + b, 0);
+  const counts = areas.map((a) => Math.floor((a / total) * N));
+  counts[areas.indexOf(Math.max(...areas))] += N - counts.reduce((a, b) => a + b, 0);
+
+  const positions = new Float32Array(N * 3);
+  const normals = new Float32Array(N * 3);
+  const raw = new Float32Array(N);
+  const p = new THREE.Vector3();
+  const n = new THREE.Vector3();
+  const uv = new THREE.Vector2();
+  const material = new THREE.MeshBasicMaterial();
+  let k = 0;
+  parts.forEach((part, i) => {
+    const g = part.geometry;
+    if (!g.getAttribute('normal')) g.computeVertexNormals();
+    const sampler = new MeshSurfaceSampler(new THREE.Mesh(g, material));
+    (sampler as unknown as { setRandomGenerator: (f: () => number) => void }).setRandomGenerator(random);
+    sampler.build();
+    const hasUv = !!part.pixels && !!g.getAttribute('uv');
+    for (let j = 0; j < counts[i] && k < N; ) {
+      sampler.sample(p, n, undefined, hasUv ? uv : undefined);
+      let t = 0.5;
+      if (hasUv) {
+        t = luminanceAt(part.pixels!, uv.x, uv.y);
+        // rejection sampling: keep midtones at ~55%, extremes always
+        const keep = 0.55 + 0.45 * Math.min(1, Math.abs(t - 0.5) * 2.2);
+        if (random() > keep) continue;
+      }
+      positions.set([p.x, p.y, p.z], k * 3);
+      normals.set([n.x, n.y, n.z], k * 3);
+      raw[k] = t;
+      j++;
+      k++;
+    }
+    g.dispose();
+  });
+  material.dispose();
+  normalize(positions);
+
+  // stretch tones to the model's own range (5th to 95th percentile)
+  const sorted = Array.from(raw).sort((a, b) => a - b);
+  const lo = sorted[Math.floor(N * 0.05)];
+  const hi = sorted[Math.floor(N * 0.95)];
+  const tones = new Float32Array(N);
+  for (let i = 0; i < N; i++) tones[i] = hi - lo > 0.05 ? Math.min(1, Math.max(0, (raw[i] - lo) / (hi - lo))) : 0.5;
+  return { positions, normals, tones };
 }
 
 /** Centre on the bounding box and scale so the largest dimension is 1. */
@@ -125,5 +196,5 @@ export function ambientShape(N: number): Shape {
       normals.set([0, 1, 0], i * 3);
     }
   }
-  return { positions, normals };
+  return { positions, normals, tones: new Float32Array(N).fill(0.5) };
 }

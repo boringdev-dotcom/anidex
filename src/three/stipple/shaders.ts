@@ -4,6 +4,8 @@ attribute vec3 aTo;
 attribute vec3 aNFrom;
 attribute vec3 aNTo;
 attribute float aSeed;
+attribute float aToneFrom;
+attribute float aToneTo;
 
 uniform float uMorph;
 uniform float uAlive;
@@ -14,6 +16,7 @@ uniform float uDpr;
 uniform float uOpacity;
 uniform float uDrift;
 uniform vec3 uTarget;
+uniform float uToneInvert;
 
 varying float vAlpha;
 
@@ -55,10 +58,18 @@ void main() {
   vec3 nv = normalize(normalMatrix * n);
   float lambert = clamp(dot(nv, normalize(vec3(-0.45, 0.65, 0.6))), 0.0, 1.0);
   float rim = 1.0 - abs(nv.z);
-  float shade = 0.28 + 0.62 * lambert + 0.3 * rim * rim;
+  // softer light so surface markings carry the image; rim still traces the silhouette
+  float shade = 0.5 + 0.38 * lambert + 0.18 * rim * rim;
 
-  gl_PointSize = uSize * uDpr * (0.55 + 0.6 * shade) * (6.0 / -mv.z);
-  vAlpha = uOpacity * clamp(shade, 0.18, 1.0) * (1.0 - dead * 0.92) * (1.0 - cs * 0.6);
+  // halftone: the surface's own markings set point size and strength (0.5 is neutral)
+  float tone = mix(aToneFrom, aToneTo, st);
+  float k = mix(tone, 1.0 - tone, uToneInvert);
+  k = smoothstep(0.12, 0.88, k);
+  float toneSize = 1.0 + (k - 0.5) * 1.5;
+  float toneAlpha = clamp(0.04 + 1.92 * k, 0.0, 1.3);
+
+  gl_PointSize = uSize * uDpr * (0.55 + 0.6 * shade) * toneSize * (6.0 / -mv.z);
+  vAlpha = uOpacity * clamp(shade, 0.18, 1.0) * toneAlpha * (1.0 - dead * 0.92) * (1.0 - cs * 0.6);
 }
 `;
 

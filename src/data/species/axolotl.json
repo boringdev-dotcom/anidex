@@ -28,7 +28,12 @@
     },
     "features": [
       "gills"
-    ]
+    ],
+    "model": {
+      "url": "/models/axolotl.glb",
+      "yaw": 1.5707963267948966
+    },
+    "tilt": 0.5
   },
   "range": {
     "summary": "Found wild only in the remnant canals of Xochimilco and the wetlands of Chalco in southern Mexico City, all that is left of an ancient lake system.",

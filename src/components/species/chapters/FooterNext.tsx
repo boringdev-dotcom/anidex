@@ -43,7 +43,7 @@ export function FooterNext({ sp }: { sp: Species }) {
             Range data <a className="link" href={`https://www.gbif.org/species/${sp.gbifTaxonKey}`} target="_blank" rel="noreferrer">GBIF</a>. Status{' '}
             <a className="link" href={sp.status.source.url} target="_blank" rel="noreferrer">IUCN Red List</a>.
           </span>
-          <span>Land outlines Natural Earth. Specimens are procedural stipple studies.</span>
+          <span>Land outlines Natural Earth. Specimens are stipple renderings of 3D models generated with Hunyuan 3D.</span>
         </footer>
       </div>
     </section>

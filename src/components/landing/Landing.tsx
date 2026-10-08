@@ -90,7 +90,7 @@ export default function Landing() {
         </ol>
         <footer className="landing-foot label">
           <span>Ranges from GBIF occurrence data. Status from the IUCN Red List. Figures sourced per species.</span>
-          <span>Specimens are procedural stipple studies.</span>
+          <span>Specimens are stipple renderings of 3D models generated with Hunyuan 3D.</span>
         </footer>
       </section>
     </main>
