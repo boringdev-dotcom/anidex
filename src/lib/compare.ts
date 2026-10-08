@@ -128,7 +128,9 @@ export function findings(a: Species, b: Species): Finding[] {
   const out: (Finding & { weight: number })[] = [];
   const ratio = (x: number, y: number) => (x >= y ? { r: x / y, who: 'a' as const } : { r: y / x, who: 'b' as const });
   if (a.physical && b.physical) {
-    const w = ratio(mid(a.physical.weightKg), mid(b.physical.weightKg));
+    const wa = a.physical.weightKg;
+    const wb = b.physical.weightKg;
+    const w = wa && wb ? ratio(mid(wa), mid(wb)) : { r: 1, who: 'a' as const };
     if (w.r >= 1.15) out.push({ label: 'Heavier', who: w.who, detail: `about ${times(w.r)} the weight`, weight: Math.log(w.r) * 2 });
     const la = realSize(a).metres;
     const lb = realSize(b).metres;

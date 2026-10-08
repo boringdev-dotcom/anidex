@@ -89,7 +89,8 @@ export interface Variant {
 
 /** Body measurements for the hero's stats row, measurement lines and size comparison. */
 export interface Physical {
-  weightKg: [number, number];
+  /** absent when no weight is published (many insects) */
+  weightKg?: [number, number];
   weightNote?: string;
   heightM: [number, number] | null;
   heightLabel: 'at shoulder' | 'standing' | null;
