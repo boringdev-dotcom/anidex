@@ -133,13 +133,20 @@ async function makeImage(sp: Sp, dir: string): Promise<{ url: string; paid: bool
 async function makeModel(sp: Sp, dir: string, imageUrl: string): Promise<{ raw: string; paid: boolean }> {
   const raw = join(dir, 'raw.glb');
   if (existsSync(raw) && !force.has('model') && !force.has('image')) return { raw, paid: false };
-  log(sp.slug, 'model: generating with Hunyuan 3D v3.1 Pro (a few minutes)');
-  const r = await generateModel(imageUrl);
+  // a submitted job is saved first, so a timeout or crash resumes it instead of paying again
+  const pendingFile = join(dir, 'model-request.json');
+  const pending = !force.has('model') && !force.has('image') ? readJson<{ requestId: string; imageUrl: string }>(pendingFile) : null;
+  const resumeId = pending?.imageUrl === imageUrl ? pending.requestId : undefined;
+  log(sp.slug, resumeId ? `model: resuming fal request ${resumeId}` : 'model: generating with Hunyuan 3D v3.1 Pro (a few minutes)');
+  const r = await generateModel(imageUrl, {
+    resumeId,
+    onSubmitted: (requestId) => writeFileSync(pendingFile, JSON.stringify({ requestId, imageUrl }, null, 2)),
+  });
   writeFileSync(raw, await download(r.glbUrl));
   if (r.thumbnailUrl) await download(r.thumbnailUrl).then((b) => writeFileSync(join(dir, 'thumbnail.png'), b)).catch(() => {});
   writeFileSync(join(dir, 'model.json'), JSON.stringify({ requestId: r.requestId, glb: r.glbUrl }, null, 2));
   log(sp.slug, 'model: done');
-  return { raw, paid: true };
+  return { raw, paid: !resumeId };
 }
 
 /** Optimize and upload; returns the site path of the stored model ("/models/<slug>-<hash>.glb"). */
