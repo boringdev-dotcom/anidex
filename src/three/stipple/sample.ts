@@ -202,14 +202,15 @@ export function earthShape(N: number, mask: { data: Uint8ClampedArray; width: nu
   const positions = new Float32Array(N * 3);
   const normals = new Float32Array(N * 3);
   const tones = new Float32Array(N);
-  const tilt = new THREE.Matrix4().makeRotationZ(23.4 * D2R);
+  // upright axis: the director leans it toward the viewer, so the spin always shows the populated band, never the pole
+  const tilt = new THREE.Matrix4();
   const v = new THREE.Vector3();
   const isLand = (lat: number, lon: number) => {
     const x = Math.min(mask.width - 1, Math.floor(((lon + 180) / 360) * mask.width));
     const y = Math.min(mask.height - 1, Math.floor(((90 - lat) / 180) * mask.height));
     return mask.data[(y * mask.width + x) * 4] > 127;
   };
-  const landTarget = Math.floor(N * 0.8);
+  const landTarget = Math.floor(N * 0.84);
   let land = 0;
   let sea = 0;
   let k = 0;
@@ -231,7 +232,7 @@ export function earthShape(N: number, mask: { data: Uint8ClampedArray; width: nu
     normals.set([v.x, v.y, v.z], k * 3);
     const r = EARTH_R * (onLand ? 1.006 : 1);
     positions.set([v.x * r, v.y * r, v.z * r], k * 3);
-    tones[k] = onLand ? 0.95 + random() * 0.05 : 0.08 + random() * 0.1;
+    tones[k] = onLand ? 0.95 + random() * 0.05 : 0.02 + random() * 0.06;
     k++;
   }
   return { positions, normals, tones, toneMid: 0.62, fixedInk: true };
