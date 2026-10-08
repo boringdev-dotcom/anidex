@@ -81,7 +81,7 @@ export interface Variant {
   source?: Source;
   /** Overrides on top of the parent species' specimen (its own GLB, prompt detail, tilt). */
   specimen?: {
-    model?: { url: string; scale?: number; yaw?: number };
+    model?: { url: string; scale?: number; yaw?: number; orient?: 'auto' };
     promptDetail?: string;
     tilt?: number;
   };
@@ -127,7 +127,7 @@ export interface Species {
     /** Camera tilt in radians so flat animals (butterflies, whales) are seen partly from above. Default 0.08. */
     tilt?: number;
     /** Drop a GLB at /public/models/<slug>.glb and reference it here. Nothing else changes. */
-    model?: { url: string; scale?: number; yaw?: number };
+    model?: { url: string; scale?: number; yaw?: number; orient?: 'auto' };
   };
 
   range: {

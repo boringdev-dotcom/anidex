@@ -6,11 +6,15 @@ import { ambientShape, earthShape, hashString, sampleParts, sampleTextured, type
 /**
  * The specimen boundary. Everything in the scene asks for a species' Shape through here.
  *
- * Today every species uses the procedural body plan. To use a real model later:
- *   1. drop public/models/<slug>.glb
- *   2. add "model": { "url": "/models/<slug>.glb" } to the species JSON
+ * A species with `specimen.model` is sampled from its GLB; any other gets the procedural body plan.
+ * Models live in Cloudflare R2 (see scripts/generate-models.ts and server/specimens.ts); data refers
+ * to them by path ("/models/<slug>-<hash>.glb") and they load from the models domain.
  * The GLB is sampled into the same stipple point cloud, so the look and every animation stay the same.
  */
+
+const MODEL_BASE = (import.meta.env.VITE_MODEL_BASE as string | undefined) ?? 'https://models.anidex.fyi';
+/** Resolve a model path from the data to the URL it is served from. */
+export const modelUrl = (path: string) => (path.startsWith('/models/') ? MODEL_BASE + path : path);
 
 const cache = new Map<string, Promise<Shape>>();
 
@@ -48,19 +52,57 @@ function readPixels(tex: THREE.Texture | null | undefined): TexturedPart['pixels
 }
 
 async function fromModel(sp: SpecimenSource): Promise<Shape> {
-  return loadModelShape(sp.specimen.model!.url, sp.specimen.model?.yaw ?? 0, POINT_COUNT, hashString(sp.key));
+  const m = sp.specimen.model!;
+  return loadModelShape(m.url, m.orient === 'auto' ? 'auto' : (m.yaw ?? 0), POINT_COUNT, hashString(sp.key));
 }
 
-/** Load any GLB and sample it into a stipple shape with N points. */
-export async function loadModelShape(url: string, yawRad: number, N: number, seed: number): Promise<Shape> {
+/**
+ * Yaw that turns a model's longest horizontal axis onto X, so it is seen side-on (generated models
+ * come out of image-to-3D facing different ways). Area-weighted, so dense heads don't dominate.
+ */
+function sideOnYaw(geoms: THREE.BufferGeometry[]): number {
+  let w = 0, mx = 0, mz = 0, xx = 0, zz = 0, xz = 0;
+  const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3();
+  const tri = new THREE.Triangle();
+  for (const g of geoms) {
+    const pos = g.getAttribute('position');
+    const idx = g.index;
+    const count = idx ? idx.count : pos.count;
+    for (let i = 0; i + 2 < count; i += 3) {
+      const [i0, i1, i2] = idx ? [idx.getX(i), idx.getX(i + 1), idx.getX(i + 2)] : [i, i + 1, i + 2];
+      a.fromBufferAttribute(pos, i0);
+      b.fromBufferAttribute(pos, i1);
+      c.fromBufferAttribute(pos, i2);
+      const area = tri.set(a, b, c).getArea();
+      const x = (a.x + b.x + c.x) / 3;
+      const z = (a.z + b.z + c.z) / 3;
+      w += area;
+      mx += area * x;
+      mz += area * z;
+      xx += area * x * x;
+      zz += area * z * z;
+      xz += area * x * z;
+    }
+  }
+  if (!w) return 0;
+  mx /= w;
+  mz /= w;
+  const cxx = xx / w - mx * mx;
+  const czz = zz / w - mz * mz;
+  const cxz = xz / w - mx * mz;
+  // principal axis angle in the XZ plane; rotateY by it lays that axis on X
+  return 0.5 * Math.atan2(2 * cxz, cxx - czz);
+}
+
+/** Load any GLB and sample it into a stipple shape with N points. yaw "auto" turns it side-on. */
+export async function loadModelShape(url: string, yawRad: number | 'auto', N: number, seed: number): Promise<Shape> {
   const [{ GLTFLoader }, { MeshoptDecoder }] = await Promise.all([
     import('three/examples/jsm/loaders/GLTFLoader.js'),
     import('three/examples/jsm/libs/meshopt_decoder.module.js'),
   ]);
   const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
-  const gltf = await loader.loadAsync(url);
+  const gltf = await loader.loadAsync(modelUrl(url));
   gltf.scene.updateMatrixWorld(true);
-  const yaw = new THREE.Matrix4().makeRotationY(yawRad);
   const parts: TexturedPart[] = [];
   gltf.scene.traverse((o) => {
     const m = o as THREE.Mesh;
@@ -71,18 +113,20 @@ export async function loadModelShape(url: string, yawRad: number, N: number, see
     if (src.getAttribute('normal')) g.setAttribute('normal', floatAttr(src.getAttribute('normal')));
     if (src.getAttribute('uv')) g.setAttribute('uv', floatAttr(src.getAttribute('uv')));
     if (src.index) g.setIndex(src.index.clone());
-    g.applyMatrix4(new THREE.Matrix4().multiplyMatrices(yaw, m.matrixWorld));
+    g.applyMatrix4(m.matrixWorld);
     const mat = (Array.isArray(m.material) ? m.material[0] : m.material) as THREE.MeshStandardMaterial;
     parts.push({ geometry: g, pixels: readPixels(mat?.map) });
   });
   if (!parts.length) throw new Error('GLB has no meshes');
+  const yaw = new THREE.Matrix4().makeRotationY(yawRad === 'auto' ? sideOnYaw(parts.map((p) => p.geometry)) : yawRad);
+  for (const p of parts) p.geometry.applyMatrix4(yaw);
   return sampleTextured(parts, N, seed);
 }
 
 /** Scale references for "Compare to you": real size in metres along the model's largest dimension. */
 export const REFERENCES = {
-  human: { url: '/models/ref-human.glb', yaw: 0, sizeM: 1.7, label: '1.7 m person' },
-  hand: { url: '/models/ref-hand.glb', yaw: 0, sizeM: 0.19, label: 'Adult hand, 19 cm' },
+  human: { url: '/models/ref-human-8782aceef6.glb', yaw: 0, sizeM: 1.7, label: '1.7 m person' },
+  hand: { url: '/models/ref-hand-056dca29e8.glb', yaw: 0, sizeM: 0.19, label: 'Adult hand, 19 cm' },
 } as const;
 export type ReferenceKind = keyof typeof REFERENCES;
 
@@ -98,7 +142,9 @@ export function loadReferenceShape(kind: ReferenceKind): Promise<Shape> {
 }
 
 export function loadSpecimenShape(sp: SpecimenSource): Promise<Shape> {
-  let p = cache.get(sp.key);
+  // keyed by model too: a species whose model arrives later gets its new shape
+  const id = `${sp.key}|${sp.specimen.model?.url ?? ''}`;
+  let p = cache.get(id);
   if (!p) {
     p = sp.specimen.model
       ? fromModel(sp).catch((err) => {
@@ -106,7 +152,7 @@ export function loadSpecimenShape(sp: SpecimenSource): Promise<Shape> {
           return procedural(sp);
         })
       : Promise.resolve(procedural(sp));
-    cache.set(sp.key, p);
+    cache.set(id, p);
   }
   return p;
 }

@@ -3,7 +3,7 @@
  * which fills an in-memory cache. Rendering and the 3D scene then read synchronously with `getSpecies`.
  */
 import type { Species, Variant } from './types';
-import type { ListResponse, ResearchStatusResponse, SpeciesRecord, SpeciesSummary, Stats } from './api';
+import type { ListResponse, ResearchStatusResponse, SpecimenStatusResponse, SpeciesRecord, SpeciesSummary, Stats } from './api';
 
 const full = new Map<string, SpeciesRecord>();
 const summaries = new Map<string, SpeciesSummary>();
@@ -60,6 +60,10 @@ export function forgetSpecies(slug: string) {
 
 export async function researchStatus(slug: string, start = false): Promise<ResearchStatusResponse> {
   return getJSON<ResearchStatusResponse>(`/api/species/${encodeURIComponent(slug)}/research`, start ? { method: 'POST' } : undefined);
+}
+
+export async function specimenStatus(slug: string, start = false): Promise<SpecimenStatusResponse> {
+  return getJSON<SpecimenStatusResponse>(`/api/species/${encodeURIComponent(slug)}/specimen`, start ? { method: 'POST' } : undefined);
 }
 
 /** Warm the cache, e.g. on hover, so the page opens instantly. */

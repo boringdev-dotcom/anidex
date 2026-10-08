@@ -49,3 +49,10 @@ export interface ResearchStatusResponse {
   position?: number;
   error?: string;
 }
+
+/** On-demand 3D specimen generation (pages without a model). */
+export type SpecimenState = 'ready' | 'queued' | 'generating' | 'failed' | 'capped' | 'unavailable';
+export interface SpecimenStatusResponse {
+  state: SpecimenState;
+  position?: number;
+}

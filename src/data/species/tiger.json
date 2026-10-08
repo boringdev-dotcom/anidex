@@ -35,7 +35,7 @@
       "roundEars"
     ],
     "model": {
-      "url": "/models/bengal-tiger.glb",
+      "url": "/models/bengal-tiger-2a0118c358.glb",
       "yaw": 1.5707963267948966
     }
   },
@@ -392,7 +392,7 @@
       },
       "specimen": {
         "model": {
-          "url": "/models/bengal-tiger.glb",
+          "url": "/models/bengal-tiger-2a0118c358.glb",
           "yaw": 1.5707963267948966
         }
       }
@@ -431,7 +431,7 @@
       "specimen": {
         "promptDetail": "Massive heavy-bodied tiger with a pale yellow-orange, very long thick winter coat, shaggy belly fur and cheek ruff, broad white chest and face markings, and fewer, widely spaced stripes that look brownish on the flanks.",
         "model": {
-          "url": "/models/tiger--amur.glb",
+          "url": "/models/tiger--amur-da92dcbb25.glb",
           "yaw": 1.5707963267948966
         }
       }
@@ -470,7 +470,7 @@
       "specimen": {
         "promptDetail": "Medium-large lean tiger with a darker reddish-orange short coat covered in many short, narrow single black stripes, white cheeks and belly, and a compact build.",
         "model": {
-          "url": "/models/tiger--indochinese.glb",
+          "url": "/models/tiger--indochinese-2001711952.glb",
           "yaw": 1.5707963267948966
         }
       }
@@ -509,7 +509,7 @@
       "specimen": {
         "promptDetail": "Compact, smaller mainland tiger with a short, deep orange coat, many narrow black stripes, white belly and face markings, and a lean build suited to dense rainforest.",
         "model": {
-          "url": "/models/tiger--malayan.glb",
+          "url": "/models/tiger--malayan-f49390b5bf.glb",
           "yaw": 1.5707963267948966
         }
       }
@@ -548,7 +548,7 @@
       "specimen": {
         "promptDetail": "Lean, medium-sized tiger with a lighter yellowish-orange short coat, extensive white on the face, paws and belly, and narrow, numerous, sharp-edged black stripes.",
         "model": {
-          "url": "/models/tiger--south-china.glb",
+          "url": "/models/tiger--south-china-c802447e8d.glb",
           "yaw": 1.5707963267948966
         }
       }
@@ -587,7 +587,7 @@
       "specimen": {
         "promptDetail": "Small, compact tiger with a dark reddish-orange coat densely covered in broad black stripes that break into spots on the flanks and legs, and a prominent ruff of long cheek fur framing the face.",
         "model": {
-          "url": "/models/tiger--sumatran.glb",
+          "url": "/models/tiger--sumatran-dd924b4193.glb",
           "yaw": 1.5707963267948966
         }
       }
@@ -626,7 +626,7 @@
       "specimen": {
         "promptDetail": "Large, long-furred tiger with a bright rusty-ochre coat, thin closely spaced brownish stripes, a thick winter belly fringe and cheek ruff, standing in tall reed beds.",
         "model": {
-          "url": "/models/tiger--caspian.glb",
+          "url": "/models/tiger--caspian-c5c5ae605f.glb",
           "yaw": 1.5707963267948966
         }
       }
@@ -665,7 +665,7 @@
       "specimen": {
         "promptDetail": "Small, slender tiger with a dark orange short coat covered in long, thin, closely set black stripes, a white belly and a narrow head.",
         "model": {
-          "url": "/models/tiger--javan.glb",
+          "url": "/models/tiger--javan-143e283d1c.glb",
           "yaw": 1.5707963267948966
         }
       }
@@ -704,7 +704,7 @@
       "specimen": {
         "promptDetail": "Very small, slim tiger with a short bright deep-orange coat, dense dark stripes, white belly and face patches, and a light, compact build.",
         "model": {
-          "url": "/models/tiger--bali.glb",
+          "url": "/models/tiger--bali-d0fbd9b3f6.glb",
           "yaw": 1.5707963267948966
         }
       }
