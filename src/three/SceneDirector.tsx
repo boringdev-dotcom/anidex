@@ -41,7 +41,8 @@ const P = (p: Partial<Pose>): Pose => ({
 });
 
 const LANDING: Record<string, Pose> = {
-  'landing-hero': P({ sx: 0.03, sy: 0.02, ss: 0.7, so: 1, spin: 0.09 }),
+  // the Earth sits in the open space right of "Search the", above "living planet"
+  'landing-hero': P({ sx: 0.19, sy: 0.085, ss: 0.5, so: 1, spin: 0.07 }),
   'landing-index': P({ sx: 0.3, sy: 0.04, ss: 0.6, so: 0.28, spin: 0.06 }),
 };
 
@@ -75,7 +76,7 @@ const mobileSpecies = (key: string, p: Pose): Pose => ({
 });
 const MOBILE_SPECIES: Record<string, Pose> = Object.fromEntries(Object.entries(SPECIES).map(([k, p]) => [k, mobileSpecies(k, p)]));
 const MOBILE_LANDING: Record<string, Pose> = {
-  'landing-hero': { ...LANDING['landing-hero'], sy: 0.1, ss: 0.31 },
+  'landing-hero': { ...LANDING['landing-hero'], sx: 0, sy: 0.1, ss: 0.31 },
   'landing-index': { ...LANDING['landing-index'], sx: 0, sy: 0.3, ss: 0.24, so: 0.3 },
 };
 
@@ -283,7 +284,9 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     const { previewShape, shape } = useStore.getState();
     const shown = getSpecimenSource(previewShape ?? shape);
     const handCompare = refKind === 'hand';
-    const tiltTarget = lerp(shown?.specimen.tilt ?? 0.08, handCompare ? (shown?.specimen.tilt ?? 0.08) : 0.03, cmp);
+    // the landing Earth leans its north toward the viewer (most land is in the northern hemisphere)
+    const baseT = shown ? (shown.specimen.tilt ?? 0.08) : (previewShape ?? shape) === 'ambient' ? 0.32 : 0.08;
+    const tiltTarget = lerp(baseT, handCompare ? baseT : 0.03, cmp);
     baseTilt.current = damp(baseTilt.current, tiltTarget, 3, dt);
     sp.rotation.x = baseTilt.current + si.pitch;
 

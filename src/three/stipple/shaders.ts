@@ -79,10 +79,14 @@ void main() {
   k = smoothstep(0.04, 0.96, k);
   float toneSize = 1.0 + (k - 0.5) * 1.3;
   float toneAlpha = clamp(0.16 + 1.6 * k, 0.0, 1.25);
-  // the silhouette never dissolves: edge-on points keep a floor whatever the fur tone
-  float edge = smoothstep(0.55, 0.92, rim);
+  // the silhouette never dissolves: edge-on points keep a floor whatever the fur tone.
+  // Animals only: on the Earth (fixed-ink map) it would make the ocean rim glow like land.
+  float animal = mix(uInvFrom, uInvTo, st);
+  float edge = smoothstep(0.55, 0.92, rim) * animal;
   toneAlpha = max(toneAlpha, edge * 0.9);
   toneSize = max(toneSize, 0.95 * edge);
+  // maps are lit evenly so every continent reads, not just the sunlit half
+  toneAlpha *= mix(0.9 / clamp(shade, 0.18, 1.0), 1.0, animal);
 
   gl_PointSize = uSize * uDpr * (0.55 + 0.6 * shade) * toneSize * (6.0 / -mv.z);
   vAlpha = uOpacity * clamp(shade, 0.18, 1.0) * toneAlpha * (1.0 - dead * 0.92) * (1.0 - cs * 0.6);
