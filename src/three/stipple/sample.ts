@@ -8,6 +8,8 @@ export interface Shape {
   tones: Float32Array; // N
   /** Median tone of the whole shape, so each theme can expose the animal around its own typical brightness. */
   toneMid: number;
+  /** When true, tone already means "how much ink" and is not inverted for the light theme (maps, diagrams). */
+  fixedInk?: boolean;
 }
 
 export interface TexturedPart {
@@ -173,31 +175,64 @@ export function normalize(positions: Float32Array) {
   }
 }
 
-/** Landing-page distribution: a dotted planet with a thin tilted orbit ring. */
+/** Fallback landing shape (an evenly dotted sphere) used until the land mask loads. */
 export function ambientShape(N: number): Shape {
-  const random = rng(7);
   const positions = new Float32Array(N * 3);
   const normals = new Float32Array(N * 3);
   const golden = Math.PI * (3 - Math.sqrt(5));
-  const sphereN = Math.floor(N * 0.78);
-  const tilt = new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(0.42, 0, -0.32));
-  const v = new THREE.Vector3();
   for (let i = 0; i < N; i++) {
-    if (i < sphereN) {
-      const y = 1 - (i / (sphereN - 1)) * 2;
-      const rad = Math.sqrt(1 - y * y);
-      const th = golden * i;
-      const r = 0.36 * (1 + (random() - 0.5) * 0.015);
-      v.set(Math.cos(th) * rad, y, Math.sin(th) * rad);
-      normals.set([v.x, v.y, v.z], i * 3);
-      positions.set([v.x * r, v.y * r, v.z * r], i * 3);
-    } else {
-      const a = random() * Math.PI * 2;
-      const r = 0.52 + Math.pow(random(), 2) * 0.16;
-      v.set(Math.cos(a) * r, (random() - 0.5) * 0.008, Math.sin(a) * r).applyMatrix4(tilt);
-      positions.set([v.x, v.y, v.z], i * 3);
-      normals.set([0, 1, 0], i * 3);
-    }
+    const y = 1 - (i / (N - 1)) * 2;
+    const rad = Math.sqrt(1 - y * y);
+    const th = golden * i;
+    normals.set([Math.cos(th) * rad, y, Math.sin(th) * rad], i * 3);
+    positions.set([Math.cos(th) * rad * EARTH_R, y * EARTH_R, Math.sin(th) * rad * EARTH_R], i * 3);
   }
-  return { positions, normals, tones: new Float32Array(N).fill(0.5), toneMid: 0.5 };
+  return { positions, normals, tones: new Float32Array(N).fill(0.3), toneMid: 0.5, fixedInk: true };
+}
+
+const EARTH_R = 0.46;
+const D2R = Math.PI / 180;
+
+/**
+ * Landing-page Earth: continents in dense, heavy dots, oceans as a sparse faint shell,
+ * tilted on Earth's 23.4 degree axis. Uses the same land mask as the globe.
+ */
+export function earthShape(N: number, mask: { data: Uint8ClampedArray; width: number; height: number }): Shape {
+  const random = rng(11);
+  const positions = new Float32Array(N * 3);
+  const normals = new Float32Array(N * 3);
+  const tones = new Float32Array(N);
+  const tilt = new THREE.Matrix4().makeRotationZ(23.4 * D2R);
+  const v = new THREE.Vector3();
+  const isLand = (lat: number, lon: number) => {
+    const x = Math.min(mask.width - 1, Math.floor(((lon + 180) / 360) * mask.width));
+    const y = Math.min(mask.height - 1, Math.floor(((90 - lat) / 180) * mask.height));
+    return mask.data[(y * mask.width + x) * 4] > 127;
+  };
+  const landTarget = Math.floor(N * 0.8);
+  let land = 0;
+  let sea = 0;
+  let k = 0;
+  let guard = 0;
+  while (k < N && guard++ < N * 60) {
+    // uniform point on the sphere
+    const z = random() * 2 - 1;
+    const lon = random() * 360 - 180;
+    const lat = Math.asin(z) / D2R;
+    const onLand = isLand(lat, lon);
+    if (onLand ? land >= landTarget : sea >= N - landTarget) continue;
+    if (!onLand && random() > 0.35) continue; // oceans are sparse, so keep them spread evenly
+    if (onLand) land++;
+    else sea++;
+    // same convention as the globe (u = 0 at lon -180, north up)
+    const phi = (lon + 180) * D2R;
+    const theta = (90 - lat) * D2R;
+    v.set(-Math.cos(phi) * Math.sin(theta), Math.cos(theta), Math.sin(phi) * Math.sin(theta)).applyMatrix4(tilt);
+    normals.set([v.x, v.y, v.z], k * 3);
+    const r = EARTH_R * (onLand ? 1.006 : 1);
+    positions.set([v.x * r, v.y * r, v.z * r], k * 3);
+    tones[k] = onLand ? 0.95 + random() * 0.05 : 0.08 + random() * 0.1;
+    k++;
+  }
+  return { positions, normals, tones, toneMid: 0.62, fixedInk: true };
 }

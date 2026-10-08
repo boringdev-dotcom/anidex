@@ -38,7 +38,7 @@ const P = (p: Partial<Pose>): Pose => ({
 });
 
 const LANDING: Record<string, Pose> = {
-  'landing-hero': P({ sx: 0, sy: 0.02, ss: 0.8, so: 1, spin: 0.09 }),
+  'landing-hero': P({ sx: 0.03, sy: 0.02, ss: 0.7, so: 1, spin: 0.09 }),
   'landing-index': P({ sx: 0.3, sy: 0.04, ss: 0.6, so: 0.28, spin: 0.06 }),
 };
 

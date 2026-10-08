@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import { useStore } from '../../store/useStore';
 import { getSpecimenSource } from '../../data';
-import { getAmbientShape, loadSpecimenShape, POINT_COUNT } from '../specimen/Specimen';
+import { getAmbientShape, loadEarthShape, loadSpecimenShape, POINT_COUNT } from '../specimen/Specimen';
 import type { Shape } from './sample';
 import { palette } from '../palette';
 import { stippleFragment, stippleVertex } from './shaders';
@@ -23,6 +23,9 @@ export const stippleUniforms = {
   /** Median tone of the shape being left and the shape being formed (auto-exposure per animal). */
   uMidFrom: { value: 0.5 },
   uMidTo: { value: 0.5 },
+  /** 1 = tone follows the theme (animals), 0 = tone is ink in every theme (the Earth). */
+  uInvFrom: { value: 0 },
+  uInvTo: { value: 0 },
   /** Per-species, per-theme exposure tweak (specimen.tone in the JSON), damped by the director. */
   uExposure: { value: 0 },
   uTime: palette.uTime,
@@ -30,9 +33,9 @@ export const stippleUniforms = {
 };
 
 function resolveShape(key: string): Promise<Shape> {
-  if (key === 'ambient') return Promise.resolve(getAmbientShape());
+  if (key === 'ambient') return loadEarthShape();
   const src = getSpecimenSource(key);
-  return src ? loadSpecimenShape(src) : Promise.resolve(getAmbientShape());
+  return src ? loadSpecimenShape(src) : loadEarthShape();
 }
 
 /** Bounds of the current target shape, used to seat the plinth ring under the specimen. */
@@ -125,6 +128,8 @@ export function StipplePoints() {
       // carry the median tone across the morph the same way positions are carried
       stippleUniforms.uMidFrom.value += (stippleUniforms.uMidTo.value - stippleUniforms.uMidFrom.value) * ease(Math.min(1, m));
       stippleUniforms.uMidTo.value = shape.toneMid;
+      stippleUniforms.uInvFrom.value += (stippleUniforms.uInvTo.value - stippleUniforms.uInvFrom.value) * ease(Math.min(1, m));
+      stippleUniforms.uInvTo.value = shape.fixedInk ? 0 : 1;
       gsap.killTweensOf(stippleUniforms.uMorph);
       stippleUniforms.uMorph.value = 0;
       gsap.to(stippleUniforms.uMorph, {
