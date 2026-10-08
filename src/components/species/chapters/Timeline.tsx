@@ -117,7 +117,8 @@ export function Timeline({ points, year, domain, events, onScrub, label }: Props
         onPointerCancel={() => (dragging.current = false)}
       >
         <line x1={M.l} x2={w - M.r} y1={h - M.b} y2={h - M.b} className="tl-axis" />
-        <text x={M.l} y={M.t - 14} className="tl-ylabel">
+        {/* hidden while the handle's year label would sit on top of it */}
+        <text x={M.l} y={M.t - 14} className={`tl-ylabel${hx < M.l + 80 ? ' is-hidden' : ''}`}>
           {fmtCompact(max / 1.08)}
         </text>
         <line x1={M.l} x2={w - M.r} y1={y(max / 1.08)} y2={y(max / 1.08)} className="tl-grid" />
