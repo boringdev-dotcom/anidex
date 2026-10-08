@@ -34,6 +34,8 @@ export const globeUniforms = {
   uRegFocus: { value: new Array(MAX_REGIONS).fill(0) },
   uRegCount: { value: 0 },
   uHistory: { value: 0 },
+  /** halftone cell size in degrees; the director coarsens it for small globes */
+  uStep: { value: 1.4 },
   uTime: palette.uTime,
   uInk: palette.uInk,
   uBg: palette.uBg,

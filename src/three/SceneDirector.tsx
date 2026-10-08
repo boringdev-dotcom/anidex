@@ -52,14 +52,26 @@ const SPECIES: Record<string, Pose> = {
   next: P({ sx: 0, sy: 0.14, ss: 0.4, so: 0.85, spin: 0.22 }),
 };
 
-const mobileSpecies = (key: string, p: Pose): Pose =>
-  key === 'hero'
-    ? { ...p, sy: 0.15, ss: 0.62 }
-    : { ...p, sx: 0, gx: 0, sy: 0.27, gy: 0.26, ss: p.ss * 0.9, gs: 0.5, so: p.so * (key === 'help' ? 0.6 : 1) };
+/**
+ * Phones use a split layout: the top ~46% of the screen is a fixed 3D stage (see .stage-band),
+ * so everything is centred in that band and sized to fill it. ss/gs here are fractions of the
+ * viewport height; the director also caps them by width.
+ */
+const BAND_Y = 0.235; // band centre, as a fraction of viewport height above screen centre
+const mobileSpecies = (key: string, p: Pose): Pose => ({
+  ...p,
+  sx: 0,
+  gx: 0,
+  sy: BAND_Y,
+  gy: BAND_Y,
+  ss: key === 'next' ? 0.3 : 0.36,
+  gs: 0.37,
+  so: p.so * (key === 'help' ? 0.7 : 1),
+});
 const MOBILE_SPECIES: Record<string, Pose> = Object.fromEntries(Object.entries(SPECIES).map(([k, p]) => [k, mobileSpecies(k, p)]));
 const MOBILE_LANDING: Record<string, Pose> = {
-  'landing-hero': { ...LANDING['landing-hero'], sy: 0.12, ss: 0.6 },
-  'landing-index': { ...LANDING['landing-index'], sx: 0, sy: 0.3, ss: 0.4, so: 0.35 },
+  'landing-hero': { ...LANDING['landing-hero'], sy: 0.1, ss: 0.31 },
+  'landing-index': { ...LANDING['landing-index'], sx: 0, sy: 0.3, ss: 0.24, so: 0.3 },
 };
 
 /** Ordered poses for the chapters on the current page. */
@@ -106,7 +118,7 @@ export function SceneDirector({ specimen, globe, root }: Props) {
     const reduced = prefersReducedMotion();
     palette.uTime.value = state.clock.elapsedTime;
     const { page, slug, activePlace, transitioning } = useStore.getState();
-    const mobile = size.width < 768 || size.width / size.height < 0.8;
+    const mobile = size.width <= 768; // matches the CSS breakpoint for the phone stage band
     const poseMap = page === 'species' ? (mobile ? MOBILE_SPECIES : SPECIES) : mobile ? MOBILE_LANDING : LANDING;
     samplePoses(posesFor(poseMap, live.chapterKeys), live.pos, tgt.current);
     // subspecies chapter: the specimen is scaled to the selected tiger's real size, extinct ones fade to a ghost
@@ -134,7 +146,8 @@ export function SceneDirector({ specimen, globe, root }: Props) {
     if (!sp || !gl || !spin) return;
 
     // specimen transform: fit by the smaller of height-based and width-based scale
-    const sScale = Math.min(c.ss * vh, c.ss * vw * 0.95);
+    // desktop: fit by height, or by width on narrow windows. phones: fill ~90% of the width
+    const sScale = mobile ? Math.min(c.ss * vh, c.ss * vw * 2.5) : Math.min(c.ss * vh, c.ss * vw * 0.95);
     sp.position.set(c.sx * vw, c.sy * vh, 0);
     sp.scale.setScalar(sScale);
     // specimen rotation: user drag with momentum, then the slow auto-spin takes over again
@@ -161,7 +174,10 @@ export function SceneDirector({ specimen, globe, root }: Props) {
     sp.rotation.x = baseTilt.current + si.pitch;
 
     // globe transform
-    const gScale = Math.min(c.gs * vh, c.gs * vw * 0.9) / 2;
+    const gScale = (mobile ? Math.min(c.gs * vh, c.gs * vw * 2.3) : Math.min(c.gs * vh, c.gs * vw * 0.9)) / 2;
+    // globe dot grid: keep cells ~6.5 css px apart so small globes stay crisp instead of grainy
+    const globePx = (gScale / vh) * size.height;
+    globeUniforms.uStep.value = clamp((360 * 6.5) / (2 * Math.PI * Math.max(globePx, 1)), 1.4, 3.2);
     gl.position.set(c.gx * vw, c.gy * vh, -0.2);
     gl.scale.setScalar(gScale * (0.92 + 0.08 * c.go));
     gl.visible = c.go > 0.002;

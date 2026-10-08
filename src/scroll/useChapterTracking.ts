@@ -30,6 +30,23 @@ export function useChapterTracking(selector: string, deps: unknown[] = []) {
       const y = window.scrollY;
       const vh = window.innerHeight;
       let pos = 0;
+      // Phones (split layout, no sticky stages): a chapter is active once its top passes a reading
+      // line just below the 3D stage, and hands over during the last stretch before the next one arrives.
+      if (window.matchMedia('(max-width: 768px)').matches && document.querySelector('.species')) {
+        const line = y + vh * 0.62;
+        const handover = vh * 0.22;
+        for (let i = 0; i < sections.length; i++) {
+          live.progress[i] = clamp((line - tops[i]) / Math.max(1, heights[i]));
+          if (line >= tops[i] - 1) {
+            const nextTop = i < sections.length - 1 ? tops[i + 1] : Infinity;
+            pos = i + clamp((line - (nextTop - handover)) / handover);
+          }
+        }
+        live.pos = pos;
+        const ch = Math.round(pos);
+        if (useStore.getState().chapter !== ch) useStore.setState({ chapter: ch });
+        return;
+      }
       for (let i = 0; i < sections.length; i++) {
         const holdStart = tops[i];
         const holdEnd = tops[i] + heights[i] - vh;
