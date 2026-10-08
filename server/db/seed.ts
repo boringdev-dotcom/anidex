@@ -15,13 +15,13 @@ export async function seedCurated(db: pg.Pool): Promise<number> {
   for (const sp of all) {
     const names = [...sp.aliases, ...(sp.variants ?? []).map((v) => v.name)];
     await db.query(
-      `insert into species (slug, scientific_name, common_name, tier, class, "order", family, genus, gbif_key, iucn, popularity, aliases, search_text, data, updated_at)
-       values ($1,$2,$3,'deep',$4,$5,$6,$7,$8,$9,$10,$11,$12,$13, now())
+      `insert into species (slug, scientific_name, common_name, tier, class, "order", family, genus, gbif_key, iucn, popularity, aliases, search_text, data, photo, updated_at)
+       values ($1,$2,$3,'deep',$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14, now())
        on conflict (slug) do update set
          scientific_name = excluded.scientific_name, common_name = excluded.common_name, tier = 'deep',
          class = excluded.class, "order" = excluded."order", family = excluded.family, genus = excluded.genus,
          gbif_key = excluded.gbif_key, iucn = excluded.iucn, popularity = excluded.popularity, aliases = excluded.aliases,
-         search_text = excluded.search_text, data = excluded.data, needs_review = false, updated_at = now()`,
+         search_text = excluded.search_text, data = excluded.data, photo = excluded.photo, needs_review = false, updated_at = now()`,
       [
         sp.slug,
         sp.scientificName,
@@ -36,6 +36,7 @@ export async function seedCurated(db: pg.Pool): Promise<number> {
         names,
         searchText({ commonName: sp.commonName, scientificName: sp.scientificName, aliases: names }),
         sp,
+        sp.photo ?? null,
       ],
     );
   }

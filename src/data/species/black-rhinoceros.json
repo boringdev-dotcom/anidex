@@ -356,5 +356,18 @@
       }
     ]
   },
-  "next": "red-panda"
+  "next": "red-panda",
+  "summary": {
+    "text": "The black rhinoceros, also called the black rhino or the hooked-lip rhinoceros, is a species of rhinoceros native to East and Southern Africa, including Angola, Botswana, Eswatini, Kenya, Lesotho, Malawi, Mozambique, Namibia, South Africa, Tanzania, Zambia, and Zimbabwe. Although the species is referred to as black, its colours vary from brown to grey. It is the only extant species of the genus Diceros.",
+    "source": "Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Black_rhinoceros",
+    "license": "CC BY-SA 4.0"
+  },
+  "photo": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/Black_Rhino_at_Working_with_Wildlife.jpg/3840px-Black_Rhino_at_Working_with_Wildlife.jpg",
+    "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/69/Black_Rhino_at_Working_with_Wildlife.jpg/330px-Black_Rhino_at_Working_with_Wildlife.jpg",
+    "credit": "AfricanConservation",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Black_Rhino_at_Working_with_Wildlife.jpg"
+  }
 }

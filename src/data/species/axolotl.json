@@ -253,5 +253,18 @@
       "year": 2020
     },
     "note": "Axolotls may once have lived in Lakes Texcoco and Zumpango too, but there are no firm records, so they are not shown."
+  },
+  "summary": {
+    "text": "The axolotl is a species of mole salamander. It is neotenic, reaching sexual maturity without undergoing metamorphosis, and the adults remain fully aquatic with obvious external gills. Axolotls may be difficult to distinguish from the larval stage of other neotenic adult mole salamanders, in particular the tiger salamander, or other species such as mudpuppies.",
+    "source": "Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Axolotl",
+    "license": "CC BY-SA 4.0"
+  },
+  "photo": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/0/00/Axolotl_ganz.jpg",
+    "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Axolotl_ganz.jpg/330px-Axolotl_ganz.jpg",
+    "credit": "LoKiLeCh",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Axolotl_ganz.jpg"
   }
 }

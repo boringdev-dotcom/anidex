@@ -296,5 +296,18 @@
       }
     ]
   },
-  "next": "black-rhinoceros"
+  "next": "black-rhinoceros",
+  "summary": {
+    "text": "The Bornean orangutan is an orangutan species endemic to the island of Borneo. It belongs to the only genus of great apes native to Asia and is the largest of the three Pongo species. It has a coarse, reddish coat and up to 1.5 m long arms. It is sexually dimorphic — males are larger than females and develop large cheek pads (flanges).",
+    "source": "Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Bornean_orangutan",
+    "license": "CC BY-SA 4.0"
+  },
+  "photo": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/d/d6/Tanjung_Puting30477.jpg",
+    "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d6/Tanjung_Puting30477.jpg/330px-Tanjung_Puting30477.jpg",
+    "credit": "Nanosanchez",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tanjung_Puting30477.jpg"
+  }
 }

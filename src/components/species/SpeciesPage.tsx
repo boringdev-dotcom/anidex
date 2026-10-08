@@ -36,7 +36,7 @@ const CHAPTERS: Chapter[] = [
 function Story({ sp }: { sp: SpeciesRecord }) {
   // a chapter appears only when the species has its data (auto pages fill in as research arrives)
   const has: Record<string, boolean> = {
-    about: sp.tier === 'auto',
+    about: sp.tier === 'auto' || !!sp.photo || !!sp.summary,
     family: (sp.variants?.length ?? 0) > 0,
     population: (sp.population?.points.length ?? 0) > 0,
     sightings: (sp.sightings?.places.length ?? 0) > 0,
