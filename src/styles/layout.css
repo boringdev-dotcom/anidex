@@ -597,6 +597,8 @@
   font-size: clamp(3.6rem, 8vw, 9rem);
   line-height: 0.9;
   letter-spacing: -0.03em;
+  /* room for the comma's descender so it never touches the label below */
+  padding-bottom: 0.16em;
 }
 
 .pop__approx {
@@ -677,6 +679,14 @@
 .tl-pt.is-past {
   fill: var(--ink);
   stroke: var(--ink);
+}
+
+.tl-ylabel {
+  transition: opacity 0.25s ease;
+}
+
+.tl-ylabel.is-hidden {
+  opacity: 0;
 }
 
 .tl-tick,
