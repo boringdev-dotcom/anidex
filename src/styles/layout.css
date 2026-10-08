@@ -12,6 +12,13 @@
   height: 100% !important;
 }
 
+/* R3F gives its wrapper pointer-events: auto; the canvas must never take input
+   (drag-to-rotate reads window events), or on phones it blocks every touch */
+.scene,
+.scene * {
+  pointer-events: none !important;
+}
+
 [data-page] {
   position: relative;
   z-index: 1;
@@ -1718,7 +1725,7 @@
     left: 0;
     right: 0;
     top: 100%;
-    height: 3.5rem;
+    height: 1.5rem;
     background: linear-gradient(var(--bg), transparent);
     pointer-events: none;
   }
@@ -1730,5 +1737,63 @@
 
   body:has(.species) .site-header {
     background: transparent;
+  }
+}
+
+/* ---------- phone: population readout stays in view while scrubbing ---------- */
+
+@media (max-width: 768px) {
+  .pop__head {
+    display: contents;
+  }
+
+  .pop__readout {
+    position: sticky;
+    top: calc(var(--band-h) + 1.1rem);
+    z-index: 1;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: 'num label' 'num delta';
+    column-gap: 0.9rem;
+    align-items: end;
+    padding: 0.5rem 0 0.7rem;
+    background: var(--bg);
+    transition: background-color var(--theme-dur) ease;
+  }
+
+  .pop__readout::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 1.4rem;
+    background: linear-gradient(var(--bg), transparent);
+    pointer-events: none;
+  }
+
+  .pop__number {
+    grid-area: num;
+    font-size: clamp(2.6rem, 12vw, 3.4rem);
+    padding-bottom: 0.08em;
+  }
+
+  .pop__readout > .label {
+    grid-area: label;
+    font-size: 0.62rem;
+  }
+
+  .pop__delta {
+    grid-area: delta;
+    margin-top: 0.1rem;
+    font-size: 0.9rem;
+  }
+
+  .event {
+    min-height: 0;
+  }
+
+  .event__place {
+    font-size: 1.45rem;
   }
 }
