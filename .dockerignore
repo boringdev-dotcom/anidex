@@ -1,0 +1,16 @@
+# never send secrets into the build context
+**/.env
+**/.env.*
+!**/.env.example
+
+node_modules
+dist
+.git
+.github
+.claude
+scripts/.cache
+src/backend
+*.log
+.DS_Store
+Dockerfile
+.dockerignore

@@ -1,0 +1,234 @@
+{
+  "slug": "axolotl",
+  "commonName": "Axolotl",
+  "scientificName": "Ambystoma mexicanum",
+  "descriptor": "A salamander that never grows up, keeping its feathery gills for life in the canals of Mexico City.",
+  "aliases": [
+    "ajolote",
+    "axolote",
+    "mexican walking fish",
+    "mexican salamander",
+    "water monster"
+  ],
+  "taxonomy": {
+    "class": "Amphibia",
+    "order": "Caudata",
+    "family": "Ambystomatidae"
+  },
+  "gbifTaxonKey": 2431950,
+  "specimen": {
+    "sizeClass": "xs",
+    "bodyPlan": "amphibian",
+    "proportions": {
+      "length": 0.8,
+      "height": 0.25,
+      "bulk": 0.4,
+      "neck": 0.1,
+      "tail": 0.7
+    },
+    "features": [
+      "gills"
+    ],
+    "model": {
+      "url": "/models/axolotl.glb",
+      "yaw": 1.5707963267948966
+    },
+    "tilt": 0.5
+  },
+  "range": {
+    "summary": "Found wild only in the remnant canals of Xochimilco and the wetlands of Chalco in southern Mexico City, all that is left of an ancient lake system.",
+    "centroid": {
+      "lat": 19.27,
+      "lon": -99.09
+    },
+    "bbox": [
+      -99.15,
+      19.22,
+      -98.92,
+      19.31
+    ],
+    "regions": [
+      "Xochimilco canals and chinampas",
+      "Lake Chalco"
+    ],
+    "countries": [
+      "MX"
+    ]
+  },
+  "population": {
+    "unit": "axolotls per km² in Xochimilco (survey density)",
+    "points": [
+      {
+        "year": 1998,
+        "estimate": 6000
+      },
+      {
+        "year": 2003,
+        "estimate": 1000
+      },
+      {
+        "year": 2008,
+        "estimate": 100
+      },
+      {
+        "year": 2014,
+        "estimate": 36
+      }
+    ],
+    "source": {
+      "label": "Contreras et al. 2009, Biological Conservation; UNAM Xochimilco census 2014",
+      "url": "https://doi.org/10.1016/j.biocon.2009.07.008",
+      "year": 2009
+    },
+    "note": "Densities come from net surveys of the canals, not full counts. Some reports date the middle survey to 2004. A new UNAM census began in 2024, and press reports in 2026 described wild axolotls as extremely hard to find."
+  },
+  "status": {
+    "iucn": "CR",
+    "assessed": 2020,
+    "trend": "decreasing",
+    "threats": [
+      {
+        "title": "Water pollution",
+        "detail": "Treated and raw wastewater flowing into the canals degrades the water axolotls breathe through their gills."
+      },
+      {
+        "title": "Invasive fish",
+        "detail": "Introduced carp and tilapia eat axolotl eggs and young and compete for food."
+      },
+      {
+        "title": "Urban sprawl",
+        "detail": "Housing and tourism are replacing the chinampa farm islands and canals."
+      },
+      {
+        "title": "Collection",
+        "detail": "Wild axolotls have long been caught for food, traditional medicine and the pet trade."
+      }
+    ],
+    "source": {
+      "label": "IUCN Red List: Ambystoma mexicanum",
+      "url": "https://www.iucnredlist.org/species/1095/53947343",
+      "year": 2020
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Xochimilco canals, Cuemanco",
+        "country": "Mexico",
+        "lat": 19.28,
+        "lon": -99.1,
+        "note": "Boat trips pass chinampa refuges, though wild axolotls are almost never seen."
+      },
+      {
+        "name": "Anfibium, Museo del Axolote",
+        "country": "Mexico",
+        "lat": 19.42,
+        "lon": -99.19,
+        "note": "Axolotl museum at Chapultepec Zoo, the easiest place to see one."
+      },
+      {
+        "name": "Lake Chalco",
+        "country": "Mexico",
+        "lat": 19.25,
+        "lon": -98.96,
+        "note": "The second remaining wild site, a shallow wetland on the city's eastern edge."
+      }
+    ],
+    "bestMonths": [
+      1,
+      2,
+      3
+    ],
+    "tip": "Breeding peaks in late winter, when axolotls are most active and surveys find the most animals. Wild sightings are very rare, so museums and refuge tours are the realistic option."
+  },
+  "help": {
+    "actions": [
+      {
+        "title": "Adopt a chinampa refuge",
+        "detail": "UNAM's AdoptAxolotl campaign funds canal biofilters and farmers who keep refuges clean.",
+        "url": "https://www.restauracionecologica.org"
+      },
+      {
+        "title": "Never release pet axolotls",
+        "detail": "Captive animals can carry disease and dilute the genes of the last wild populations."
+      },
+      {
+        "title": "Buy chinampa produce",
+        "detail": "Food grown with traditional, low-chemical methods keeps farmland and clean canals in use."
+      },
+      {
+        "title": "Choose captive-bred pets only",
+        "detail": "Never buy animals taken from the wild."
+      }
+    ],
+    "orgs": [
+      {
+        "name": "Laboratorio de Restauracion Ecologica, UNAM",
+        "url": "https://www.restauracionecologica.org"
+      },
+      {
+        "name": "Amphibian Survival Alliance",
+        "url": "https://www.amphibians.org"
+      },
+      {
+        "name": "Amphibian Ark",
+        "url": "https://www.amphibianark.org"
+      }
+    ]
+  },
+  "next": "monarch-butterfly",
+  "rangeHistory": {
+    "regions": [
+      {
+        "name": "Xochimilco canals",
+        "lat": 19.28,
+        "lon": -99.1,
+        "radius": 0.04,
+        "note": "Canals between the chinampa farm islands are the axolotl's last main stronghold."
+      },
+      {
+        "name": "San Gregorio Atlapulco",
+        "lat": 19.25,
+        "lon": -99.05,
+        "radius": 0.03,
+        "note": "Its canals are part of the Xochimilco Ramsar wetland, designated in 2004."
+      },
+      {
+        "name": "Chinampa refuge",
+        "lat": 19.27,
+        "lon": -99.08,
+        "radius": 0.02,
+        "from": 2009,
+        "note": "In 2009 farmers and UNAM researchers screened a canal with wooden filters to make an axolotl refuge."
+      },
+      {
+        "name": "Chapultepec Park lakes",
+        "lat": 19.42,
+        "lon": -99.19,
+        "radius": 0.03,
+        "note": "A third wild population was confirmed in the lakes of Chapultepec Park in 2010."
+      },
+      {
+        "name": "Lake Chalco",
+        "lat": 19.24,
+        "lon": -98.9,
+        "radius": 0.06,
+        "to": 1907,
+        "note": "Lake Chalco was drained for farmland between 1896 and 1907."
+      },
+      {
+        "name": "Chalco wetland",
+        "lat": 19.27,
+        "lon": -98.97,
+        "radius": 0.03,
+        "note": "Wetlands on the old Chalco lakebed still hold a few wild axolotls."
+      }
+    ],
+    "source": {
+      "label": "IUCN Red List: Ambystoma mexicanum",
+      "url": "https://www.iucnredlist.org/species/1095/53947343",
+      "year": 2020
+    },
+    "note": "Axolotls may once have lived in Lakes Texcoco and Zumpango too, but there are no firm records, so they are not shown."
+  }
+}

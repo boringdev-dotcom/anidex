@@ -1,0 +1,687 @@
+{
+  "slug": "tiger",
+  "commonName": "Tiger",
+  "scientificName": "Panthera tigris",
+  "descriptor": "The largest living cat, a solitary striped hunter of Asian forests from Siberian taiga to Sumatran rainforest.",
+  "aliases": [
+    "bengal tiger",
+    "royal bengal tiger",
+    "siberian tiger",
+    "amur tiger",
+    "sumatran tiger",
+    "indochinese tiger",
+    "malayan tiger",
+    "south china tiger",
+    "bagh",
+    "big cat"
+  ],
+  "taxonomy": {
+    "class": "Mammalia",
+    "order": "Carnivora",
+    "family": "Felidae"
+  },
+  "gbifTaxonKey": 5219416,
+  "specimen": {
+    "sizeClass": "l",
+    "bodyPlan": "quadruped",
+    "proportions": {
+      "length": 0.85,
+      "height": 0.5,
+      "bulk": 0.65,
+      "neck": 0.2,
+      "tail": 0.8
+    },
+    "features": [
+      "roundEars"
+    ],
+    "model": {
+      "url": "/models/bengal-tiger.glb",
+      "yaw": 1.5707963267948966
+    }
+  },
+  "range": {
+    "summary": "Wild tigers now occupy less than 7% of their historical range, about 978,000 km² in 2020, in scattered pockets from India to the Russian Far East and Sumatra. A century ago they ranged from eastern Turkey to the Pacific coast and south to Java and Bali.",
+    "centroid": {
+      "lat": 22,
+      "lon": 95
+    },
+    "bbox": [
+      73,
+      -6.5,
+      141,
+      51.5
+    ],
+    "regions": [
+      "Central Indian Highlands",
+      "Western Ghats",
+      "Terai Arc",
+      "Sundarbans",
+      "Sikhote-Alin",
+      "Sumatra"
+    ],
+    "countries": [
+      "IN",
+      "NP",
+      "BT",
+      "BD",
+      "MM",
+      "TH",
+      "MY",
+      "ID",
+      "RU",
+      "CN"
+    ]
+  },
+  "rangeHistory": {
+    "regions": [
+      {
+        "name": "Central India",
+        "lat": 21,
+        "lon": 80,
+        "radius": 3,
+        "note": "Central India's forests, from Kanha to Tadoba, form India's largest tiger landscape."
+      },
+      {
+        "name": "Nepal Terai",
+        "lat": 28,
+        "lon": 82.8,
+        "radius": 1.8,
+        "note": "Nepal's Terai tigers rose from 121 in 2009 to 355 in 2022."
+      },
+      {
+        "name": "Russian Far East",
+        "lat": 45.5,
+        "lon": 135.5,
+        "radius": 4,
+        "note": "Amur tigers fell to under 40 in the 1940s; Russia's Far East now holds over 500."
+      },
+      {
+        "name": "Sumatra",
+        "lat": -0.5,
+        "lon": 101.5,
+        "radius": 4,
+        "note": "Sumatra holds the last island tigers, a Critically Endangered population."
+      },
+      {
+        "name": "Bali",
+        "lat": -8.3,
+        "lon": 114.9,
+        "radius": 0.6,
+        "to": 1937,
+        "note": "The Bali tiger's last confirmed record was a tigress shot in west Bali in 1937."
+      },
+      {
+        "name": "Java",
+        "lat": -7.5,
+        "lon": 110.5,
+        "radius": 3,
+        "to": 1976,
+        "note": "The Javan tiger's last confirmed sighting was in Meru Betiri National Park in 1976."
+      },
+      {
+        "name": "Caspian range",
+        "lat": 39.5,
+        "lon": 55,
+        "radius": 11,
+        "to": 1970,
+        "note": "The Caspian tiger died out from Turkey to Central Asia; one of the last was killed in Turkey in 1970."
+      },
+      {
+        "name": "South Korea",
+        "lat": 36.5,
+        "lon": 128,
+        "radius": 1.8,
+        "to": 1922,
+        "note": "South Korea's last known wild tiger was shot near Gyeongju in 1922."
+      },
+      {
+        "name": "South China",
+        "lat": 26,
+        "lon": 113,
+        "radius": 4,
+        "to": 1989,
+        "note": "No wild South China tiger has been confirmed since the late 1980s; 2001-02 surveys found none."
+      },
+      {
+        "name": "Cambodia",
+        "lat": 12.8,
+        "lon": 107,
+        "radius": 1.5,
+        "to": 2007,
+        "note": "Cambodia's last tiger was camera-trapped in Mondulkiri in 2007; it was declared functionally extinct in 2016."
+      },
+      {
+        "name": "Sariska",
+        "lat": 27.3,
+        "lon": 76.4,
+        "radius": 0.5,
+        "to": 2004,
+        "from": 2008,
+        "note": "Poaching emptied Sariska of tigers by 2004; tigers from Ranthambore were moved back in from 2008."
+      },
+      {
+        "name": "Panna",
+        "lat": 24.7,
+        "lon": 80,
+        "radius": 0.5,
+        "to": 2008,
+        "from": 2009,
+        "note": "Panna's last tiger vanished in late 2008; tigresses brought in from March 2009 rebuilt the population."
+      }
+    ],
+    "source": {
+      "label": "IUCN Red List: Panthera tigris (Goodrich et al. 2022)",
+      "url": "https://www.iucnredlist.org/species/15955/214862019",
+      "year": 2022
+    },
+    "note": "Circles are approximate and extinct subspecies are shown as lost ranges."
+  },
+  "population": {
+    "unit": "wild tigers worldwide",
+    "points": [
+      {
+        "year": 1900,
+        "estimate": 100000
+      },
+      {
+        "year": 1998,
+        "estimate": 6000,
+        "low": 5000,
+        "high": 7000
+      },
+      {
+        "year": 2010,
+        "estimate": 3200
+      },
+      {
+        "year": 2016,
+        "estimate": 3890
+      },
+      {
+        "year": 2021,
+        "estimate": 4500,
+        "low": 3726,
+        "high": 5578
+      },
+      {
+        "year": 2023,
+        "estimate": 5574
+      }
+    ],
+    "source": {
+      "label": "Global Tiger Forum, International Tiger Day 2023; IUCN Red List 2022 (Goodrich et al.); WWF and GTF 2016",
+      "url": "https://globaltigerforum.org/press-release-international-tiger-day-2023/",
+      "year": 2023
+    },
+    "note": "The 1900 figure is a rough back-estimate and the 1998 point is the midpoint of Seidensticker et al.'s 5,000 to 7,000. Much of the rise since 2010 reflects wider and better surveys as well as real recovery in South Asia, Russia and China, and national counts differ in method and in whether cubs are included."
+  },
+  "status": {
+    "iucn": "EN",
+    "assessed": 2022,
+    "trend": "decreasing",
+    "threats": [
+      {
+        "title": "Habitat loss and fragmentation",
+        "detail": "Roads, mines and farmland sever the corridors that connect reserves."
+      },
+      {
+        "title": "Poaching",
+        "detail": "Demand for skins, bones and body parts persists across Asia."
+      },
+      {
+        "title": "Prey depletion",
+        "detail": "Bushmeat hunting removes the deer and wild pigs tigers depend on."
+      },
+      {
+        "title": "Conflict with people",
+        "detail": "Retaliatory killings follow livestock losses on reserve edges."
+      }
+    ],
+    "source": {
+      "label": "IUCN Red List: Panthera tigris",
+      "url": "https://www.iucnredlist.org/species/15955/214862019",
+      "year": 2022
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Ranthambore National Park",
+        "country": "IN",
+        "lat": 26.02,
+        "lon": 76.5,
+        "note": "Dry deciduous forest and old fort ruins where Bengal tigers are often seen in daylight."
+      },
+      {
+        "name": "Chitwan National Park",
+        "country": "NP",
+        "lat": 27.5,
+        "lon": 84.35,
+        "note": "Terai grassland and sal forest in the Terai Arc, home to a growing Bengal tiger population."
+      },
+      {
+        "name": "Huai Kha Khaeng Wildlife Sanctuary",
+        "country": "TH",
+        "lat": 15.55,
+        "lon": 99.2,
+        "note": "Core of Thailand's Western Forest Complex, the main stronghold of Indochinese tigers; seen mostly on camera traps."
+      },
+      {
+        "name": "Taman Negara National Park",
+        "country": "MY",
+        "lat": 4.7,
+        "lon": 102.45,
+        "note": "Malaysia's oldest national park and a key Malayan tiger landscape; tigers are rarely seen, though tracks are found."
+      },
+      {
+        "name": "Kerinci Seblat National Park",
+        "country": "ID",
+        "lat": -2,
+        "lon": 101.45,
+        "note": "Sumatra's largest national park, thought to hold more than 150 Sumatran tigers."
+      },
+      {
+        "name": "Land of the Leopard National Park",
+        "country": "RU",
+        "lat": 43.2,
+        "lon": 131.4,
+        "note": "Southwest Primorye forests shared with Amur leopards, where Amur tigers are tracked by snow prints and camera traps."
+      }
+    ],
+    "bestMonths": [
+      3,
+      4,
+      5
+    ],
+    "tip": "Book early morning jeep safaris in Indian or Nepali reserves in the hot dry season, when tigers visit waterholes and thinning foliage improves visibility; most Indian core zones close during the July to September monsoon."
+  },
+  "help": {
+    "actions": [
+      {
+        "title": "Choose certified wood and paper",
+        "detail": "FSC-certified products reduce pressure on the forests tigers live in.",
+        "url": "https://fsc.org"
+      },
+      {
+        "title": "Never buy tiger products",
+        "detail": "Skins, bone wine, teeth and claws fund the poaching networks."
+      },
+      {
+        "title": "Travel with responsible operators",
+        "detail": "Pick lodges that fund patrols, employ locals and cap vehicle numbers."
+      },
+      {
+        "title": "Fund rangers directly",
+        "detail": "Anti-poaching patrols are one of the most cost-effective interventions."
+      }
+    ],
+    "orgs": [
+      {
+        "name": "Panthera",
+        "url": "https://panthera.org"
+      },
+      {
+        "name": "WWF Tigers",
+        "url": "https://www.worldwildlife.org/species/tiger"
+      },
+      {
+        "name": "Wildlife Conservation Trust",
+        "url": "https://www.wildlifeconservationtrust.org"
+      }
+    ]
+  },
+  "taxonomyNote": "Tigers were traditionally split into nine subspecies, three of which (Bali, Javan and Caspian) are extinct. The 2017 IUCN Cat Specialist Group revision (Kitchener et al.) recognises only two: P. t. tigris on mainland Asia and P. t. sondaica on the Sunda Islands.",
+  "variants": [
+    {
+      "slug": "bengal",
+      "name": "Bengal tiger",
+      "trinomial": "Panthera tigris tigris",
+      "group": "mainland",
+      "alive": true,
+      "extinctBy": null,
+      "wild": {
+        "estimate": 4367,
+        "year": 2026,
+        "label": "about 4,370: India 3,682 (2022), Nepal 429 (2026), Bhutan 131 (2022), Bangladesh 125 (2024)"
+      },
+      "status": "Endangered",
+      "lengthM": [
+        2.7,
+        3.1
+      ],
+      "weightKg": [
+        180,
+        258
+      ],
+      "coat": "Yellow to light orange short coat with dark brown to black stripes and white underparts, the classic tiger look.",
+      "range": "The Indian subcontinent: India, Nepal, Bhutan and Bangladesh, including the Sundarbans mangroves.",
+      "centroid": {
+        "lat": 23,
+        "lon": 80
+      },
+      "source": {
+        "label": "Size: Mazák 1981, Mammalian Species 152. Count: NTCA and WII, All India Tiger Estimation 2022; Nepal DNPWC 2026; Bhutan DoFPS 2022; Bangladesh Forest Department 2024",
+        "url": "https://pib.gov.in/PressReleseDetailm.aspx?PRID=1943922"
+      },
+      "specimen": {
+        "model": {
+          "url": "/models/bengal-tiger.glb",
+          "yaw": 1.5707963267948966
+        }
+      }
+    },
+    {
+      "slug": "amur",
+      "name": "Amur tiger",
+      "trinomial": "Panthera tigris altaica",
+      "group": "mainland",
+      "alive": true,
+      "extinctBy": null,
+      "wild": {
+        "estimate": 820,
+        "year": 2024,
+        "label": "about 820: at least 750 in Russia including cubs (2022 census) plus about 70 in northeast China (2024)"
+      },
+      "status": "Endangered",
+      "lengthM": [
+        2.7,
+        3.3
+      ],
+      "weightKg": [
+        180,
+        306
+      ],
+      "coat": "The palest and largest form, with a long, dense winter coat, a thick neck ruff and flank stripes that are often brown rather than black.",
+      "range": "Temperate forests of the Russian Far East (Primorye and southern Khabarovsk) and adjoining northeast China.",
+      "centroid": {
+        "lat": 45,
+        "lon": 135
+      },
+      "source": {
+        "label": "Size: Mazák 1981, Mammalian Species 152. Count: Russian Amur tiger census 2022 (TASS); Northeast China Tiger and Leopard National Park monitoring 2024",
+        "url": "https://tass.com/society/1653595"
+      },
+      "specimen": {
+        "promptDetail": "Massive heavy-bodied tiger with a pale yellow-orange, very long thick winter coat, shaggy belly fur and cheek ruff, broad white chest and face markings, and fewer, widely spaced stripes that look brownish on the flanks.",
+        "model": {
+          "url": "/models/tiger--amur.glb",
+          "yaw": 1.5707963267948966
+        }
+      }
+    },
+    {
+      "slug": "indochinese",
+      "name": "Indochinese tiger",
+      "trinomial": "Panthera tigris corbetti",
+      "group": "mainland",
+      "alive": true,
+      "extinctBy": null,
+      "wild": {
+        "estimate": 200,
+        "year": 2024,
+        "label": "about 200: Thailand 179 to 223 (2024); Myanmar unknown (last published estimate 22); gone from Cambodia, Laos and Vietnam"
+      },
+      "status": "Endangered",
+      "lengthM": [
+        2.55,
+        2.85
+      ],
+      "weightKg": [
+        150,
+        195
+      ],
+      "coat": "Darker than the Bengal tiger, with more numerous short, narrow single stripes on a smaller frame.",
+      "range": "Now mainly western Thailand's forests and parts of Myanmar; extinct in Cambodia, Laos and Vietnam.",
+      "centroid": {
+        "lat": 15.5,
+        "lon": 99
+      },
+      "source": {
+        "label": "Size: Mazák 1981, Mammalian Species 152. Count: Thailand Department of National Parks via WWF, 2024",
+        "url": "https://www.worldwildlife.org/news/press-releases/thailands-tigers-recovering-investment-in-conservation-leads-to-increase-in-tiger-numbers/"
+      },
+      "specimen": {
+        "promptDetail": "Medium-large lean tiger with a darker reddish-orange short coat covered in many short, narrow single black stripes, white cheeks and belly, and a compact build.",
+        "model": {
+          "url": "/models/tiger--indochinese.glb",
+          "yaw": 1.5707963267948966
+        }
+      }
+    },
+    {
+      "slug": "malayan",
+      "name": "Malayan tiger",
+      "trinomial": "Panthera tigris jacksoni",
+      "group": "mainland",
+      "alive": true,
+      "extinctBy": null,
+      "wild": {
+        "estimate": 150,
+        "year": 2022,
+        "label": "fewer than 150 in Peninsular Malaysia (First National Tiger Survey 2016 to 2020, reported 2022)"
+      },
+      "status": "Critically endangered",
+      "lengthM": [
+        1.9,
+        2.8
+      ],
+      "weightKg": [
+        47,
+        129
+      ],
+      "coat": "Practically indistinguishable from the Indochinese tiger in coat and skull, but one of the smallest mainland tigers.",
+      "range": "Rainforests of Peninsular Malaysia, such as Taman Negara and Belum-Temengor.",
+      "centroid": {
+        "lat": 4.5,
+        "lon": 102
+      },
+      "source": {
+        "label": "Size: Khan 1986 (21 males, Malaysian wildlife department records). Count: Malaysian government, First National Tiger Survey",
+        "url": "https://www.malaymail.com/news/malaysia/2024/09/16/malayan-tigers-in-peril-fewer-than-150-left-in-peninsular-malaysia-amid-rising-threats-despite-revered-status/150519"
+      },
+      "specimen": {
+        "promptDetail": "Compact, smaller mainland tiger with a short, deep orange coat, many narrow black stripes, white belly and face markings, and a lean build suited to dense rainforest.",
+        "model": {
+          "url": "/models/tiger--malayan.glb",
+          "yaw": 1.5707963267948966
+        }
+      }
+    },
+    {
+      "slug": "south-china",
+      "name": "South China tiger",
+      "trinomial": "Panthera tigris amoyensis",
+      "group": "mainland",
+      "alive": true,
+      "extinctBy": null,
+      "wild": {
+        "estimate": 0,
+        "year": 2022,
+        "label": "none confirmed in the wild since the 1970s to 1980s; survives only in captivity, around 150 in Chinese zoos (2019)"
+      },
+      "status": "Extinct in the wild (functionally)",
+      "lengthM": [
+        2.3,
+        2.65
+      ],
+      "weightKg": [
+        130,
+        175
+      ],
+      "coat": "Lighter, more yellowish coat with whiter face, paws and belly, and narrower, more numerous, sharp-edged stripes; the smallest mainland tiger.",
+      "range": "Formerly the forests of south-central and eastern China; now only in zoos and breeding centres.",
+      "centroid": {
+        "lat": 27,
+        "lon": 114
+      },
+      "source": {
+        "label": "Size: Mazák 1981, Mammalian Species 152. Status: IUCN Red List 2022 (Goodrich et al.), not observed in the wild since the 1970s",
+        "url": "https://www.iucnredlist.org/species/15955/214862019"
+      },
+      "specimen": {
+        "promptDetail": "Lean, medium-sized tiger with a lighter yellowish-orange short coat, extensive white on the face, paws and belly, and narrow, numerous, sharp-edged black stripes.",
+        "model": {
+          "url": "/models/tiger--south-china.glb",
+          "yaw": 1.5707963267948966
+        }
+      }
+    },
+    {
+      "slug": "sumatran",
+      "name": "Sumatran tiger",
+      "trinomial": "Panthera tigris sumatrae",
+      "group": "sunda",
+      "alive": true,
+      "extinctBy": null,
+      "wild": {
+        "estimate": 586,
+        "year": 2019,
+        "label": "about 586 adults (Indonesian estimate compiled from 2013 to 2019 surveys)"
+      },
+      "status": "Critically endangered",
+      "lengthM": [
+        2.2,
+        2.55
+      ],
+      "weightKg": [
+        100,
+        140
+      ],
+      "coat": "The smallest living tiger, darkest in colour with the most frequent, broad stripes that break into spots, and a prominent ruff of cheek fur.",
+      "range": "Rainforests, peat swamps and mountains of Sumatra, Indonesia.",
+      "centroid": {
+        "lat": -1,
+        "lon": 101.5
+      },
+      "source": {
+        "label": "Size: Mazák 1981, Mammalian Species 152. Count: Indonesian Ministry of Environment and Forestry, via Antara",
+        "url": "https://sumut.antaranews.com/berita/563784/menteri-lhk-lebih-seribu-ekor-harimau-sumatra-ada-di-pulau-sumatera"
+      },
+      "specimen": {
+        "promptDetail": "Small, compact tiger with a dark reddish-orange coat densely covered in broad black stripes that break into spots on the flanks and legs, and a prominent ruff of long cheek fur framing the face.",
+        "model": {
+          "url": "/models/tiger--sumatran.glb",
+          "yaw": 1.5707963267948966
+        }
+      }
+    },
+    {
+      "slug": "caspian",
+      "name": "Caspian tiger",
+      "trinomial": "Panthera tigris virgata",
+      "group": "mainland",
+      "alive": false,
+      "extinctBy": 1970,
+      "wild": {
+        "estimate": null,
+        "year": null,
+        "label": "Extinct since about the 1970s"
+      },
+      "status": "Extinct",
+      "lengthM": [
+        2.7,
+        2.95
+      ],
+      "weightKg": [
+        170,
+        240
+      ],
+      "coat": "Bright rusty-ochre coat with thin, closely spaced brownish stripes and long winter fur, especially on the belly and cheeks.",
+      "range": "Riverine forests and reed beds from eastern Turkey and northern Iran across Central Asia to Xinjiang.",
+      "centroid": {
+        "lat": 40,
+        "lon": 62
+      },
+      "source": {
+        "label": "Size: Mazák 1981, Mammalian Species 152. Extinction: IUCN Red List 2022 (Goodrich et al.), lost from Central Asia in the 1970s",
+        "url": "https://doi.org/10.2305/IUCN.UK.2022-1.RLTS.T15955A214862019.en"
+      },
+      "specimen": {
+        "promptDetail": "Large, long-furred tiger with a bright rusty-ochre coat, thin closely spaced brownish stripes, a thick winter belly fringe and cheek ruff, standing in tall reed beds.",
+        "model": {
+          "url": "/models/tiger--caspian.glb",
+          "yaw": 1.5707963267948966
+        }
+      }
+    },
+    {
+      "slug": "javan",
+      "name": "Javan tiger",
+      "trinomial": "Panthera tigris sondaica",
+      "group": "sunda",
+      "alive": false,
+      "extinctBy": 1980,
+      "wild": {
+        "estimate": null,
+        "year": null,
+        "label": "Extinct; last confirmed signs in Meru Betiri in the mid to late 1970s"
+      },
+      "status": "Extinct",
+      "lengthM": [
+        2.48,
+        2.48
+      ],
+      "weightKg": [
+        100,
+        141
+      ],
+      "coat": "Small and dark, with long, thin, closely set stripes slightly more numerous than a Sumatran tiger's.",
+      "range": "Forests of Java, with the last records from Meru Betiri in the far east of the island.",
+      "centroid": {
+        "lat": -7.5,
+        "lon": 110.5
+      },
+      "source": {
+        "label": "Size: Mazák 1981, Mammalian Species 152 (single male total length 2.48 m)",
+        "url": "https://doi.org/10.2307/3504004"
+      },
+      "specimen": {
+        "promptDetail": "Small, slender tiger with a dark orange short coat covered in long, thin, closely set black stripes, a white belly and a narrow head.",
+        "model": {
+          "url": "/models/tiger--javan.glb",
+          "yaw": 1.5707963267948966
+        }
+      }
+    },
+    {
+      "slug": "bali",
+      "name": "Bali tiger",
+      "trinomial": "Panthera tigris balica",
+      "group": "sunda",
+      "alive": false,
+      "extinctBy": 1940,
+      "wild": {
+        "estimate": null,
+        "year": null,
+        "label": "Extinct; last records in the late 1930s, gone by the 1940s"
+      },
+      "status": "Extinct",
+      "lengthM": [
+        2.2,
+        2.3
+      ],
+      "weightKg": [
+        90,
+        100
+      ],
+      "coat": "The smallest of all tigers, with a short coat reported brighter than the Javan tiger's and dense dark Sunda-style stripes.",
+      "range": "Forests of western Bali, Indonesia.",
+      "centroid": {
+        "lat": -8.3,
+        "lon": 114.7
+      },
+      "source": {
+        "label": "Size: Mazák 1981, Mammalian Species 152. Extinction: IUCN Red List 2022 (Goodrich et al.), lost from Bali in the 1940s",
+        "url": "https://doi.org/10.2307/3504004"
+      },
+      "specimen": {
+        "promptDetail": "Very small, slim tiger with a short bright deep-orange coat, dense dark stripes, white belly and face patches, and a light, compact build.",
+        "model": {
+          "url": "/models/tiger--bali.glb",
+          "yaw": 1.5707963267948966
+        }
+      }
+    }
+  ],
+  "next": "snow-leopard"
+}

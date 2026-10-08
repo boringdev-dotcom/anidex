@@ -1,0 +1,392 @@
+{
+  "slug": "grey-wolf",
+  "commonName": "Grey wolf",
+  "scientificName": "Canis lupus",
+  "descriptor": "The largest wild dog, living and hunting in family packs across the forests, tundra and steppe of the north.",
+  "aliases": [
+    "gray wolf",
+    "wolf",
+    "timber wolf",
+    "lobo",
+    "canis lupus"
+  ],
+  "taxonomy": {
+    "class": "Mammalia",
+    "order": "Carnivora",
+    "family": "Canidae"
+  },
+  "gbifTaxonKey": 5219173,
+  "specimen": {
+    "sizeClass": "m",
+    "bodyPlan": "quadruped",
+    "proportions": {
+      "length": 0.75,
+      "height": 0.6,
+      "bulk": 0.45,
+      "neck": 0.3,
+      "tail": 0.55
+    },
+    "features": [
+      "pointyEars"
+    ],
+    "model": {
+      "url": "/models/grey-wolf.glb",
+      "yaw": 1.5707963267948966
+    }
+  },
+  "range": {
+    "summary": "Across much of North America, Europe and Asia, from Arctic tundra to deserts. Wolves are recolonising western Europe and parts of the United States after near extermination.",
+    "centroid": {
+      "lat": 58,
+      "lon": 95
+    },
+    "bbox": [
+      -180,
+      8,
+      180,
+      84
+    ],
+    "regions": [
+      "Canada and Alaska",
+      "Siberia and the Russian Far East",
+      "Central Asian steppe and mountains",
+      "Europe",
+      "Northern Rockies and Great Lakes",
+      "Indian subcontinent and Arabia"
+    ],
+    "countries": [
+      "AF",
+      "AL",
+      "AM",
+      "AT",
+      "AZ",
+      "BY",
+      "BE",
+      "BT",
+      "BA",
+      "BG",
+      "CA",
+      "CN",
+      "HR",
+      "CZ",
+      "DK",
+      "EE",
+      "FI",
+      "FR",
+      "GE",
+      "DE",
+      "GR",
+      "GL",
+      "HU",
+      "IN",
+      "IR",
+      "IQ",
+      "IL",
+      "IT",
+      "JO",
+      "KZ",
+      "KP",
+      "KR",
+      "KG",
+      "LV",
+      "LY",
+      "LT",
+      "LU",
+      "MX",
+      "MD",
+      "MN",
+      "ME",
+      "MM",
+      "NP",
+      "NL",
+      "MK",
+      "NO",
+      "OM",
+      "PK",
+      "PL",
+      "PT",
+      "RO",
+      "RU",
+      "SA",
+      "RS",
+      "SK",
+      "SI",
+      "ES",
+      "SE",
+      "CH",
+      "SY",
+      "TJ",
+      "TM",
+      "TR",
+      "UA",
+      "AE",
+      "US",
+      "UZ",
+      "YE"
+    ]
+  },
+  "population": {
+    "unit": "wolves in Wisconsin, USA (late-winter count)",
+    "points": [
+      {
+        "year": 1980,
+        "estimate": 25
+      },
+      {
+        "year": 1985,
+        "estimate": 14
+      },
+      {
+        "year": 1990,
+        "estimate": 34
+      },
+      {
+        "year": 1995,
+        "estimate": 83
+      },
+      {
+        "year": 2000,
+        "estimate": 248
+      },
+      {
+        "year": 2005,
+        "estimate": 435
+      },
+      {
+        "year": 2010,
+        "estimate": 704
+      },
+      {
+        "year": 2020,
+        "estimate": 1034,
+        "low": 1034,
+        "high": 1057
+      },
+      {
+        "year": 2026,
+        "estimate": 1162,
+        "low": 1026,
+        "high": 1307
+      }
+    ],
+    "source": {
+      "label": "Wisconsin DNR, Annual Wolf Report 2026 and Gray Wolf Monitoring Report 2020",
+      "url": "https://dnr.wisconsin.gov/topic/WildlifeHabitat/wolf",
+      "year": 2026
+    },
+    "note": "Counts from 1980 to 2020 are minimum late-winter counts from snow tracking and radio collars. The 2026 figure is a model-based estimate with a 95% credible interval, so it is not strictly comparable."
+  },
+  "status": {
+    "iucn": "LC",
+    "assessed": 2026,
+    "trend": "stable",
+    "threats": [
+      {
+        "title": "Conflict over livestock",
+        "detail": "Attacks on sheep and cattle lead to legal culls and illegal retaliatory killing."
+      },
+      {
+        "title": "Hunting and poaching",
+        "detail": "Wolves are hunted or trapped across much of their range, legally and illegally."
+      },
+      {
+        "title": "Roads and fragmentation",
+        "detail": "Vehicle collisions are a leading cause of death for dispersing wolves in Europe."
+      },
+      {
+        "title": "Hybridisation with dogs",
+        "detail": "Free-roaming dogs interbreed with wolves in parts of southern Europe and Asia."
+      }
+    ],
+    "source": {
+      "label": "IUCN Red List: Canis lupus",
+      "url": "https://www.iucnredlist.org/species/3746/226161232",
+      "year": 2026
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Lamar Valley, Yellowstone National Park",
+        "country": "USA",
+        "lat": 44.89,
+        "lon": -110.2,
+        "note": "Open valley where reintroduced packs are watched daily through spotting scopes."
+      },
+      {
+        "name": "Denali National Park",
+        "country": "USA",
+        "lat": 63.33,
+        "lon": -150.5,
+        "note": "Wolves are sometimes seen from the park road in summer."
+      },
+      {
+        "name": "Algonquin Provincial Park",
+        "country": "Canada",
+        "lat": 45.55,
+        "lon": -78.4,
+        "note": "Famous public wolf howls on August evenings."
+      },
+      {
+        "name": "Sierra de la Culebra",
+        "country": "Spain",
+        "lat": 41.9,
+        "lon": -6.35,
+        "note": "Stronghold of the Iberian wolf with guided dawn watches."
+      },
+      {
+        "name": "Abruzzo, Lazio and Molise National Park",
+        "country": "Italy",
+        "lat": 41.8,
+        "lon": 13.8,
+        "note": "Apennine wolves that survived when the species vanished from most of western Europe."
+      }
+    ],
+    "bestMonths": [
+      12,
+      1,
+      2,
+      3
+    ],
+    "tip": "Winter is best in Yellowstone, when snow makes wolves easy to spot against open slopes and elk herds move to lower valleys. Algonquin's howls run in August."
+  },
+  "help": {
+    "actions": [
+      {
+        "title": "Support non-lethal livestock protection",
+        "detail": "Guardian dogs, electric fencing and night pens cut losses without killing wolves."
+      },
+      {
+        "title": "Keep dogs vaccinated and under control",
+        "detail": "Loose dogs spread disease to wolves and can hybridise with them."
+      },
+      {
+        "title": "Watch wolves ethically",
+        "detail": "Keep your distance, never feed wildlife and stay on roads and trails."
+      },
+      {
+        "title": "Back wildlife crossings",
+        "detail": "Overpasses and underpasses on busy roads reduce collisions and reconnect populations."
+      }
+    ],
+    "orgs": [
+      {
+        "name": "International Wolf Center",
+        "url": "https://wolf.org"
+      },
+      {
+        "name": "Large Carnivore Initiative for Europe",
+        "url": "https://www.lcie.org"
+      },
+      {
+        "name": "Defenders of Wildlife",
+        "url": "https://defenders.org"
+      }
+    ]
+  },
+  "next": "tiger",
+  "rangeHistory": {
+    "regions": [
+      {
+        "name": "Northern Minnesota",
+        "lat": 47.6,
+        "lon": -93,
+        "radius": 1.5,
+        "note": "Minnesota kept the last large wolf population in the lower 48 states and seeded the Great Lakes return."
+      },
+      {
+        "name": "Northern Wisconsin",
+        "lat": 45.9,
+        "lon": -90.5,
+        "radius": 1.2,
+        "from": 1975,
+        "note": "Wiped out by 1960, wolves crossed back into Wisconsin from Minnesota in the mid-1970s."
+      },
+      {
+        "name": "Upper Peninsula, Michigan",
+        "lat": 46.3,
+        "lon": -87,
+        "radius": 1.2,
+        "from": 1991,
+        "note": "A pair in Michigan's Upper Peninsula produced the first verified pups there in 1991."
+      },
+      {
+        "name": "Yellowstone",
+        "lat": 44.6,
+        "lon": -110.5,
+        "radius": 1.2,
+        "from": 1995,
+        "note": "14 wolves from Alberta were released in Yellowstone in 1995; its last pack was killed in 1926."
+      },
+      {
+        "name": "Blue Range, Arizona",
+        "lat": 33.6,
+        "lon": -109.1,
+        "radius": 1.2,
+        "from": 1998,
+        "note": "The first 11 captive-bred Mexican wolves were released in the Blue Range in 1998."
+      },
+      {
+        "name": "Colorado",
+        "lat": 40.1,
+        "lon": -106.1,
+        "radius": 1,
+        "from": 2023,
+        "note": "Colorado released its first reintroduced wolves in Grand County in December 2023."
+      },
+      {
+        "name": "Chihuahua and Durango",
+        "lat": 26,
+        "lon": -106,
+        "radius": 2.5,
+        "to": 1980,
+        "note": "By 1980 the last few wild Mexican wolves in Chihuahua and Durango had been caught for breeding."
+      },
+      {
+        "name": "Italian Apennines",
+        "lat": 42,
+        "lon": 13.8,
+        "radius": 2,
+        "note": "About 100 wolves survived in the Apennines in the 1970s and later spread north into the Alps."
+      },
+      {
+        "name": "Mercantour, France",
+        "lat": 44.1,
+        "lon": 7.2,
+        "radius": 0.8,
+        "from": 1992,
+        "note": "Two wolves from Italy were seen in France's Mercantour National Park in 1992."
+      },
+      {
+        "name": "Lusatia, Germany",
+        "lat": 51.4,
+        "lon": 14.6,
+        "radius": 0.8,
+        "from": 2000,
+        "note": "In 2000 wolves from Poland raised Germany's first wild pups in about 150 years."
+      },
+      {
+        "name": "Jutland, Denmark",
+        "lat": 56.4,
+        "lon": 8.6,
+        "radius": 1,
+        "from": 2012,
+        "note": "A wolf found in Thy in 2012 was Denmark's first since 1813; a pack settled in Jutland in 2017."
+      },
+      {
+        "name": "Varmland, Sweden",
+        "lat": 60,
+        "lon": 13,
+        "radius": 1.5,
+        "from": 1983,
+        "note": "Functionally extinct in Scandinavia by the 1960s, wolves bred again in Varmland in 1983."
+      }
+    ],
+    "source": {
+      "label": "IUCN Red List: Canis lupus",
+      "url": "https://www.iucnredlist.org/species/3746/226161232",
+      "year": 2026
+    },
+    "note": "A selection of documented losses and returns; wolves also came back to Idaho, the Netherlands, Belgium and more."
+  }
+}

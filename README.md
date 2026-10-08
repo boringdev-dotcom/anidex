@@ -1,397 +1,92 @@
-# 🦁 AniDex
+# AniDex
 
-A cross-platform wildlife photography and collection app that gamifies animal spotting and conservation awareness. Catch, collect, and explore the animal kingdom while contributing to wildlife conservation efforts!
+A field guide to the animals we might lose. Search a species and scroll through its story:
 
-## 🌟 Project Vision
+1. **Specimen.** A 3D stipple study of the animal.
+2. **Where they live.** A dotted globe with the wild range from live GBIF data.
+3. **Population over time.** A draggable timeline. As you scrub, the globe shows where the species was lost and where it came back, with a caption for each event.
+4. **Vulnerability.** The IUCN Red List category, trend and main threats.
+5. **Where and when to see them.** Places on the globe and the best months of the year.
+6. **How you can help.** Concrete actions and organisations to support.
+7. **Next specimen.** The point cloud morphs into the next animal.
 
-**"Gotta Catch 'Em All... But For Real Animals!"**
+Drag the animal or the globe to spin it. Light and dark themes follow the OS setting until you pick one.
 
-AniDex transforms wildlife observation into an engaging, Pokemon Go-style experience where users photograph real animals in their natural habitats. The app combines social networking, gamification, and conservation education to create a global community of wildlife enthusiasts.
-
-## 🎮 Core Features
-
-### 🐾 Animal Collection System
-- **Species Database**: 1000+ animal species with detailed information
-- **Photo Verification**: AI-powered and community-driven photo verification
-- **Rarity System**: Common → Uncommon → Rare → Epic → Legendary animals
-- **Collection Cards**: Pokemon-style cards with stats and conservation info
-
-### 📍 Location-Based Discovery
-- **GPS Tracking**: Real-time location-based animal encounters
-- **Interactive Maps**: Friend's catches appear as map balloons
-- **Hotspots**: Popular animal spotting locations
-- **Geographic Challenges**: Country/region-specific collection goals
-
-### 🏆 Gamification & Achievements
-- **Badge System**: 50+ achievement badges (Top 5 Big Cats, Night Owl, etc.)
-- **Streaks**: Daily/weekly catch streaks with bonuses
-- **Leaderboards**: Global, country, and local rankings
-- **Points System**: Rarity-based scoring with conservation multipliers
-
-### 👥 Social Features
-- **Follow System**: Connect with fellow wildlife enthusiasts
-- **Activity Feed**: See friends' latest animal catches
-- **Photo Sharing**: Share and comment on animal photographs
-- **Conservation Groups**: Join wildlife protection communities
-
-### 🔬 Educational Content
-- **Species Information**: Detailed animal facts and conservation status
-- **Habitat Learning**: Ecosystem and environmental education
-- **Conservation Awareness**: IUCN Red List integration
-- **Wildlife Protection**: Partner with conservation organizations
-
-## 🛠️ Tech Stack
-
-### Backend (Go)
-- **Framework**: Gin HTTP Framework
-- **Database**: PostgreSQL 16+ with GORM ORM
-- **Authentication**: Firebase Auth + JWT tokens
-- **Storage**: Firebase Storage for image uploads
-- **Documentation**: Swagger/OpenAPI
-- **Deployment**: Docker containerization
-
-### Frontend (React Native)
-- **Platform**: iOS, Android, and Web support
-- **Framework**: React Native + React Native Web
-- **Language**: TypeScript for type safety
-- **State Management**: Zustand
-- **Navigation**: React Navigation 6
-- **Maps**: React Native Maps with custom markers
-- **Camera**: React Native Camera for animal photography
-
-### Infrastructure
-- **Cloud Storage**: Firebase Storage for images
-- **Authentication**: Firebase Authentication
-- **Database**: PostgreSQL with spatial extensions
-- **Image Processing**: AI-powered animal recognition
-- **Maps Integration**: Google Maps Platform
-
-## 📱 Platform Support
-
-| Platform | Status | Features |
-|----------|--------|----------|
-| 📱 **iOS** | ✅ Ready | Camera, GPS, Push notifications |
-| 🤖 **Android** | ✅ Ready | Camera, GPS, Push notifications |
-| 🌐 **Web** | ✅ Ready | Photo upload, social features |
-
-## 🚀 Quick Start Guide
-
-### 📋 Prerequisites
-- **Go 1.23+** - [Download](https://golang.org/dl/)
-- **Node.js 18+** - [Download](https://nodejs.org/)
-- **PostgreSQL 16+** - [Download](https://www.postgresql.org/download/)
-- **Git** - [Download](https://git-scm.com/)
-- **Docker** (optional but recommended) - [Download](https://docker.com/)
-
-### 🔥 One-Command Setup (Docker)
+## Run it
 
 ```bash
-# Clone and start everything
-git clone https://github.com/your-username/anidex.git
-cd anidex
-docker-compose up -d
-```
-
-**That's it!** 🎉 All services will be running:
-- **Backend API**: http://localhost:8080
-- **Frontend Web**: http://localhost:3000  
-- **Testing UI**: Open `testing-ui.html` in browser
-- **Swagger Docs**: http://localhost:8080/swagger/index.html
-
-### 📋 Manual Setup (Step by Step)
-
-#### 1️⃣ Clone Repository
-```bash
-git clone https://github.com/your-username/anidex.git
-cd anidex
-```
-
-#### 2️⃣ Database Setup
-
-**Option A: Docker (Recommended)**
-```bash
-# Start PostgreSQL with Docker
-docker-compose up -d postgres
-```
-
-**Option B: Local PostgreSQL**
-```bash
-# Create database
-createdb anidex_development
-
-# Set connection string
-export DATABASE_URL="postgresql://username:password@localhost/anidex_development?sslmode=disable"
-```
-
-#### 3️⃣ Backend Setup
-
-```bash
-cd src/backend
-
-# Install Go dependencies
-go mod download
-
-# Create environment file
-cat > .env << EOF
-# Database
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/anidex_development?sslmode=disable
-
-# Server
-PORT=8080
-GIN_MODE=debug
-
-# JWT
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-
-# Firebase (optional - for auth)
-FIREBASE_PROJECT_ID=your-project-id
-EOF
-
-# Run database migrations and seed data
-go run cmd/seeder/main.go -seed
-
-# Start the backend server
-go run cmd/api/main.go
-```
-
-**✅ Backend running at: http://localhost:8080**
-
-#### 4️⃣ Frontend Setup
-
-```bash
-cd src/frontend
-
-# Install dependencies
 npm install
-
-# Start web development server
-npm run web
+npm run dev
 ```
 
-**✅ Frontend running at: http://localhost:3000**
+| Script | What it does |
+|---|---|
+| `npm run dev` | Vite dev server on port 5173 |
+| `npm run build` | Type-check, then build to `dist/` |
+| `npm run preview` | Serve the production build |
+| `npm run gbif:check` | Check every species' GBIF key against the GBIF backbone |
+| `npm start` | Serve `dist/` and the `/api` routes with the Node server (`server/`) |
+| `npm run models` | Generate 3D specimens with fal.ai (see below) |
 
-#### 5️⃣ Testing UI Setup
+## Server and deployment
+
+`server/index.ts` is a small Express server. It serves the built site with long caching for hashed assets and an `index.html` fallback so `/species/<slug>` deep links load. Backend routes live under `/api` in `server/api.ts`; `/api/health` reports the running commit. It runs on Node 24's built-in TypeScript support, with no compile step.
+
+The `Dockerfile` builds the site in a Debian stage, then ships only `dist/`, `server/` and the two server dependencies on Alpine, running as the unprivileged `node` user on `$PORT` (10000 by default). `.dockerignore` keeps `.env` files out of the build context.
 
 ```bash
-# Open the testing dashboard in your browser
-open testing-ui.html
-# OR simply double-click the file
+docker build -t anidex .
+docker run -p 10000:10000 anidex
 ```
 
-**✅ Testing UI ready to use!**
+It is deployed on Render as a Docker web service that auto-deploys from `master`.
 
-### 🧪 Testing Your Setup
+## Stack
 
-1. **Backend Health Check**
-   ```bash
-   curl http://localhost:8080/health
-   # Should return: {"status":"healthy"}
-   ```
+Vite, React 19, TypeScript, React Three Fiber on three.js, GSAP with ScrollTrigger and SplitText, Lenis, zustand, d3-shape. Styling is plain CSS with custom properties.
 
-2. **API Documentation**
-   - Visit: http://localhost:8080/swagger/index.html
-   - Test endpoints directly in Swagger UI
+## How it fits together
 
-3. **Test Gallery with Sample Data**
-   - Open `testing-ui.html`
-   - Click "🖼️ Gallery" tab
-   - Click "Load Gallery" to see Pokemon-style animal cards
+- **One canvas.** `src/three/SceneRoot.tsx` mounts a single fixed WebGL canvas behind the page. It never unmounts, so morphs carry across route changes.
+- **Scroll drives the scene.** Each chapter is a tall section with a sticky stage. `src/scroll/useChapterTracking.ts` turns scroll into a continuous chapter position. `src/three/SceneDirector.tsx` blends a pose per chapter for the specimen and the globe.
+- **One point cloud.** `src/three/stipple/` holds a single `Points` object. Its shader handles the morph between shapes and the collapse into a dot on the globe.
+- **Theme tokens.** `src/styles/tokens.css` is the only place colours live. `src/three/ThemeBridge.tsx` reads the same tokens and fades the WebGL colours to match.
+- **Drag to rotate.** `src/three/interaction.ts` reads window pointer events, because the canvas sits behind the page. The director publishes each object's on-screen circle every frame, and a press inside one starts a drag with momentum. Links, buttons, search and the timeline are left alone.
+- **Range history.** Each species has curated `rangeHistory` regions with the year they were lost (`to`) or regained (`from`). `src/data/rangeState.ts` turns a year into present, lost or not yet. If `from` is later than `to`, the area was lost and later returned.
+- **Range layer.** `src/lib/gbif.ts` stitches two GBIF density tiles into a world texture. It falls back to raw occurrence records, then to the curated bounding box. The globe masks records outside the curated wild range, which hides zoo animals.
 
-4. **Frontend Check**
-   - Visit: http://localhost:3000
-   - Should show AniDex login screen
+## Add a species
 
-### 📱 Mobile App Setup (Optional)
+1. Create `src/data/species/<slug>.json` matching the `Species` type in `src/data/types.ts`. `tiger.json` is a good template, including optional `variants` for subspecies.
+2. Set `gbifTaxonKey` from `https://api.gbif.org/v1/species/match?name=<scientific name>`, then run `npm run gbif:check`.
+3. Point another species' `next` at the new slug so it joins the chain.
 
-For iOS/Android development:
+The index and search pick it up automatically.
+
+## 3D specimens
+
+Each species has a textured GLB in `public/models/`, generated with fal.ai and sampled into the stipple point cloud. The texture sets each point's size and strength like a halftone, so stripes, patches and wing veins show through. Each animal is auto-exposed around its own median tone in each theme, so pale and dark animals both read on black and on cream; `specimen.tone` fine-tunes one theme if needed.
+
+With Claude Code, the project skill in `.claude/skills/generate-specimen/` walks through this end to end, including a visual check. Ask it to "generate the specimen for <species>". By hand:
 
 ```bash
-cd src/frontend
-
-# Install React Native CLI
-npm install -g @react-native-community/cli
-
-# iOS (Mac only)
-cd ios && pod install && cd ..
-npx react-native run-ios
-
-# Android
-npx react-native run-android
+npm run models -- --only <slug>
 ```
 
-### 🔥 Firebase Setup (Optional - for full features)
+The script reads `FAL_KEY` from the environment or a `.env` file. It draws a reference image with Nano Banana Pro, turns it into a model with Hunyuan 3D v3.1 Pro, then shrinks it with glTF-Transform. Every step is cached in `scripts/.cache/`, so a rerun only pays for missing steps. Pass `--force image` to start over, or `--image-only` to review references first.
 
-1. **Create Firebase Project**
-   - Go to [Firebase Console](https://console.firebase.google.com/)
-   - Create new project "AniDex"
-   - Enable Authentication (Email/Password)
-   - Enable Storage for image uploads
+Then add `"model": { "url": "/models/<slug>.glb", "yaw": 1.5708 }` to the species' `specimen` block. Use `yaw` to turn the model and `specimen.tilt` to view flat animals from above. If a model fails to load, the procedural body plan in `src/three/specimen/bodyPlans.ts` is used instead.
 
-2. **Download Config Files**
-   ```bash
-   # Download service account key
-   # Place in: src/backend/serviceAccountKey.json
-   
-   # Download Android config  
-   # Place in: src/frontend/android/app/google-services.json
-   
-   # Download iOS config
-   # Place in: src/frontend/ios/GoogleService-Info.plist
-   ```
+## Data sources
 
-3. **Update Environment**
-   ```bash
-   # Add to src/backend/.env
-   FIREBASE_PROJECT_ID=your-project-id
-   ```
+- **Ranges:** [GBIF](https://www.gbif.org) occurrence density maps, fetched live.
+- **Status:** the [IUCN Red List](https://www.iucnredlist.org). Each species links to its assessment.
+- **Populations:** sourced per species. The source and any caveats appear under each chart.
+- **Range history:** curated per species from the IUCN Red List, specialist group reports and peer-reviewed papers. Circles are approximate areas, not exact boundaries.
+- **Land outlines:** [Natural Earth](https://www.naturalearthdata.com), public domain.
 
-## 📚 API Documentation
+Population series mix methods across decades. Each species notes where early figures are back-estimates or not directly comparable.
 
-### Animal & Species Endpoints
-```
-GET    /api/species                 # List all species
-GET    /api/species/{id}            # Get species details
-GET    /api/species/category/{cat}  # Filter by category
-GET    /api/species/rarity/{rarity} # Filter by rarity
-POST   /api/species/search          # Search species
-```
+## License
 
-### Animal Catches
-```
-POST   /api/catches                 # Create new catch
-GET    /api/catches                 # List user's catches
-GET    /api/catches/{id}            # Get catch details
-PUT    /api/catches/{id}            # Update catch
-DELETE /api/catches/{id}            # Delete catch
-POST   /api/catches/{id}/verify     # Verify catch (moderator)
-```
-
-### Social Features
-```
-POST   /api/users/{id}/follow       # Follow user
-DELETE /api/users/{id}/follow       # Unfollow user
-GET    /api/users/{id}/followers    # Get followers
-GET    /api/users/{id}/following    # Get following
-GET    /api/feed                    # Activity feed
-```
-
-### Maps & Locations
-```
-GET    /api/locations/nearby        # Find nearby locations
-GET    /api/locations/hotspots      # Popular locations
-GET    /api/catches/map             # Map markers for catches
-```
-
-### Badges & Achievements
-```
-GET    /api/badges                  # List all badges
-GET    /api/users/{id}/badges       # User's badges
-GET    /api/leaderboard             # Global leaderboard
-GET    /api/users/{id}/stats        # User statistics
-```
-
-## 🎯 Game Mechanics
-
-### Point System
-- **Base Points**: Determined by species rarity
-- **Rarity Multipliers**: 
-  - Common: 1x
-  - Uncommon: 1.5x
-  - Rare: 2x
-  - Epic: 3x
-  - Legendary: 5x
-- **Difficulty Bonus**: +10% per difficulty level
-- **Conservation Bonus**: +50% for endangered species
-
-### Badge Categories
-- **Species Collector**: "Big Cat Hunter", "Bird Watcher", "Marine Biologist"
-- **Explorer**: "Globe Trotter", "Urban Wildlife", "Safari Master"
-- **Conservationist**: "Endangered Protector", "Habitat Guardian"
-- **Social**: "Community Leader", "Photo Artist", "Mentor"
-- **Achievement**: "First Catch", "Century Club", "Legendary Hunter"
-
-### Level System
-- **Level Calculation**: `floor(sqrt(total_points / 100)) + 1`
-- **Level 1**: 0-99 points
-- **Level 2**: 100-399 points
-- **Level 10**: 8,100+ points
-
-## 🌍 Conservation Impact
-
-### Educational Features
-- **IUCN Red List Integration**: Real conservation status
-- **Habitat Information**: Ecosystem education
-- **Threat Awareness**: Climate change and human impact
-- **Conservation Tips**: How users can help protect wildlife
-
-### Partnership Opportunities
-- **Wildlife Organizations**: WWF, National Geographic, local zoos
-- **Research Institutions**: Citizen science data collection
-- **Conservation Groups**: Species monitoring and protection
-- **Educational Programs**: School and university partnerships
-
-## 🔧 Development Roadmap
-
-### Phase 1: Core Features ✅
-- [x] Database models and relationships
-- [x] User authentication and profiles
-- [x] Basic animal catch functionality
-- [x] Location tracking and mapping
-
-### Phase 2: Social & Gamification 🚧
-- [ ] Following/followers system
-- [ ] Activity feed and photo sharing
-- [ ] Badge system implementation
-- [ ] Leaderboards and rankings
-
-### Phase 3: Advanced Features 📋
-- [ ] AI-powered animal recognition
-- [ ] Advanced map features with filters
-- [ ] Push notifications for nearby animals
-- [ ] Offline mode for remote locations
-
-### Phase 4: Community & Conservation 📋
-- [ ] Conservation organization partnerships
-- [ ] Citizen science data integration
-- [ ] Educational content expansion
-- [ ] Community challenges and events
-
-## 🤝 Contributing
-
-We welcome contributions from wildlife enthusiasts, developers, and conservationists!
-
-### How to Contribute
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Areas of Interest
-- **Wildlife Data**: Species information and conservation status
-- **Photography**: Animal photo verification algorithms
-- **Conservation**: Educational content and partnerships
-- **Mobile Development**: iOS/Android feature improvements
-- **Backend**: API optimization and scalability
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Wildlife Organizations**: For conservation data and partnership
-- **Open Source Community**: For the amazing tools and libraries
-- **Pokemon Go**: For the inspiration and game mechanics
-- **iNaturalist**: For citizen science inspiration
-- **eBird**: For wildlife data collection concepts
-
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/your-username/anidex/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-username/anidex/discussions)
-- **Email**: support@anidex.app
-
----
-
-**🌿 "Together, we can explore, protect, and celebrate the incredible diversity of our planet's wildlife!"** 🌿
+Apache 2.0. See `LICENSE`.

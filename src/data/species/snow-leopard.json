@@ -1,0 +1,307 @@
+{
+  "slug": "snow-leopard",
+  "commonName": "Snow leopard",
+  "scientificName": "Panthera uncia",
+  "descriptor": "A smoky-grey cat of the high Asian mountains, balanced by a thick tail almost as long as its body.",
+  "aliases": [
+    "ounce",
+    "ghost of the mountains",
+    "uncia uncia",
+    "irbis",
+    "big cat",
+    "himalayan snow leopard"
+  ],
+  "taxonomy": {
+    "class": "Mammalia",
+    "order": "Carnivora",
+    "family": "Felidae"
+  },
+  "gbifTaxonKey": 2435238,
+  "specimen": {
+    "sizeClass": "m",
+    "bodyPlan": "quadruped",
+    "proportions": {
+      "length": 0.7,
+      "height": 0.4,
+      "bulk": 0.45,
+      "neck": 0.2,
+      "tail": 1
+    },
+    "features": [
+      "roundEars"
+    ],
+    "model": {
+      "url": "/models/snow-leopard.glb",
+      "yaw": 1.5707963267948966
+    }
+  },
+  "range": {
+    "summary": "Rugged mountains of 12 Central and South Asian countries, mostly between 3,000 and 5,500 m, with about 60% of the range in China.",
+    "centroid": {
+      "lat": 33.5,
+      "lon": 95.5
+    },
+    "bbox": [
+      66,
+      27,
+      106,
+      53
+    ],
+    "regions": [
+      "Himalaya",
+      "Tibetan Plateau",
+      "Karakoram and Hindu Kush",
+      "Pamir",
+      "Tian Shan",
+      "Altai and Sayan"
+    ],
+    "countries": [
+      "AF",
+      "BT",
+      "CN",
+      "IN",
+      "KZ",
+      "KG",
+      "MN",
+      "NP",
+      "PK",
+      "RU",
+      "TJ",
+      "UZ"
+    ]
+  },
+  "rangeHistory": {
+    "regions": [
+      {
+        "name": "Nepal Himalaya",
+        "lat": 28.8,
+        "lon": 83.5,
+        "radius": 2.5,
+        "note": "Nepal's high Himalaya held an estimated 300 to 500 snow leopards in 2003."
+      },
+      {
+        "name": "Ladakh",
+        "lat": 34,
+        "lon": 77.5,
+        "radius": 2,
+        "note": "Ladakh's Hemis National Park is one of the best studied snow leopard strongholds."
+      },
+      {
+        "name": "Qinghai Plateau",
+        "lat": 33.5,
+        "lon": 94,
+        "radius": 5,
+        "note": "China holds about 60 percent of the range; Schaller estimated about 650 in Qinghai in the 1980s."
+      },
+      {
+        "name": "Mongolian Altai",
+        "lat": 46.5,
+        "lon": 93.5,
+        "radius": 3,
+        "note": "Mongolia's Altai and Gobi ranges held an estimated 500 to 1,000 snow leopards in 2003."
+      },
+      {
+        "name": "Kyrgyz Tien Shan",
+        "lat": 41.6,
+        "lon": 75.5,
+        "radius": 2,
+        "note": "Kyrgyzstan's Tien Shan held an estimated 150 to 500 snow leopards in 2003."
+      },
+      {
+        "name": "Pamir",
+        "lat": 38.5,
+        "lon": 73,
+        "radius": 2,
+        "note": "Tajikistan's Pamir held an estimated 180 to 220 snow leopards in 2003."
+      },
+      {
+        "name": "Russian Altai",
+        "lat": 50,
+        "lon": 88,
+        "radius": 1.5,
+        "note": "Poaching cut Altai Republic snow leopards from about 40 to 10 to 15 by 2008; patrols since 2011 aid recovery."
+      },
+      {
+        "name": "Karatau, Kazakhstan",
+        "lat": 43.5,
+        "lon": 69.5,
+        "radius": 1,
+        "to": 1949,
+        "note": "Snow leopards vanished from Kazakhstan's Karatau ridge; the last were recorded in the 1940s."
+      },
+      {
+        "name": "Helan Mountains",
+        "lat": 38.8,
+        "lon": 105.9,
+        "radius": 0.8,
+        "to": 1959,
+        "from": 2020,
+        "note": "Unconfirmed in China's Helan Mountains since the 1950s, a snow leopard was camera-trapped there in 2020."
+      },
+      {
+        "name": "Mazong Shan, Gansu",
+        "lat": 41.8,
+        "lon": 97,
+        "radius": 0.8,
+        "to": 1996,
+        "note": "Surveys reported snow leopards extirpated from Gansu's Mazong Shan by 1996."
+      },
+      {
+        "name": "Tomur, Xinjiang",
+        "lat": 42,
+        "lon": 80.2,
+        "radius": 0.8,
+        "to": 1989,
+        "from": 2004,
+        "note": "After herders killed over 10 in 1989, Tomur's cats nearly vanished; 2004-05 surveys found them back."
+      }
+    ],
+    "source": {
+      "label": "Snow Leopard Survival Strategy (McCarthy and Chapron 2003)",
+      "url": "https://snowleopardnetwork.org/wp-content/uploads/2020/04/slss_full_2003.pdf",
+      "year": 2003
+    },
+    "note": "Snow leopards are hard to survey, so gaps in records are not always true absences; Tomur's 1989 loss was a near disappearance."
+  },
+  "population": {
+    "unit": "snow leopards worldwide (expert range-wide estimates)",
+    "points": [
+      {
+        "year": 1989,
+        "estimate": 3700,
+        "low": 3350,
+        "high": 4050
+      },
+      {
+        "year": 1994,
+        "estimate": 5930,
+        "low": 4510,
+        "high": 7350
+      },
+      {
+        "year": 2003,
+        "estimate": 5335,
+        "low": 4080,
+        "high": 6590
+      },
+      {
+        "year": 2010,
+        "estimate": 6000,
+        "low": 4500,
+        "high": 7500
+      },
+      {
+        "year": 2013,
+        "estimate": 5155,
+        "low": 3920,
+        "high": 6390
+      }
+    ],
+    "source": {
+      "label": "Snow Leopard Survival Strategy 2014 (GSLEP), compiling Fox 1989 and 1994, McCarthy et al. 2003, Jackson et al. 2010",
+      "url": "https://globalsnowleopard.org/wp-content/uploads/2018/12/Snow_Leopard_Survival_Strategy_2014.1.pdf",
+      "year": 2014
+    },
+    "note": "Each point is the midpoint of a published expert range, not a census, and the differences mostly reflect better information rather than real change. Less than 2% of the range has been surveyed rigorously; IUCN estimates 2,710 to 3,386 mature individuals."
+  },
+  "status": {
+    "iucn": "VU",
+    "assessed": 2017,
+    "trend": "decreasing",
+    "threats": [
+      {
+        "title": "Retaliatory killing",
+        "detail": "Herders kill cats that take sheep, goats and yaks from poorly protected corrals."
+      },
+      {
+        "title": "Poaching and illegal trade",
+        "detail": "Pelts and bones are traded across the region, often from cats caught in snares."
+      },
+      {
+        "title": "Prey decline",
+        "detail": "Overgrazing and hunting reduce the blue sheep and ibex that snow leopards depend on."
+      },
+      {
+        "title": "Climate change",
+        "detail": "A rising treeline could swallow up to 30% of Himalayan snow leopard habitat."
+      },
+      {
+        "title": "Mining and infrastructure",
+        "detail": "Roads, mines and border development fragment remote mountain habitat."
+      }
+    ],
+    "source": {
+      "label": "IUCN Red List: Panthera uncia",
+      "url": "https://www.iucnredlist.org/species/22732/50664030",
+      "year": 2017
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Hemis National Park (Rumbak valley)",
+        "country": "India",
+        "lat": 34.05,
+        "lon": 77.43,
+        "note": "Ladakh's best-known snow leopard site, tracked with local spotters and homestays."
+      },
+      {
+        "name": "Kibber, Spiti Valley",
+        "country": "India",
+        "lat": 32.33,
+        "lon": 78.01,
+        "note": "High desert valleys where cats hunt ibex and blue sheep near the village."
+      },
+      {
+        "name": "Shey Phoksundo National Park",
+        "country": "Nepal",
+        "lat": 29.37,
+        "lon": 82.84,
+        "note": "Remote trans-Himalayan park in Dolpo, demanding but wild."
+      }
+    ],
+    "bestMonths": [
+      12,
+      1,
+      2,
+      3
+    ],
+    "tip": "In deep winter snow pushes ibex and blue sheep to lower slopes and the cats follow, while February and March are the mating season, when they move and call more."
+  },
+  "help": {
+    "actions": [
+      {
+        "title": "Choose responsible cashmere",
+        "detail": "Overgrazing by cashmere goats strips the pastures wild prey need, so look for certified sustainable fibre.",
+        "url": "https://sustainablefibre.org"
+      },
+      {
+        "title": "Back predator-proof corrals",
+        "detail": "Secured night pens and livestock insurance stop the losses that lead to retaliatory killing."
+      },
+      {
+        "title": "Never buy pelts or bones",
+        "detail": "Any purchase keeps the poaching and trafficking networks profitable."
+      },
+      {
+        "title": "Stay in community homestays",
+        "detail": "Tourism income that reaches herder families makes a live cat worth more than a dead one."
+      }
+    ],
+    "orgs": [
+      {
+        "name": "Snow Leopard Trust",
+        "url": "https://snowleopard.org"
+      },
+      {
+        "name": "Snow Leopard Conservancy",
+        "url": "https://snowleopardconservancy.org"
+      },
+      {
+        "name": "Panthera",
+        "url": "https://panthera.org"
+      }
+    ]
+  },
+  "next": "african-savanna-elephant"
+}
