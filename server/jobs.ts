@@ -62,12 +62,43 @@ const RUNNERS: Record<string, (db: pg.Pool, key: string) => Promise<{ costUsd: n
 };
 const busy = new Set<string>();
 
+/**
+ * Deploys briefly run the old and new instance side by side, and both would claim jobs (the old one
+ * with old code). Each worker sends a heartbeat; only the most recently started live worker claims.
+ */
+const WORKER_ID = `${process.env.RENDER_INSTANCE_ID ?? 'local'}-${process.pid}-${Date.now().toString(36)}`;
+const BOOTED_AT = new Date();
+let leader = false;
+let stopping = false;
+/** Stop claiming new jobs (shutdown); a job already running finishes or is re-queued later. */
+export function stopWorker() {
+  stopping = true;
+  leader = false;
+}
+async function heartbeat(db: pg.Pool) {
+  if (stopping) return;
+  await db.query(
+    `insert into workers (id, booted_at, beat_at) values ($1, $2, now())
+     on conflict (id) do update set beat_at = now()`,
+    [WORKER_ID, BOOTED_AT],
+  );
+  const r = await db.query<{ id: string }>(
+    `select id from workers where beat_at > now() - interval '20 seconds' order by booted_at desc, id limit 1`,
+  );
+  const was = leader;
+  leader = r.rows[0]?.id === WORKER_ID;
+  if (leader !== was) console.log(`[jobs] this worker ${leader ? 'now claims jobs' : 'stands by (a newer worker is live)'}`);
+  if (leader) {
+    await db.query(`delete from workers where beat_at < now() - interval '1 hour'`);
+    // jobs whose worker died mid-run (a crash or a deploy) go back to the queue
+    await db.query(`update jobs set status = 'queued' where status = 'running' and started_at < now() - interval '15 minutes'`);
+  }
+}
+
 /** Poll for queued jobs, one at a time per kind. Call once at startup. */
 export function startWorker(db: pg.Pool) {
-  // jobs left "running" by a previous instance (deploy, crash) go back to the queue
-  db.query(`update jobs set status = 'queued' where status = 'running'`).catch(() => {});
   const tick = async (kind: string) => {
-    if (busy.has(kind)) return;
+    if (!leader || busy.has(kind)) return;
     busy.add(kind);
     try {
       const claim = await db.query<{ id: string; kind: string; key: string }>(
@@ -95,7 +126,17 @@ export function startWorker(db: pg.Pool) {
       busy.delete(kind);
     }
   };
-  setInterval(() => Object.keys(RUNNERS).forEach((k) => void tick(k)), 4000).unref();
+  const loop = async () => {
+    try {
+      await heartbeat(db);
+    } catch (err) {
+      console.error('[jobs] heartbeat failed', (err as Error).message);
+      leader = false;
+    }
+    Object.keys(RUNNERS).forEach((k) => void tick(k));
+  };
+  void loop();
+  setInterval(loop, 4000).unref();
   console.log(
     `[jobs] worker started (research ${researchEnabled() ? `on, cap ${DAILY_CAP}/day` : 'off: ANTHROPIC_API_KEY not set'}; ` +
       `models ${generationEnabled() ? `on, cap ${process.env.MODEL_DAILY_CAP ?? 30}/day` : 'off: FAL_KEY or R2 not set'})`,

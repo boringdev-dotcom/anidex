@@ -13,7 +13,7 @@ import { api } from './api.ts';
 import { pool } from './db/pool.ts';
 import { migrate } from './db/migrate.ts';
 import { seedAuto, seedCurated } from './db/seed.ts';
-import { startWorker } from './jobs.ts';
+import { startWorker, stopWorker } from './jobs.ts';
 
 const root = join(import.meta.dirname, '..');
 const dist = join(root, 'dist');
@@ -62,7 +62,9 @@ if (pool) {
   await migrate(pool);
   console.log(`[db] upserted ${await seedCurated(pool)} curated species`);
   console.log(`[db] ${await seedAuto(pool)}`);
-  startWorker(pool);
+  // locally the database is usually production's, so the dev server leaves jobs to production
+  if (process.env.NODE_ENV === 'production' || process.env.WORKER === '1') startWorker(pool);
+  else console.log('[jobs] worker off in development (set WORKER=1 to run jobs locally)');
 } else {
   console.log('[db] DATABASE_URL not set: serving the bundled curated species');
 }
