@@ -90,3 +90,5 @@ await Promise.all(
 );
 console.log(`done: ${slugs.length - failed} cards, ${failed} failed`);
 await pool.end();
+// a headless Chrome helper can linger after close and keep the process alive
+process.exit(failed ? 1 : 0);
