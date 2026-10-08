@@ -24,7 +24,7 @@ export function savePrefs(p: { units: Units; userHeightM: number }) {
 const prefs = loadPrefs();
 
 export type Theme = 'light' | 'dark';
-export type Page = 'landing' | 'species' | 'compare';
+export type Page = 'landing' | 'species' | 'compare' | 'og';
 
 interface State {
   theme: Theme;

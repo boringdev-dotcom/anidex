@@ -201,7 +201,8 @@
       "url": "https://dnr.wisconsin.gov/topic/WildlifeHabitat/wolf",
       "year": 2026
     },
-    "note": "Counts from 1980 to 2020 are minimum late-winter counts from snow tracking and radio collars. The 2026 figure is a model-based estimate with a 95% credible interval, so it is not strictly comparable."
+    "note": "Counts from 1980 to 2020 are minimum late-winter counts from snow tracking and radio collars. The 2026 figure is a model-based estimate with a 95% credible interval, so it is not strictly comparable.",
+    "scope": "regional"
   },
   "status": {
     "iucn": "LC",

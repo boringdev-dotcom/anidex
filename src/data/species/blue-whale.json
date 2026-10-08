@@ -215,7 +215,8 @@
       "url": "https://open.uct.ac.za/handle/11427/17261",
       "year": 2007
     },
-    "note": "The 1904 and 1973 values are model back-estimates of the pre-whaling and lowest populations; later points are survey estimates south of 60°S. Worldwide, IUCN estimates 5,000 to 15,000 mature blue whales."
+    "note": "The 1904 and 1973 values are model back-estimates of the pre-whaling and lowest populations; later points are survey estimates south of 60°S. Worldwide, IUCN estimates 5,000 to 15,000 mature blue whales.",
+    "scope": "regional"
   },
   "status": {
     "iucn": "EN",

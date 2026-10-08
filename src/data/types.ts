@@ -152,6 +152,12 @@ export interface Species {
 
   /** Absent when no published time series exists (most auto pages). */
   population?: {
+    /**
+     * Absent: a global count of the species. "regional": one population or area only (wolves in
+     * Wisconsin). "index": a density or proxy (axolotls per km², hectares of monarch forest).
+     * Only global counts are compared between species or quoted as "in the wild".
+     */
+    scope?: 'regional' | 'index';
     unit: string;
     points: PopulationPoint[];
     source: Source;

@@ -70,6 +70,12 @@ const COMPARE: Record<string, Pose> = {
   'cmp-more': P({ sx: 0.2, sy: 0.06, ss: 0.5, so: 0.5, spin: 0 }),
 };
 
+/** Social cards (1200x630): the animal or the Earth on the right, text on the left. */
+const OG: Record<string, Pose> = {
+  og: P({ sx: 0.19, sy: 0.02, ss: 0.74, so: 1, spin: 0 }),
+  'og-earth': P({ sx: 0.23, sy: -0.05, ss: 0.8, so: 1, spin: 0 }),
+};
+
 /**
  * Phones use a split layout: the top ~46% of the screen is a fixed 3D stage (see .stage-band),
  * so everything is centred in that band and sized to fill it. ss/gs here are fractions of the
@@ -142,7 +148,7 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     palette.uTime.value = state.clock.elapsedTime;
     const { page, slug, activePlace } = useStore.getState();
     const mobile = size.width <= 768; // matches the CSS breakpoint for the phone stage band
-    const poseMap = page === 'species' ? (mobile ? MOBILE_SPECIES : SPECIES) : page === 'compare' ? COMPARE : mobile ? MOBILE_LANDING : LANDING;
+    const poseMap = page === 'species' ? (mobile ? MOBILE_SPECIES : SPECIES) : page === 'compare' ? COMPARE : page === 'og' ? OG : mobile ? MOBILE_LANDING : LANDING;
     samplePoses(posesFor(poseMap, live.chapterKeys), live.pos, tgt.current);
     // subspecies chapter: the specimen is scaled to the selected tiger's real size, extinct ones fade to a ghost
     const familyIdx = live.chapterKeys.indexOf('family');
@@ -291,6 +297,9 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
         const diff = wrap(-0.28 - sp.rotation.y);
         sp.rotation.y += diff * (1 - Math.exp(-2.5 * dt));
       }
+      // social cards: a fixed three-quarter view, the same for every animal (the Earth shows Africa and Europe)
+      // (every model faces side-on at rotation 0: curated ones by their yaw, generated ones by orient: auto)
+      if (page === 'og') sp.rotation.y = shapeNow === 'ambient' ? -1.75 : -0.5;
       // compare: turn to a near-profile view so the sizes read side by side
       if (cmp > 0.02 && now - si.last > 1500) {
         const axisX = specimenInfo.maxX - specimenInfo.minX >= (specimenInfo.maxZ - specimenInfo.minZ) * 0.9;
@@ -460,7 +469,7 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     const invert = themeNow === 'light' ? 1 : 0;
     stippleUniforms.uExposure.value = damp(stippleUniforms.uExposure.value, shown?.specimen.tone?.[themeNow] ?? 0, 4, dt);
     stippleUniforms.uToneInvert.value = damp(stippleUniforms.uToneInvert.value, invert, reduced ? 60 : 5, dt);
-    plinthUniforms.uOpacity.value = eff.so * (1 - eff.coll) * (page === 'species' || page === 'compare' ? 0.28 : 0) * (1 - 0.7 * meas.current.cmp);
+    plinthUniforms.uOpacity.value = eff.so * (1 - eff.coll) * (page === 'species' || page === 'compare' || page === 'og' ? 0.28 : 0) * (1 - 0.7 * meas.current.cmp);
 
     globeUniforms.uOpacity.value = eff.go;
     globeUniforms.uReveal.value = eff.reveal;

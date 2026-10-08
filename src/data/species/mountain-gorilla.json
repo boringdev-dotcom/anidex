@@ -186,7 +186,8 @@
       "url": "https://igcp.org/content/uploads/2020/09/GVTCpress-release-Gorila-census-31-May18.pdf",
       "year": 2018
     },
-    "note": "The 1973 and 1981 values are census estimates allowing for undercounting, and 2000 is a minimum count. Bwindi-Sarambwe held 459 gorillas in 2018, bringing the world total to 1,063."
+    "note": "The 1973 and 1981 values are census estimates allowing for undercounting, and 2000 is a minimum count. Bwindi-Sarambwe held 459 gorillas in 2018, bringing the world total to 1,063.",
+    "scope": "regional"
   },
   "status": {
     "iucn": "EN",

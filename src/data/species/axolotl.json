@@ -103,7 +103,8 @@
       "url": "https://doi.org/10.1016/j.biocon.2009.07.008",
       "year": 2009
     },
-    "note": "Densities come from net surveys of the canals, not full counts. Some reports date the middle survey to 2004. A new UNAM census began in 2024, and press reports in 2026 described wild axolotls as extremely hard to find."
+    "note": "Densities come from net surveys of the canals, not full counts. Some reports date the middle survey to 2004. A new UNAM census began in 2024, and press reports in 2026 described wild axolotls as extremely hard to find.",
+    "scope": "index"
   },
   "status": {
     "iucn": "CR",
