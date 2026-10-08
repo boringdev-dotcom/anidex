@@ -56,3 +56,9 @@ export interface SpecimenStatusResponse {
   state: SpecimenState;
   position?: number;
 }
+
+/** "What lives near me": species with recent wild records around a point. */
+export interface NearResponse {
+  radiusKm: number;
+  items: (SpeciesSummary & { records: number })[];
+}

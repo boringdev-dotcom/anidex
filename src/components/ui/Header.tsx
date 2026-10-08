@@ -34,6 +34,9 @@ export function Header() {
         <Link to="/explore" className="label label--ink header-link">
           Explore
         </Link>
+        <Link to="/compare" className="label label--ink header-link">
+          Compare
+        </Link>
         {page === 'species' && (
           <a href="/" className="label label--ink header-link" onClick={home}>
             Search

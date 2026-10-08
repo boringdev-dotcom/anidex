@@ -9,6 +9,7 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/grain.css';
 import './styles/layout.css';
+import './styles/compare.css';
 import { router } from './router';
 import { initTheme } from './theme/theme';
 import { initSmoothScroll } from './scroll/smoothScroll';

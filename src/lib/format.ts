@@ -56,6 +56,8 @@ const trim = (n: number, d = 1) => {
   const r = Number(n.toFixed(d));
   return r >= 100 ? fmt(r) : String(r);
 };
+/** Small numbers keep two significant figures (0.0035 oz, 0.12 g) instead of rounding to 0. */
+const small = (n: number) => (n >= 10 ? trim(n, 0) : n >= 1 ? trim(n, 1) : String(Number(n.toPrecision(2))));
 const span = (a: string, b: string, unit: string) => (a === b ? `${a} ${unit}` : `${a} to ${b} ${unit}`);
 
 const LB = 2.20462;
@@ -65,11 +67,11 @@ export function fmtWeight([a, b]: [number, number], units: Units = 'metric'): st
   if (units === 'imperial') {
     const [la, lb] = [a * LB, b * LB];
     if (lb >= 10000) return span(trim(la / 2000, 0), trim(lb / 2000, 0), 'tons');
-    if (lb < 1) return span(trim(la * 16, 2), trim(lb * 16, 2), 'oz');
+    if (lb < 1) return span(small(la * 16), small(lb * 16), 'oz');
     return span(trim(la, la < 10 ? 1 : 0), trim(lb, lb < 10 ? 1 : 0), 'lb');
   }
   if (b >= 1000) return span(trim(a / 1000), trim(b / 1000), 't');
-  if (b < 1) return span(trim(a * 1000, 2), trim(b * 1000, 2), 'g');
+  if (b < 1) return span(small(a * 1000), small(b * 1000), 'g');
   return span(trim(a, a < 10 ? 1 : 0), trim(b, b < 10 ? 1 : 0), 'kg');
 }
 
@@ -77,11 +79,12 @@ export function fmtLength([a, b]: [number, number], units: Units = 'metric'): st
   if (units === 'imperial') {
     if (b * FT < 3) {
       const [ia, ib] = [a * FT * 12, b * FT * 12];
-      return span(trim(ia, ia < 10 ? 1 : 0), trim(ib, ib < 10 ? 1 : 0), 'in');
+      return span(small(ia), small(ib), 'in');
     }
     return span(trim(a * FT, a * FT < 10 ? 1 : 0), trim(b * FT, b * FT < 10 ? 1 : 0), 'ft');
   }
-  if (b < 1) return span(trim(a * 100, 0), trim(b * 100, 0), 'cm');
+  if (b < 0.01) return span(small(a * 1000), small(b * 1000), 'mm');
+  if (b < 1) return span(small(a * 100), small(b * 100), 'cm');
   return span(trim(a), trim(b), 'm');
 }
 
@@ -97,6 +100,10 @@ export function fmtHeight(m: number, units: Units = 'metric'): string {
 export function fmtYears([a, b]: [number, number]): string {
   if (b < 1 && a * 12 < 1) return `${trim(a * 52, 0)} weeks to ${trim(b * 12, 0)} months`;
   if (b < 1) return span(trim(a * 12, 0), trim(b * 12, 0), 'months');
+  if (a < 1) {
+    const [n, unit] = a * 12 < 1 ? [trim(a * 52, 0), 'week'] : [trim(a * 12, 0), 'month'];
+    return `${n} ${unit}${n === '1' ? '' : 's'} to ${trim(b, 0)} yrs`;
+  }
   return span(trim(a, 0), trim(b, 0), 'yrs');
 }
 

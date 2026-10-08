@@ -3,6 +3,7 @@ import { repo } from '../repo.ts';
 import { pool } from '../db/pool.ts';
 import { requestResearch, researchState } from '../jobs.ts';
 import { modelState, requestModel } from '../models.ts';
+import { nearMe } from '../near.ts';
 
 export const species = Router();
 
@@ -143,5 +144,26 @@ species.post(
     if (!pool) return res.json({ state: 'unavailable' });
     if (limited('model', req, 10)) return res.status(429).json({ state: 'capped' });
     res.json(await requestModel(pool, String(req.params.slug)));
+  }),
+);
+
+// ---- what lives near me ----
+
+/**
+ * POST so the location stays out of URLs and request logs. The client already rounds it to half a
+ * degree (about 50 km); the server rounds again and never stores it.
+ */
+species.post(
+  '/near',
+  h(async (req, res) => {
+    res.set('Cache-Control', 'no-store');
+    const half = (v: unknown) => Math.round(Number(v) * 2) / 2;
+    const lat = half(req.body?.lat);
+    const lon = half(req.body?.lon);
+    if (!Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) {
+      return res.status(400).json({ error: 'lat and lon required' });
+    }
+    if (limited('near', req, 60)) return res.status(429).json({ error: 'Too many requests' });
+    res.json(await nearMe(lat, lon));
   }),
 );

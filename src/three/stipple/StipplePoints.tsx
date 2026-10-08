@@ -2,8 +2,9 @@ import { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { useStore } from '../../store/useStore';
-import { fetchSpecies, getSpecimenSource } from '../../data';
-import { getAmbientShape, loadEarthShape, loadSpecimenShape, POINT_COUNT } from '../specimen/Specimen';
+import { fetchSpecies, getSpecies, getSpecimenSource } from '../../data';
+import { realSize } from '../../lib/compare';
+import { activatePairLayout, getAmbientShape, loadEarthShape, loadPairShape, loadSpecimenShape, POINT_COUNT } from '../specimen/Specimen';
 import type { Shape } from './sample';
 import { palette } from '../palette';
 import { stippleFragment, stippleVertex } from './shaders';
@@ -34,6 +35,17 @@ export const stippleUniforms = {
 
 async function resolveShape(key: string): Promise<Shape> {
   if (key === 'ambient') return loadEarthShape();
+  if (key.startsWith('pair:')) {
+    // two animals side by side at true scale (compare page): "pair:<a>|<b>"
+    const [a, b] = key.slice(5).split('|');
+    await Promise.all([a, b].map((s) => (getSpecies(s) ? null : fetchSpecies(s).catch(() => null))));
+    const sa = getSpecies(a);
+    const sb = getSpecies(b);
+    const A = getSpecimenSource(a);
+    const B = getSpecimenSource(b);
+    if (!sa || !sb || !A || !B) return loadEarthShape();
+    return loadPairShape(key, A, B, realSize(sa), realSize(sb));
+  }
   let src = getSpecimenSource(key);
   if (!src) {
     await fetchSpecies(key.split('--')[0]).catch(() => null);
@@ -84,6 +96,7 @@ export function StipplePoints() {
     let cancelled = false;
     resolveShape(shapeKey).then((shape) => {
       if (cancelled) return;
+      if (shapeKey.startsWith('pair:')) activatePairLayout(shapeKey);
       const from = geometry.getAttribute('aFrom') as THREE.BufferAttribute;
       const to = geometry.getAttribute('aTo') as THREE.BufferAttribute;
       const nFrom = geometry.getAttribute('aNFrom') as THREE.BufferAttribute;
