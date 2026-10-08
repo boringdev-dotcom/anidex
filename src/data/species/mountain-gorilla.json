@@ -34,6 +34,33 @@
       "light": 0.14
     }
   },
+  "physical": {
+    "weightKg": [
+      70,
+      190
+    ],
+    "weightNote": "silverbacks about twice female weight",
+    "heightM": [
+      1.4,
+      1.75
+    ],
+    "heightLabel": "standing",
+    "lengthM": [
+      1.4,
+      1.75
+    ],
+    "lengthLabel": "standing height",
+    "lifespanYrs": [
+      35,
+      40
+    ],
+    "fact": "Its fur is longer and thicker than other gorillas', helping it cope with cold, high mountain forests.",
+    "compare": "human",
+    "source": {
+      "label": "Animal Diversity Web",
+      "url": "https://animaldiversity.org/accounts/Gorilla_beringei/"
+    }
+  },
   "range": {
     "summary": "Two isolated populations: the Virunga volcanoes shared by DRC, Rwanda and Uganda, and Bwindi-Sarambwe in Uganda and DRC.",
     "centroid": {

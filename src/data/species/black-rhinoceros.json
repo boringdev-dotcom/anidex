@@ -33,6 +33,33 @@
       "yaw": 1.5707963267948966
     }
   },
+  "physical": {
+    "weightKg": [
+      800,
+      1400
+    ],
+    "weightNote": "males larger",
+    "heightM": [
+      1.4,
+      1.8
+    ],
+    "heightLabel": "at shoulder",
+    "lengthM": [
+      3.6,
+      4.4
+    ],
+    "lengthLabel": "nose to tail tip",
+    "lifespanYrs": [
+      30,
+      35
+    ],
+    "fact": "Its pointed upper lip is prehensile, letting it grip and strip leaves and twigs from shrubs.",
+    "compare": "human",
+    "source": {
+      "label": "Animal Diversity Web",
+      "url": "https://animaldiversity.org/accounts/Diceros_bicornis/"
+    }
+  },
   "range": {
     "summary": "Guarded parks, conservancies and fenced sanctuaries across eastern and southern Africa, with most animals in South Africa, Namibia, Kenya and Zimbabwe.",
     "centroid": {

@@ -35,6 +35,29 @@
     },
     "tilt": 0.5
   },
+  "physical": {
+    "weightKg": [
+      0.06,
+      0.23
+    ],
+    "heightM": null,
+    "heightLabel": null,
+    "lengthM": [
+      0.15,
+      0.3
+    ],
+    "lengthLabel": "total length",
+    "lifespanYrs": [
+      10,
+      15
+    ],
+    "fact": "It can regrow lost limbs, its spinal cord, and even parts of its heart and brain without scarring.",
+    "compare": "hand",
+    "source": {
+      "label": "National Geographic",
+      "url": "https://www.nationalgeographic.com/animals/amphibians/facts/axolotl"
+    }
+  },
   "range": {
     "summary": "Found wild only in the remnant canals of Xochimilco and the wetlands of Chalco in southern Mexico City, all that is left of an ancient lake system.",
     "centroid": {

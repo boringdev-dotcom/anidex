@@ -4,6 +4,8 @@ import * as THREE from 'three';
 import { StipplePoints } from './stipple/StipplePoints';
 import { Globe } from './globe/Globe';
 import { Plinth } from './Plinth';
+import { MeasureLines } from './MeasureLines';
+import { ScaleFigure } from './ScaleFigure';
 import { SceneDirector } from './SceneDirector';
 import { ThemeBridge } from './ThemeBridge';
 import { live } from '../store/useStore';
@@ -13,6 +15,7 @@ function Rig() {
   const root = useRef<THREE.Group>(null);
   const specimen = useRef<THREE.Group>(null);
   const globe = useRef<THREE.Group>(null);
+  const figure = useRef<THREE.Group>(null);
   return (
     <>
       <ThemeBridge />
@@ -21,9 +24,11 @@ function Rig() {
         <group ref={specimen} rotation={[0.08, -0.6, 0]}>
           <StipplePoints />
           <Plinth />
+          <MeasureLines />
         </group>
+        <ScaleFigure ref={figure} />
       </group>
-      <SceneDirector specimen={specimen} globe={globe} root={root} />
+      <SceneDirector specimen={specimen} globe={globe} root={root} figure={figure} />
     </>
   );
 }

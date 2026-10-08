@@ -35,6 +35,33 @@
       "yaw": 1.5707963267948966
     }
   },
+  "physical": {
+    "weightKg": [
+      25,
+      45
+    ],
+    "weightNote": "males heavier",
+    "heightM": [
+      1,
+      1.3
+    ],
+    "heightLabel": "standing",
+    "lengthM": [
+      1,
+      1.3
+    ],
+    "lengthLabel": "standing height",
+    "lifespanYrs": [
+      15,
+      20
+    ],
+    "fact": "Males fast through the winter incubation and can lose about 40% of their body mass.",
+    "compare": "human",
+    "source": {
+      "label": "Animal Diversity Web",
+      "url": "https://animaldiversity.org/accounts/Aptenodytes_forsteri/"
+    }
+  },
   "range": {
     "summary": "Circumpolar around the Antarctic coast, breeding in more than 60 known colonies on fast ice and foraging in the surrounding Southern Ocean.",
     "centroid": {

@@ -5,6 +5,7 @@ import type { Species } from '../../data/types';
 import { live, useStore } from '../../store/useStore';
 import { useChapterTracking } from '../../scroll/useChapterTracking';
 import { ProgressRail } from '../ui/ProgressRail';
+import { MeasureOverlay } from './MeasureOverlay';
 import { Hero } from './chapters/Hero';
 import { Family } from './chapters/Family';
 import { Range } from './chapters/Range';
@@ -37,7 +38,7 @@ function Story({ sp }: { sp: Species }) {
 
   useEffect(() => {
     live.chapterKeys = keys;
-    useStore.setState({ page: 'species', slug: sp.slug, shape: sp.slug, previewShape: null, activePlace: -1 });
+    useStore.setState({ page: 'species', slug: sp.slug, shape: sp.slug, previewShape: null, activePlace: -1, compare: false });
     document.title = `${sp.commonName} · AniDex`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sp]);
@@ -46,6 +47,7 @@ function Story({ sp }: { sp: Species }) {
   return (
     <main className="species" data-page style={{ ['--status' as string]: `var(--st-${sp.status.iucn})` }}>
       <ProgressRail chapters={chapters.map((c) => c.label)} />
+      <MeasureOverlay sp={sp} />
       {chapters.map((c, i) => (
         <div key={c.key} style={{ display: 'contents' }}>
           {c.render(sp, i + 1)}

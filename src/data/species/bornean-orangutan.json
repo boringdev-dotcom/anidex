@@ -31,6 +31,33 @@
       "yaw": 1.5707963267948966
     }
   },
+  "physical": {
+    "weightKg": [
+      36,
+      100
+    ],
+    "weightNote": "males about twice female weight",
+    "heightM": [
+      1.1,
+      1.4
+    ],
+    "heightLabel": "standing",
+    "lengthM": [
+      1.1,
+      1.4
+    ],
+    "lengthLabel": "standing height",
+    "lifespanYrs": [
+      35,
+      45
+    ],
+    "fact": "Its arms span about 2 m and reach nearly to its ankles when it stands upright.",
+    "compare": "human",
+    "source": {
+      "label": "San Diego Zoo Wildlife Alliance",
+      "url": "https://ielc.libguides.com/sdzg/factsheets/orangutans/summary"
+    }
+  },
   "range": {
     "summary": "Lowland, hill and peat-swamp forests of Borneo, split among three subspecies in Indonesian Kalimantan and Malaysian Sabah and Sarawak.",
     "centroid": {

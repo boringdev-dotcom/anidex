@@ -13,6 +13,9 @@ import { prefersReducedMotion } from '../hooks/useMediaQuery';
 import { interaction } from './interaction';
 import { bestSlot } from './slots';
 import { specimenInfo } from './stipple/StipplePoints';
+import { measureLocal, measureUniforms } from './MeasureLines';
+import { figureInfo, figureUniforms } from './ScaleFigure';
+import { REFERENCES, type ReferenceKind } from './specimen/Specimen';
 
 const wrap = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
 const tmpV = new THREE.Vector3();
@@ -44,7 +47,7 @@ const LANDING: Record<string, Pose> = {
 
 /** Keyed by chapter, so species with extra chapters (e.g. subspecies) just add a key. */
 const SPECIES: Record<string, Pose> = {
-  hero: P({ sx: 0, sy: 0.05, ss: 0.64, so: 1, gx: 0.2 }),
+  hero: P({ sx: -0.05, sy: 0.09, ss: 0.6, so: 1, gx: 0.2 }),
   family: P({ sx: 0.21, sy: 0.19, ss: 0.5, so: 1, gx: 0.2, spin: 0.2 }),
   range: P({ sx: 0, sy: 0.05, ss: 0.64, so: 0, coll: 1, gx: 0.17, gs: 0.68, go: 1, reveal: 1, ripple: 1 }),
   population: P({ sx: 0.24, sy: 0.1, ss: 0.46, so: 0, coll: 1, gx: 0.26, gy: 0.14, gs: 0.5, go: 1, reveal: 1, hist: 1 }),
@@ -101,9 +104,10 @@ interface Props {
   specimen: RefObject<THREE.Group | null>;
   globe: RefObject<THREE.Group | null>;
   root: RefObject<THREE.Group | null>;
+  figure: RefObject<THREE.Group | null>;
 }
 
-export function SceneDirector({ specimen, globe, root }: Props) {
+export function SceneDirector({ specimen, globe, root, figure }: Props) {
   const viewport = useThree((s) => s.viewport);
   const size = useThree((s) => s.size);
   const cur = useRef<Pose>(P({ so: 0, ss: 0.4 }));
@@ -116,6 +120,8 @@ export function SceneDirector({ specimen, globe, root }: Props) {
   const userQ = useRef(new THREE.Quaternion());
   /** phone slot mode: damped visibility and globe layers, in place of the pose table */
   const slotState = useRef({ so: 0, go: 0, reveal: 0, hist: 0, pins: 0, ripple: 0 });
+  /** hero measurement lines and "Compare to you" blend */
+  const meas = useRef({ opacity: 0, cmp: 0 });
 
   useFrame((state, rawDt) => {
     const dt = Math.min(rawDt, 1 / 20);
@@ -171,18 +177,54 @@ export function SceneDirector({ specimen, globe, root }: Props) {
 
     // specimen transform: fit by the smaller of height-based and width-based scale
     // desktop: fit by height, or by width on narrow windows. phones: fill ~90% of the width
-    let sScale = mobile ? Math.min(c.ss * vh, c.ss * vw * 2.5) : Math.min(c.ss * vh, c.ss * vw * 0.95);
+    // ---- hero measurements and "Compare to you" ----
+    const heroSpecies = getSpecies(slug ?? undefined);
+    const phys = heroSpecies?.physical;
+    const { previewShape: pv, shape: shapeNow, compare } = useStore.getState();
+    const heroW = page !== 'species' ? 0 : slotMode ? (sSlot?.slot.chapter === 'hero' ? sSlot.visible : 0) : clamp(1 - live.pos * 1.6);
+    const onOwnShape = !pv && shapeNow === slug && measureLocal.ready && stippleUniforms.uMorph.value > 0.92;
+    const M = meas.current;
+    M.opacity = damp(M.opacity, onOwnShape ? heroW : 0, reduced ? 60 : 5, dt);
+    const refKind = (phys?.compare ?? 'human') as ReferenceKind;
+    const cmpOn = compare && !!phys && onOwnShape && figureInfo.ready && figureInfo.kind === refKind;
+    M.cmp = damp(M.cmp, cmpOn ? heroW : 0, reduced ? 60 : 3.2, dt);
+    const cmp = M.cmp;
+    // composition in the animal's normalised units: animal, gap, then the reference at true scale
+    const ref = REFERENCES[refKind];
+    const refU = ref.sizeM / Math.max(measureLocal.mPerUnit, 1e-4); // reference's largest dimension, in animal units
+    const rw = figureInfo.w * refU;
+    const rh = figureInfo.h * refU;
+    const aw = measureLocal.aw;
+    const ah = measureLocal.ah;
+    const gap = 0.14 * Math.max(Math.min(aw, 1), Math.min(rw, 1)) + 0.04;
+    const tw = aw + gap + rw;
+    const th = Math.max(ah, rh);
+    const shrink = lerp(1, Math.max(tw, th, 1) * 1.1, cmp);
+
+    let sScale = (mobile ? Math.min(c.ss * vh, c.ss * vw * 2.5) : Math.min(c.ss * vh, c.ss * vw * 0.95)) / shrink;
     if (slotMode) {
       if (sSlot) {
         // fit the specimen inside its slot: by width, or by height using the shape's own proportions
         const shapeH = Math.max(0.3, specimenInfo.maxY - specimenInfo.minY);
-        let px = Math.min(sSlot.w * 0.84, (sSlot.h * 0.82) / shapeH);
+        // leave room at the front for the height line and its label
+        const fill = measureLocal.hasHt ? lerp(0.7, 0.6, cmp) : 0.84;
+        let px = Math.min((sSlot.w * fill) / lerp(1, Math.max(tw, 1), cmp), (sSlot.h * 0.8) / lerp(shapeH, th, cmp));
         if (sSlot.slot.chapter === 'family') px *= live.variantScale;
         sScale = px * pxToWorld;
         sp.position.set((sSlot.x / size.width - 0.5) * vw, (0.5 - sSlot.y / size.height) * vh, 0);
       }
     } else {
       sp.position.set(c.sx * vw, c.sy * vh, 0);
+    }
+    // make room for the reference on the left (the tail end; the height line sits at the front)
+    sp.position.x += ((gap + rw) / 2) * sScale * cmp;
+    // phones: shift left so the height line's label (to its right) stays on screen
+    if (slotMode && measureLocal.hasHt) sp.position.x -= lerp(46, 30, cmp) * pxToWorld * heroW;
+    // a reference taller than the animal grows upward from the shared floor: recentre vertically
+    if (refKind !== 'hand') {
+      const top = Math.max(specimenInfo.maxY, specimenInfo.minY + rh);
+      const centreShift = (top + specimenInfo.minY) / 2 - (specimenInfo.minY + specimenInfo.maxY) / 2;
+      sp.position.y -= centreShift * sScale * cmp;
     }
     sp.scale.setScalar(sScale);
     // specimen rotation: user drag with momentum, then the slow auto-spin takes over again
@@ -199,13 +241,22 @@ export function SceneDirector({ specimen, globe, root }: Props) {
       si.vYaw *= Math.exp(-2.4 * dt);
       si.vPitch *= Math.exp(-5 * dt);
       const settled = Math.abs(si.vYaw) < 0.25;
-      if (!reduced && settled) sp.rotation.y += dt * c.spin * clamp((now - si.last - 600) / 1200);
+      if (!reduced && settled) sp.rotation.y += dt * c.spin * clamp((now - si.last - 600) / 1200) * (1 - cmp);
+      // compare: turn to a near-profile view so the sizes read side by side
+      if (cmp > 0.02 && now - si.last > 1500) {
+        const axisX = specimenInfo.maxX - specimenInfo.minX >= (specimenInfo.maxZ - specimenInfo.minZ) * 0.9;
+        const profile = axisX ? -0.32 : Math.PI / 2 - 0.32;
+        const diff = wrap(profile - sp.rotation.y);
+        sp.rotation.y += diff * (1 - Math.exp(-3 * dt * cmp));
+      }
       if (now - si.last > 1200) si.pitch = damp(si.pitch, 0, 1.6, dt);
     }
     si.dYaw = si.dPitch = 0;
     const { previewShape, shape } = useStore.getState();
     const shown = getSpecimenSource(previewShape ?? shape);
-    baseTilt.current = damp(baseTilt.current, shown?.specimen.tilt ?? 0.08, 3, dt);
+    const handCompare = refKind === 'hand';
+    const tiltTarget = lerp(shown?.specimen.tilt ?? 0.08, handCompare ? (shown?.specimen.tilt ?? 0.08) : 0.03, cmp);
+    baseTilt.current = damp(baseTilt.current, tiltTarget, 3, dt);
     sp.rotation.x = baseTilt.current + si.pitch;
 
     // globe transform
@@ -285,6 +336,45 @@ export function SceneDirector({ specimen, globe, root }: Props) {
     if (hs.on) toScreen(sp, sScale * 0.48, hs);
     if (hg.on) toScreen(gl, gScale * 1.02, hg);
 
+    // reference figure, at true scale to the right of the animal
+    const fig = figure.current;
+    if (fig) {
+      fig.visible = cmp > 0.01;
+      const fs = sScale * refU;
+      fig.scale.setScalar(fs);
+      const figX = sp.position.x - (aw / 2 + gap + rw / 2) * sScale;
+      // stand on the same floor as the animal; flat references (hand) sit level with its centre
+      const figY = handCompare ? sp.position.y : sp.position.y + specimenInfo.minY * sScale - figureInfo.minY * fs;
+      fig.position.set(figX, figY, 0);
+      fig.rotation.set(handCompare ? baseTilt.current : 0, handCompare ? -0.3 : 0.5, 0);
+      figureUniforms.uOpacity.value = cmp * 0.92;
+      figureUniforms.uSize.value = stippleUniforms.uSize.value;
+      figureUniforms.uDpr.value = stippleUniforms.uDpr.value;
+      figureUniforms.uDrift.value = stippleUniforms.uDrift.value;
+      figureUniforms.uToneInvert.value = stippleUniforms.uToneInvert.value;
+    }
+    measureUniforms.uOpacity.value = M.opacity * 0.6;
+
+    // screen anchors for the HTML labels
+    root.current?.updateMatrixWorld(true);
+    const lm = live.measure;
+    const project = (wp: THREE.Vector3, out: { x: number; y: number; on: boolean }) => {
+      wp.project(state.camera);
+      out.x = (wp.x * 0.5 + 0.5) * size.width;
+      out.y = (-wp.y * 0.5 + 0.5) * size.height;
+      out.on = wp.z < 1;
+    };
+    lm.opacity = M.opacity;
+    lm.compare = cmp;
+    if (measureLocal.hasLen) project(sp.localToWorld(tmpV.copy(measureLocal.len)), lm.len);
+    else lm.len.on = false;
+    if (measureLocal.hasHt) project(sp.localToWorld(tmpV.copy(measureLocal.ht)), lm.ht);
+    else lm.ht.on = false;
+    if (fig && cmp > 0.01) {
+      const top = handCompare ? fig.position.y - (figureInfo.h / 2 + 0.12) * fig.scale.y : fig.position.y + (figureInfo.maxY + 0.06) * fig.scale.y;
+      project(tmpV.set(fig.position.x, top, 0).applyMatrix4(root.current!.matrixWorld), lm.ref);
+    } else lm.ref.on = false;
+
     // collapse target: the focus point on the globe surface, in specimen-local space
     root.current?.updateMatrixWorld(true);
     latLonToVec3(focus.lat, focus.lon, 1.0, v.current);
@@ -303,7 +393,7 @@ export function SceneDirector({ specimen, globe, root }: Props) {
     const invert = themeNow === 'light' ? 1 : 0;
     stippleUniforms.uExposure.value = damp(stippleUniforms.uExposure.value, shown?.specimen.tone?.[themeNow] ?? 0, 4, dt);
     stippleUniforms.uToneInvert.value = damp(stippleUniforms.uToneInvert.value, invert, reduced ? 60 : 5, dt);
-    plinthUniforms.uOpacity.value = eff.so * (1 - eff.coll) * (page === 'species' ? 0.28 : 0);
+    plinthUniforms.uOpacity.value = eff.so * (1 - eff.coll) * (page === 'species' ? 0.28 : 0) * (1 - 0.7 * meas.current.cmp);
 
     globeUniforms.uOpacity.value = eff.go;
     globeUniforms.uReveal.value = eff.reveal;

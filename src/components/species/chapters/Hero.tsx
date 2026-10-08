@@ -3,6 +3,7 @@ import { STATUS_LABEL } from '../../../data';
 import { ChapterLabel } from '../../ui/ChapterLabel';
 import { Reveal } from '../../ui/Reveal';
 import { RotateIcon, StageSlot } from '../../ui/StageSlot';
+import { Vitals } from '../Vitals';
 
 export function Hero({ sp }: { sp: Species }) {
   const long = sp.commonName.length > 16;
@@ -39,6 +40,9 @@ export function Hero({ sp }: { sp: Species }) {
             </Reveal>
             <Reveal split="fade" immediate delay={1.0}>
               <span className="status-chip">{STATUS_LABEL[sp.status.iucn]}</span>
+            </Reveal>
+            <Reveal split="fade" immediate delay={1.15}>
+              <Vitals sp={sp} />
             </Reveal>
           </div>
         </div>

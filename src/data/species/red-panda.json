@@ -34,6 +34,32 @@
       "yaw": 1.5707963267948966
     }
   },
+  "physical": {
+    "weightKg": [
+      3.7,
+      6.2
+    ],
+    "heightM": [
+      0.28,
+      0.34
+    ],
+    "heightLabel": "at shoulder",
+    "lengthM": [
+      0.93,
+      1.1
+    ],
+    "lengthLabel": "nose to tail tip",
+    "lifespanYrs": [
+      8,
+      10
+    ],
+    "fact": "A false thumb grips bamboo, and flexible ankles let it climb down trees headfirst.",
+    "compare": "human",
+    "source": {
+      "label": "Animal Diversity Web",
+      "url": "https://animaldiversity.org/accounts/Ailurus_fulgens/"
+    }
+  },
   "range": {
     "summary": "Temperate mountain forests with a dense bamboo understorey, from Nepal through India, Bhutan and northern Myanmar to southwest China.",
     "centroid": {

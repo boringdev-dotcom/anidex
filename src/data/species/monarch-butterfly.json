@@ -32,6 +32,30 @@
     },
     "tilt": 0.85
   },
+  "physical": {
+    "weightKg": [
+      0.00025,
+      0.00075
+    ],
+    "weightNote": "about half a gram",
+    "heightM": null,
+    "heightLabel": null,
+    "lengthM": [
+      0.089,
+      0.102
+    ],
+    "lengthLabel": "wingspan",
+    "lifespanYrs": [
+      0.04,
+      0.75
+    ],
+    "fact": "It stores toxic cardenolides from the milkweed it ate as a caterpillar, making it poisonous to predators.",
+    "compare": "hand",
+    "source": {
+      "label": "Monarch Watch",
+      "url": "https://monarchwatch.org/biology/"
+    }
+  },
   "range": {
     "summary": "Breeds across southern Canada and the United States wherever milkweed grows. Eastern monarchs overwinter in central Mexico and western monarchs on the California coast.",
     "centroid": {

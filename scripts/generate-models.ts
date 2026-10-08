@@ -53,7 +53,29 @@ interface Sp {
   specimen: { bodyPlan: string; promptDetail?: string; model?: { url: string; yaw?: number } };
   /** set for subspecies tasks: "<species>--<variant>" lives inside the parent species file */
   parent?: { file: string; variant: string; extinct: boolean };
+  /** full prompt for non-animal reference models (scale comparisons) */
+  promptOverride?: string;
 }
+
+/** Scale references for the "Compare to you" view. Not species: no JSON is wired for these. */
+const REFERENCES: Sp[] = [
+  {
+    slug: 'ref-human',
+    commonName: 'person',
+    scientificName: 'Homo sapiens',
+    specimen: { bodyPlan: 'biped' },
+    promptOverride:
+      'A single adult person standing upright in a relaxed neutral pose, arms resting at the sides, feet together, wearing simple plain fitted clothes and shoes, short hair, seen from a three-quarter front-left angle. The entire body is fully visible and centered with generous margin, nothing cropped. Isolated on a pure plain white background, soft even studio lighting, no cast shadow, no ground, no props, no text. Photorealistic, sharp focus.',
+  },
+  {
+    slug: 'ref-hand',
+    commonName: 'hand',
+    scientificName: 'Homo sapiens',
+    specimen: { bodyPlan: 'arthropod' },
+    promptOverride:
+      'A single adult human hand and wrist, open and flat with the palm facing down and fingers slightly spread, seen from above at a three-quarter angle. The whole hand and wrist are fully visible and centered with generous margin, nothing cropped. Isolated on a pure plain white background, soft even studio lighting, no cast shadow, no props, no text. Photorealistic, sharp focus.',
+  },
+];
 
 interface VariantJson {
   slug: string;
@@ -91,6 +113,7 @@ const DETAIL: Record<string, string> = {
 };
 
 function prompt(sp: Sp): string {
+  if (sp.promptOverride) return sp.promptOverride;
   // a species can override the built-in detail with specimen.promptDetail in its JSON
   const detail = sp.specimen.promptDetail ?? DETAIL[sp.slug];
   return [
@@ -180,6 +203,7 @@ async function optimize(sp: Sp, raw: string) {
 
 /** Point the species JSON at its model if it isn't already (keeps any hand-tuned yaw/tilt). */
 function wire(sp: Sp) {
+  if (sp.promptOverride) return; // reference models are referenced from code, not species JSON
   const file = sp.parent?.file ?? join(speciesDir, `${sp.slug}.json`);
   const json = JSON.parse(readFileSync(file, 'utf8'));
   const target = sp.parent
@@ -211,6 +235,7 @@ for (const f of readdirSync(speciesDir).filter((x) => x.endsWith('.json'))) {
     });
   }
 }
+all.push(...REFERENCES);
 const selected = all.filter((s) => !only || only.includes(s.slug) || only.some((o) => s.slug.startsWith(`${o}--`)));
 all.length = 0;
 all.push(...selected);
