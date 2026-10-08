@@ -1,32 +1,88 @@
+/**
+ * Client data layer. Species live in the API; pages load them through `fetchSpecies` (router loaders),
+ * which fills an in-memory cache. Rendering and the 3D scene then read synchronously with `getSpecies`.
+ */
 import type { Species, Variant } from './types';
+import type { ListResponse, SpeciesRecord, SpeciesSummary, Stats } from './api';
 
-const modules = import.meta.glob<Species>('./species/*.json', { eager: true, import: 'default' });
+const full = new Map<string, SpeciesRecord>();
+const summaries = new Map<string, SpeciesSummary>();
+const inflight = new Map<string, Promise<SpeciesRecord | null>>();
 
-const bySlug = new Map<string, Species>();
-for (const sp of Object.values(modules)) bySlug.set(sp.slug, sp);
-
-/** Order follows the `next` chain from the first species, then anything left over. */
-function buildOrder(): Species[] {
-  const out: Species[] = [];
-  const seen = new Set<string>();
-  let cur = bySlug.get('tiger') ?? bySlug.values().next().value;
-  while (cur && !seen.has(cur.slug)) {
-    out.push(cur);
-    seen.add(cur.slug);
-    cur = bySlug.get(cur.next);
+export class Moved extends Error {
+  constructor(public to: string) {
+    super(`moved to ${to}`);
   }
-  const rest = [...bySlug.values()].filter((s) => !seen.has(s.slug)).sort((a, b) => a.commonName.localeCompare(b.commonName));
-  return out.concat(rest);
 }
 
-export const allSpecies: Species[] = buildOrder();
-
-export function getSpecies(slug: string | undefined): Species | undefined {
-  return slug ? bySlug.get(slug) : undefined;
+async function getJSON<T>(url: string, init?: RequestInit): Promise<T> {
+  const r = await fetch(url, init);
+  if (r.status === 301) throw new Moved(((await r.json()) as { redirect: string }).redirect);
+  if (!r.ok) throw Object.assign(new Error(`${r.status} ${url}`), { status: r.status });
+  return r.json() as Promise<T>;
 }
 
-/** Old slugs that moved, so shared links keep working. */
-export const REDIRECTS: Record<string, string> = { 'bengal-tiger': 'tiger' };
+export function rememberSummaries(items: (SpeciesSummary | null | undefined)[]) {
+  for (const s of items) if (s) summaries.set(s.slug, s);
+}
+
+/** Load (and cache) a full species. Resolves null for unknown slugs; throws Moved for renamed ones. */
+export function fetchSpecies(slug: string): Promise<SpeciesRecord | null> {
+  const hit = full.get(slug);
+  if (hit) return Promise.resolve(hit);
+  let p = inflight.get(slug);
+  if (!p) {
+    p = getJSON<SpeciesRecord>(`/api/species/${encodeURIComponent(slug)}`)
+      .then((sp) => {
+        full.set(sp.slug, sp);
+        rememberSummaries([sp.nextSummary]);
+        return sp;
+      })
+      .catch((e) => {
+        if (e instanceof Moved) throw e;
+        if ((e as { status?: number }).status === 404) return null;
+        throw e;
+      })
+      .finally(() => inflight.delete(slug));
+    inflight.set(slug, p);
+  }
+  return p;
+}
+
+/** Warm the cache, e.g. on hover, so the page opens instantly. */
+export const prefetchSpecies = (slug: string) => void fetchSpecies(slug).catch(() => {});
+
+export async function searchSpecies(q: string, signal?: AbortSignal): Promise<SpeciesSummary[]> {
+  if (!q.trim()) return [];
+  const { items } = await getJSON<{ items: SpeciesSummary[] }>(`/api/search?q=${encodeURIComponent(q)}`, { signal });
+  rememberSummaries(items);
+  return items;
+}
+
+export async function listSpecies(params: Record<string, string | number | undefined>): Promise<ListResponse> {
+  const qs = new URLSearchParams(Object.entries(params).filter(([, v]) => v !== undefined && v !== '') as [string, string][]);
+  const res = await getJSON<ListResponse>(`/api/species?${qs}`);
+  rememberSummaries(res.items);
+  return res;
+}
+
+export async function relatedSpecies(slug: string, limit = 6): Promise<SpeciesSummary[]> {
+  const { items } = await getJSON<{ items: SpeciesSummary[] }>(`/api/species/${encodeURIComponent(slug)}/related?limit=${limit}`);
+  rememberSummaries(items);
+  return items;
+}
+
+let statsP: Promise<Stats> | null = null;
+export const fetchStats = () => (statsP ??= getJSON<Stats>('/api/stats').catch((e) => ((statsP = null), Promise.reject(e))));
+
+/** Synchronous read of a loaded species (pages and the 3D scene). */
+export function getSpecies(slug: string | undefined | null): SpeciesRecord | undefined {
+  return slug ? full.get(slug) : undefined;
+}
+
+export function getSummary(slug: string): SpeciesSummary | undefined {
+  return summaries.get(slug);
+}
 
 /** Shape keys are a species slug, or "<species>--<variant>" for a subspecies. */
 export const variantKey = (sp: Species, v: Variant) => `${sp.slug}--${v.slug}`;
@@ -39,27 +95,13 @@ export interface SpecimenSource {
 /** Resolve a shape key to the specimen settings to build (variants inherit their species' body plan). */
 export function getSpecimenSource(key: string): SpecimenSource | undefined {
   const [base, sub] = key.split('--');
-  const sp = getSpecies(base);
-  if (!sp) return undefined;
-  if (!sub) return { key, specimen: sp.specimen };
-  const v = sp.variants?.find((x) => x.slug === sub);
-  if (!v) return { key, specimen: sp.specimen };
-  return {
-    key,
-    specimen: {
-      ...sp.specimen,
-      model: v.specimen?.model ?? sp.specimen.model,
-      tilt: v.specimen?.tilt ?? sp.specimen.tilt,
-    },
-  };
-}
-
-export function indexOf(slug: string): number {
-  return allSpecies.findIndex((s) => s.slug === slug);
-}
-
-export function nextSpecies(sp: Species): Species {
-  return bySlug.get(sp.next) ?? allSpecies[(indexOf(sp.slug) + 1) % allSpecies.length];
+  const sp = full.get(base);
+  const specimen = sp?.specimen ?? summaries.get(base)?.specimen;
+  if (!specimen) return undefined;
+  if (!sub) return { key, specimen };
+  const v = sp?.variants?.find((x) => x.slug === sub);
+  if (!v) return { key, specimen };
+  return { key, specimen: { ...specimen, model: v.specimen?.model ?? specimen.model, tilt: v.specimen?.tilt ?? specimen.tilt } };
 }
 
 export const STATUS_ORDER = ['LC', 'NT', 'VU', 'EN', 'CR', 'EW', 'EX'] as const;
@@ -72,6 +114,8 @@ export const STATUS_LABEL: Record<string, string> = {
   CR: 'Critically Endangered',
   EW: 'Extinct in the Wild',
   EX: 'Extinct',
+  DD: 'Data Deficient',
+  NE: 'Not Evaluated',
 };
 
 export const STATUS_SHORT: Record<string, string> = {
@@ -82,4 +126,6 @@ export const STATUS_SHORT: Record<string, string> = {
   CR: 'Critically endangered',
   EW: 'Extinct in the wild',
   EX: 'Extinct',
+  DD: 'Data deficient',
+  NE: 'Not evaluated',
 };

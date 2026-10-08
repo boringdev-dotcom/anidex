@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
-import { allSpecies, STATUS_SHORT } from '../../data';
+import { useLoaderData } from 'react-router';
+import { prefetchSpecies, STATUS_SHORT } from '../../data';
+import type { LandingData } from '../../router';
 import { live, useStore } from '../../store/useStore';
 import { useChapterTracking } from '../../scroll/useChapterTracking';
 import { Reveal } from '../ui/Reveal';
@@ -16,7 +18,9 @@ export default function Landing() {
   }, []);
   useChapterTracking('.landing .chapter');
 
-  const threatened = allSpecies.filter((s) => ['VU', 'EN', 'CR'].includes(s.status.iucn)).length;
+  const { stats, featured } = useLoaderData() as LandingData;
+  const total = stats?.total ?? featured.length;
+  const threatened = stats?.threatened ?? 0;
 
   return (
     <main className="landing" data-page>
@@ -26,7 +30,7 @@ export default function Landing() {
             A field guide to the animals we might lose
           </Reveal>
           <Reveal as="p" className="label num landing-hero__vol" split="fade" immediate delay={0.3}>
-            Vol. 01 · {allSpecies.length} species
+            Vol. 01 · {total.toLocaleString('en-US')} species
           </Reveal>
         </div>
 
@@ -45,7 +49,7 @@ export default function Landing() {
 
         <div className="landing-hero__foot">
           <p className="label">
-            {threatened} of {allSpecies.length} species here are threatened
+            {threatened.toLocaleString('en-US')} of {total.toLocaleString('en-US')} species here are threatened
           </p>
           <button className="label label--ink scroll-cue" onClick={() => scrollToEl(document.querySelector('.landing-index')!)}>
             <span className="scroll-cue__line" aria-hidden="true" />
@@ -60,16 +64,19 @@ export default function Landing() {
             The index
           </Reveal>
           <Reveal as="h2" id="index-title" className="display h2" split="lines">
-            {allSpecies.length} species, one planet. Hover to preview, click to explore.
+            {total.toLocaleString('en-US')} species, one planet. Hover to preview, click to explore.
           </Reveal>
         </div>
         <ol className="index-list">
-          {allSpecies.map((s, i) => (
+          {featured.map((s, i) => (
             <li key={s.slug}>
               <a
                 href={`/species/${s.slug}`}
                 className="index-row"
-                onMouseEnter={() => useStore.setState({ previewShape: s.slug })}
+                onMouseEnter={() => {
+                  useStore.setState({ previewShape: s.slug });
+                  prefetchSpecies(s.slug);
+                }}
                 onMouseLeave={() => useStore.setState({ previewShape: null })}
                 onFocus={() => useStore.setState({ previewShape: s.slug })}
                 onBlur={() => useStore.setState({ previewShape: null })}
@@ -81,10 +88,12 @@ export default function Landing() {
                 <span className="index-row__num label num">{String(i + 1).padStart(2, '0')}</span>
                 <span className="index-row__name display">{s.commonName}</span>
                 <span className="index-row__sci italic muted">{s.scientificName}</span>
-                <span className="index-row__class label">{s.taxonomy.class}</span>
-                <span className="status-chip index-row__status" style={{ ['--status' as string]: `var(--st-${s.status.iucn})` }}>
-                  {STATUS_SHORT[s.status.iucn]}
-                </span>
+                <span className="index-row__class label">{s.class}</span>
+                {s.iucn && (
+                  <span className="status-chip index-row__status" style={{ ['--status' as string]: `var(--st-${s.iucn})` }}>
+                    {STATUS_SHORT[s.iucn]}
+                  </span>
+                )}
               </a>
             </li>
           ))}

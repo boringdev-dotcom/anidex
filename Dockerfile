@@ -19,6 +19,9 @@ COPY package.json package-lock.json ./
 RUN npm ci --omit=dev --ignore-scripts --no-audit --no-fund && npm cache clean --force
 COPY --from=build /app/dist ./dist
 COPY server ./server
+# curated species: the API's fallback when no database is configured, and the seed source
+COPY src/data ./src/data
+COPY scripts/db ./scripts/db
 USER node
 EXPOSE 10000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s \
