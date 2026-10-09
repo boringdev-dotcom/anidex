@@ -1,8 +1,10 @@
-import type { ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
+import { listSpecies, prefetchSpecies, relatedSpecies, STATUS_LABEL } from '../../data';
+import type { SpeciesSummary } from '../../data/api';
 import type { Species } from '../../data/types';
-import { fmtEstimate } from '../../lib/format';
+import { useStore } from '../../store/useStore';
 import { Reveal } from '../ui/Reveal';
-import { rangeCounts } from './chapters/popMath';
+import { useTransitionNavigate } from '../ui/useTransitionNavigate';
 
 interface Row {
   k: string;
@@ -10,7 +12,7 @@ interface Row {
   sub?: string;
 }
 
-/** Desktop only: a small museum-style label under the specimen, so the right side of a chapter carries facts too. */
+/** Desktop only: a small museum-style label under the specimen, with things the rest of the page doesn't say. */
 function SideNote({ title, rows, children }: { title: string; rows: Row[]; children?: ReactNode }) {
   if (!rows.length) return null;
   return (
@@ -32,66 +34,98 @@ function SideNote({ title, rows, children }: { title: string; rows: Row[]; child
   );
 }
 
-const countries = (sp: Species) => {
-  const n = sp.range.countries.length;
-  return n ? `${n} ${n === 1 ? 'country' : 'countries'}` : null;
-};
+const THREATENED = 'VU,EN,CR';
 
-/** About chapter: where the animal sits in the tree of life and where it lives. */
+/** Other species as links; hovering one brings its specimen forward in place of this one. */
+function SpeciesLinks({ items }: { items: SpeciesSummary[] }) {
+  const go = useTransitionNavigate();
+  return (
+    <ul className="side-note__links">
+      {items.map((s) => (
+        <li key={s.slug}>
+          <a
+            href={`/species/${s.slug}`}
+            className="link"
+            onMouseEnter={() => {
+              useStore.setState({ previewShape: s.slug });
+              prefetchSpecies(s.slug);
+            }}
+            onMouseLeave={() => useStore.setState({ previewShape: null })}
+            onClick={(e) => {
+              e.preventDefault();
+              useStore.setState({ previewShape: null });
+              go(`/species/${s.slug}`, s.slug);
+            }}
+          >
+            {s.commonName}
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** About chapter: other names, the rest of the classification, and its closest relatives here. */
 export function AboutNote({ sp }: { sp: Species }) {
-  const { taxonomy: t } = sp;
-  const genus = sp.scientificName.split(' ')[0];
-  const regions = sp.range.regions.slice(0, 3).join(', ');
+  const [relatives, setRelatives] = useState<SpeciesSummary[]>([]);
+  useEffect(() => {
+    let live = true;
+    relatedSpecies(sp.slug, 4)
+      .then((r) => live && setRelatives(r))
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, [sp.slug]);
+
+  const common = sp.commonName.toLowerCase();
+  const aliases = sp.aliases.filter((a) => a.toLowerCase() !== common && !common.includes(a.toLowerCase())).slice(0, 3);
   const rows = ([
-    { k: 'Class', v: t.class },
-    { k: 'Order', v: t.order },
-    { k: 'Family', v: t.family },
-    { k: 'Genus', v: <i>{genus}</i> },
-    regions ? { k: 'Lives in', v: regions, sub: countries(sp) ?? undefined } : null,
-  ] as (Row | null)[]).filter((r): r is Row => !!r && !!r.v);
+    aliases.length ? { k: 'Also called', v: aliases.join(', ') } : null,
+    sp.taxonomy.order ? { k: 'Order', v: sp.taxonomy.order } : null,
+    { k: 'Genus', v: <i>{sp.scientificName.split(' ')[0]}</i> },
+    relatives.length ? { k: 'Relatives', v: <SpeciesLinks items={relatives} /> } : null,
+  ] as (Row | null)[]).filter((r): r is Row => !!r);
   return <SideNote title="Specimen label" rows={rows} />;
 }
 
-/** Status chapter: the numbers behind the category. */
-export function StatusNote({ sp }: { sp: Species }) {
-  const pts = sp.population?.points ?? [];
-  const first = pts[0];
-  const last = pts[pts.length - 1];
-  const rows: Row[] = [];
-  // only a global count is quoted as "in the wild"; regional and index series still show their change
-  if (last && !sp.population?.scope) rows.push({ k: 'In the wild', v: `~${fmtEstimate(last.estimate)}`, sub: `estimate, ${last.year}` });
-  if (first && last && last.year > first.year && first.estimate > 0) {
-    const pct = Math.round(((last.estimate - first.estimate) / first.estimate) * 100);
-    rows.push({ k: `Since ${first.year}`, v: `${pct > 0 ? '+' : pct < 0 ? '−' : ''}${Math.abs(pct)}%`, sub: sp.population?.scope ? 'tracked population' : undefined });
-  }
-  const c = countries(sp);
-  if (c) rows.push({ k: 'Found in', v: c });
-  const { lost, total } = rangeCounts(sp, new Date().getFullYear());
-  if (lost > 0) rows.push({ k: 'Lost from', v: `${lost} of ${total}`, sub: 'mapped areas' });
-
-  return (
-    <SideNote title="In numbers" rows={rows}>
-      {pts.length > 2 && <Spark sp={sp} />}
-    </SideNote>
-  );
+interface StatusContext {
+  same: number;
+  family: { threatened: number; total: number };
+  peers: SpeciesSummary[];
 }
 
-/** Population line, oldest to newest, in the status colour. */
-function Spark({ sp }: { sp: Species }) {
-  const pts = sp.population!.points;
-  const x0 = pts[0].year;
-  const x1 = pts[pts.length - 1].year;
-  const max = Math.max(...pts.map((p) => p.estimate)) || 1;
-  const d = pts.map((p, i) => `${i ? 'L' : 'M'}${(((p.year - x0) / (x1 - x0 || 1)) * 100).toFixed(2)},${(38 - (p.estimate / max) * 34).toFixed(2)}`).join('');
-  return (
-    <figure className="side-note__spark" aria-hidden="true">
-      <svg viewBox="0 0 100 40" preserveAspectRatio="none">
-        <path d={d} vectorEffect="non-scaling-stroke" />
-      </svg>
-      <figcaption className="label num">
-        <span>{x0}</span>
-        <span>{x1}</span>
-      </figcaption>
-    </figure>
-  );
+/** Status chapter: where this category sits among the other species on AniDex. */
+export function StatusNote({ sp }: { sp: Species }) {
+  const [ctx, setCtx] = useState<StatusContext | null>(null);
+  const { iucn } = sp.status;
+  useEffect(() => {
+    let live = true;
+    const { class: cls, family } = sp.taxonomy;
+    Promise.all([
+      listSpecies({ status: iucn, pageSize: 6, class: cls }),
+      listSpecies({ status: iucn, pageSize: 6 }),
+      listSpecies({ family, pageSize: 1 }),
+      listSpecies({ family, status: THREATENED, pageSize: 1 }),
+    ])
+      .then(([sameClass, same, fam, famThreat]) => {
+        if (!live) return;
+        // peers from the same class first, then any other species with this status
+        const peers = [...sameClass.items, ...same.items].filter((s, i, a) => s.slug !== sp.slug && a.findIndex((o) => o.slug === s.slug) === i).slice(0, 3);
+        setCtx({ same: same.total, family: { threatened: famThreat.total, total: fam.total }, peers });
+      })
+      .catch(() => {});
+    return () => {
+      live = false;
+    };
+  }, [sp.slug, iucn, sp.taxonomy]);
+
+  if (!ctx) return null;
+  const label = STATUS_LABEL[iucn] ?? iucn;
+  const others = ctx.same - 1;
+  const rows: Row[] = [];
+  if (others > 0) rows.push({ k: 'Same category', v: `${others.toLocaleString('en-US')} other ${others === 1 ? 'species' : 'species'}`, sub: `rated ${label.toLowerCase()} on AniDex` });
+  if (ctx.family.total > 1) rows.push({ k: 'Its family', v: `${ctx.family.threatened} of ${ctx.family.total} threatened`, sub: `${sp.taxonomy.family} on AniDex` });
+  if (ctx.peers.length) rows.push({ k: `Also ${iucn}`, v: <SpeciesLinks items={ctx.peers} /> });
+  return <SideNote title="In context" rows={rows} />;
 }
