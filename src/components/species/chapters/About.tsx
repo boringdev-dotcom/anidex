@@ -2,6 +2,7 @@ import type { SpeciesRecord } from '../../../data/api';
 import { ChapterLabel } from '../../ui/ChapterLabel';
 import { Reveal } from '../../ui/Reveal';
 import { ResearchStatus } from '../ResearchStatus';
+import { AboutNote } from '../SideNote';
 
 /** Wikipedia summary and photo with attribution, plus the on-demand research state on open-data pages. */
 export function About({ sp, n }: { sp: SpeciesRecord; n: number }) {
@@ -48,6 +49,7 @@ export function About({ sp, n }: { sp: SpeciesRecord; n: number }) {
           )}
           <ResearchStatus sp={sp} />
         </div>
+        <AboutNote sp={sp} />
       </div>
     </section>
   );
