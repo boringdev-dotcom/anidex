@@ -8,6 +8,7 @@ import { live, useStore } from '../../store/useStore';
 import { useChapterTracking } from '../../scroll/useChapterTracking';
 import { Reveal } from '../ui/Reveal';
 import { SearchBox } from './SearchBox';
+import { IndexPreview } from './IndexPreview';
 import { useTransitionNavigate } from '../ui/useTransitionNavigate';
 import { scrollToEl } from '../../scroll/smoothScroll';
 
@@ -168,6 +169,7 @@ export default function Landing() {
             </li>
           ))}
         </ol>
+        <IndexPreview items={near.state === 'done' ? near.result.items : featured} />
         <a href="/explore" className="compare-btn landing-explore" onClick={(e) => { e.preventDefault(); go('/explore', 'ambient'); }}>
           Explore all {total.toLocaleString('en-US')} species →
         </a>

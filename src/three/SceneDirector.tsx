@@ -49,7 +49,7 @@ const P = (p: Partial<Pose>): Pose => ({
 const LANDING: Record<string, Pose> = {
   // the Earth sits in the open space right of "Search the", above "living planet"
   'landing-hero': P({ sx: 0.19, sy: 0.085, ss: 0.5, so: 1, spin: 0.07 }),
-  'landing-index': P({ sx: 0.3, sy: 0.04, ss: 0.6, so: 0.14, spin: 0.06 }),
+  'landing-index': P({ sx: 0.3, sy: 0.06, ss: 0.46, so: 0.14, spin: 0.06 }),
 };
 
 /** Keyed by chapter, so species with extra chapters (e.g. subspecies) just add a key. */
@@ -58,8 +58,8 @@ const SPECIES: Record<string, Pose> = {
   family: P({ sx: 0.21, sy: 0.19, ss: 0.5, so: 1, gx: 0.2, spin: 0.2 }),
   range: P({ sx: 0, sy: 0.05, ss: 0.64, so: 0, coll: 1, gx: 0.17, gs: 0.68, go: 1, reveal: 1, ripple: 1 }),
   population: P({ sx: 0.24, sy: 0.1, ss: 0.46, so: 0, coll: 1, gx: 0.26, gy: 0.14, gs: 0.5, go: 1, reveal: 1, hist: 1 }),
-  status: P({ sx: 0.3, sy: 0.03, ss: 0.4, so: 0.95, gx: 0.21 }),
-  about: P({ sx: 0.27, sy: 0.04, ss: 0.48, so: 0.95, gx: 0.21, spin: 0.12 }),
+  status: P({ sx: 0.3, sy: 0.12, ss: 0.38, so: 0.95, gx: 0.21 }),
+  about: P({ sx: 0.3, sy: 0.12, ss: 0.42, so: 0.95, gx: 0.21, spin: 0.12 }),
   sightings: P({ sx: 0.3, sy: 0.03, ss: 0.4, so: 0, coll: 1, gx: 0.2, gs: 0.66, go: 1, reveal: 1, pins: 1 }),
   help: P({ sx: 0.25, sy: 0.0, ss: 0.56, so: 0.55, spin: 0.1 }),
   next: P({ sx: 0, sy: 0.14, ss: 0.4, so: 0.85, spin: 0.22 }),

@@ -4,6 +4,7 @@ import { listSpecies, prefetchSpecies, STATUS_SHORT } from '../../data';
 import type { ListResponse, SpeciesSummary, Stats } from '../../data/api';
 import { live, useStore } from '../../store/useStore';
 import { useTransitionNavigate } from '../ui/useTransitionNavigate';
+import { IndexPreview } from '../landing/IndexPreview';
 
 export interface ExploreData {
   list: ListResponse;
@@ -171,6 +172,7 @@ export default function Explore() {
             ))}
           </ol>
         )}
+        <IndexPreview items={items} />
         {items.length < list.total && (
           <button className="compare-btn explore__more" onClick={loadMore} disabled={loading}>
             {loading ? 'Loading…' : `Show more · ${(list.total - items.length).toLocaleString('en-US')} left`}

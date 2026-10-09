@@ -2551,3 +2551,144 @@ body:has(.explore) .site-header {
     font-size: 1.4rem;
   }
 }
+
+/* ---------- desktop: keep the 3D clear of the text ---------- */
+
+/* index lists stop short of the right third, where the hovered row's specimen appears */
+@media (min-width: 769px) {
+  .landing-index .index-list,
+  .explore__list {
+    margin-right: 35vw;
+  }
+
+  .index-row,
+  .explore-row {
+    grid-template-columns: 3.2rem minmax(0, 1fr) 7.5rem 13.5rem;
+    grid-template-areas: 'n name class status' 'n sci class status';
+    row-gap: 0.3rem;
+  }
+
+  .explore-row {
+    grid-template-columns: 3.4rem minmax(0, 1fr) 9rem 13.5rem;
+  }
+
+  .index-row__num,
+  .explore-row__thumb { grid-area: n; }
+  .index-row__name { grid-area: name; font-size: clamp(1.7rem, 2.9vw, 3rem); }
+  .index-row__sci { grid-area: sci; }
+  .index-row__class { grid-area: class; align-self: center; }
+  .index-row__status { grid-area: status; align-self: center; }
+  .explore-row__thumb { align-self: center; }
+}
+
+@media (min-width: 769px) and (max-width: 1180px) {
+  .index-row,
+  .explore-row {
+    grid-template-columns: 3.2rem minmax(0, 1fr) 0 12rem;
+  }
+
+  .index-row__class { visibility: hidden; }
+}
+
+.index-preview {
+  position: fixed;
+  left: 65vw;
+  right: calc(var(--gutter) + 1rem);
+  bottom: 9vh;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.6s var(--ease-out);
+}
+
+.index-preview.is-on {
+  opacity: 1;
+  transform: none;
+}
+
+.index-preview__name {
+  font-size: clamp(1.6rem, 2.2vw, 2.4rem);
+  line-height: 1;
+}
+
+.index-preview__sci {
+  font-size: var(--fs-small);
+}
+
+.index-preview__tax {
+  margin: 0.3rem 0 0.2rem;
+}
+
+/* species chapters with the specimen on the right: a museum-style label under it */
+.side-note {
+  position: absolute;
+  left: 66vw;
+  width: min(22vw, 360px);
+  bottom: 7vh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.side-note__title {
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.side-note__rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.side-note__rows > div {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.side-note__rows dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--fs-small);
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.side-note__sub {
+  color: var(--ink-3);
+  font-size: 0.75rem;
+}
+
+.side-note__links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* short windows: tighter rows so the label stays clear of the plinth */
+@media (max-height: 860px) {
+  .side-note { bottom: 5vh; gap: 0.6rem; }
+  .side-note__rows > div { padding: 0.35rem 0; }
+}
+
+@media (max-width: 768px) {
+  .index-preview,
+  .side-note {
+    display: none;
+  }
+}
