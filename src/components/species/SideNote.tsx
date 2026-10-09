@@ -70,13 +70,15 @@ export function AboutNote({ sp }: { sp: Species }) {
   const [relatives, setRelatives] = useState<SpeciesSummary[]>([]);
   useEffect(() => {
     let live = true;
-    relatedSpecies(sp.slug, 4)
-      .then((r) => live && setRelatives(r))
+    // the endpoint falls back to anything in the same class; only same family or order counts as a relative here
+    const { family, order } = sp.taxonomy;
+    relatedSpecies(sp.slug, 8)
+      .then((r) => live && setRelatives(r.filter((s) => (family && s.family === family) || (order && s.order === order)).slice(0, 4)))
       .catch(() => {});
     return () => {
       live = false;
     };
-  }, [sp.slug]);
+  }, [sp.slug, sp.taxonomy]);
 
   const common = sp.commonName.toLowerCase();
   const aliases = sp.aliases.filter((a) => a.toLowerCase() !== common && !common.includes(a.toLowerCase())).slice(0, 3);
