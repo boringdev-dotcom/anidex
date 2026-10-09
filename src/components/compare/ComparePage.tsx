@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useLoaderData, useRevalidator } from 'react-router';
 import gsap from 'gsap';
 import type { SpeciesRecord, SpeciesSummary } from '../../data/api';
@@ -12,6 +12,7 @@ import { UnitsToggle } from '../species/Vitals';
 import { useTransitionNavigate } from '../ui/useTransitionNavigate';
 import { findings, overlapSentence, pairPath, pairShapeKey, realSize, statRows, type StatRow } from '../../lib/compare';
 import { fmtLength } from '../../lib/format';
+import { kinship, type Kinship } from '../../lib/kinship';
 import { SpeciesPicker } from './SpeciesPicker';
 
 export interface CompareData {
@@ -159,6 +160,58 @@ function StatsTable({ rows, a, b }: { rows: StatRow[]; a: SpeciesRecord; b: Spec
  * Keyed by the pair, like the species page: moving from one matchup to another mounts a fresh page.
  * Page transitions fade the old page out, and a reused element would stay invisible.
  */
+/** The two classifications from the root down: one trunk while they agree, then a fork. */
+function KinTree({ a, b, kin }: { a: SpeciesRecord; b: SpeciesRecord; kin: Kinship }) {
+  const forkAt = kin.rows.findIndex((r) => !r.shared);
+  return (
+    <ol className="kin" aria-label={`Classification of ${a.commonName} and ${b.commonName}`}>
+      {kin.rows.map((r, i) => (
+        <Fragment key={r.rank}>
+          {i === forkAt && (
+            <li className="kin__fork">
+              <span className="label kin__k" />
+              <span className="kin__split">
+                <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M50,0 V12 M50,12 C50,26 25,22 25,40 M50,12 C50,26 75,22 75,40" vectorEffect="non-scaling-stroke" />
+                </svg>
+                <span className="label kin__when">
+                  {kin.split ? `Split ${kin.split.over ? 'more than' : 'about'} ${kin.split.mya} million years ago` : 'Their lines part here'}
+                </span>
+              </span>
+            </li>
+          )}
+          <li className={`kin__row${r.shared ? ' is-shared' : ''}${r.rank === 'Species' ? ' is-leaf' : ''}`}>
+            <span className="label kin__k">{r.rank}</span>
+            {r.shared ? (
+              <span className="kin__v kin__v--both">
+                <span>{r.rank === 'Species' || r.rank === 'Genus' ? <i>{r.a}</i> : r.a}</span>
+              </span>
+            ) : (
+              <>
+                <span className="kin__v">
+                  <span>{r.rank === 'Species' ? <Leaf name={a.commonName} sci={r.a} /> : r.rank === 'Genus' ? <i>{r.a}</i> : r.a}</span>
+                </span>
+                <span className="kin__v">
+                  <span>{r.rank === 'Species' ? <Leaf name={b.commonName} sci={r.b} /> : r.rank === 'Genus' ? <i>{r.b}</i> : r.b}</span>
+                </span>
+              </>
+            )}
+          </li>
+        </Fragment>
+      ))}
+    </ol>
+  );
+}
+
+function Leaf({ name, sci }: { name: string; sci: string }) {
+  return (
+    <>
+      <span className="display kin__name">{name}</span>
+      <i className="kin__sci">{sci}</i>
+    </>
+  );
+}
+
 export default function ComparePage() {
   const data = useLoaderData() as CompareData;
   return <CompareStory key={`${data.a.slug}|${data.b.slug}`} {...data} />;
@@ -173,7 +226,7 @@ function CompareStory({ a, b, relA, relB }: CompareData) {
   const shape = pairShapeKey(a.slug, b.slug);
 
   useEffect(() => {
-    live.chapterKeys = ['cmp-hero', 'cmp-stats', 'cmp-range', 'cmp-more'];
+    live.chapterKeys = ['cmp-hero', 'cmp-stats', 'cmp-tree', 'cmp-range', 'cmp-more'];
     useStore.setState({ page: 'compare', slug: null, pair: [a.slug, b.slug], shape, previewShape: null, activePlace: -1, compare: false });
     document.title = `${a.commonName} vs ${b.commonName} · AniDex`;
   }, [a, b, shape]);
@@ -181,6 +234,7 @@ function CompareStory({ a, b, relA, relB }: CompareData) {
   useChapterTracking('.compare .chapter', [a.slug, b.slug]);
 
   const rows = statRows(a, b, units);
+  const kin = kinship(a, b);
   const found = findings(a, b);
   const name = (who: 'a' | 'b') => (who === 'a' ? a : b).commonName;
 
@@ -316,10 +370,23 @@ function CompareStory({ a, b, relA, relB }: CompareData) {
         </div>
       </section>
 
+      <section className="chapter cmp-tree" aria-labelledby="cmp-tree-title">
+        <div className="stage cmp-tree__wrap">
+          <Reveal split="fade">
+            <ChapterLabel n={3}>Family tree</ChapterLabel>
+          </Reveal>
+          <Reveal as="h2" id="cmp-tree-title" className="display h2" split="lines">
+            {kin.sentence}
+          </Reveal>
+          <KinTree a={a} b={b} kin={kin} />
+          <p className="label cmp-stats__src">Classification from each species’ record. Split times are rounded molecular-clock estimates (TimeTree), given only for deep splits.</p>
+        </div>
+      </section>
+
       <section className="chapter cmp-range" aria-labelledby="cmp-range-title">
         <div className="stage cmp-range__wrap">
           <Reveal split="fade">
-            <ChapterLabel n={3}>Where they live</ChapterLabel>
+            <ChapterLabel n={4}>Where they live</ChapterLabel>
           </Reveal>
           <StageSlot kind="globe" chapter="cmp-range" className="m-slot--cmp-globe" />
           <Reveal as="h2" id="cmp-range-title" className="display h2 cmp-range__title" split="lines">
@@ -340,7 +407,7 @@ function CompareStory({ a, b, relA, relB }: CompareData) {
       <section className="chapter cmp-more" aria-labelledby="cmp-more-title">
         <div className="stage cmp-more__wrap">
           <Reveal split="fade">
-            <ChapterLabel n={4}>More matchups</ChapterLabel>
+            <ChapterLabel n={5}>More matchups</ChapterLabel>
           </Reveal>
           <ul className="cmp-more__list" id="cmp-more-title">
             {matchups.map(([x, y]) => (

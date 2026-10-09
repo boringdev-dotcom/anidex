@@ -2,6 +2,7 @@
 
 .cmp-hero { height: 140vh; }
 .cmp-stats { height: 170vh; }
+.cmp-tree { height: 150vh; }
 .cmp-range { height: 190vh; }
 .cmp-more { height: 110vh; }
 
@@ -349,6 +350,116 @@
   color: var(--ink-3);
 }
 
+/* family tree */
+.cmp-tree__wrap {
+  gap: 1.6rem;
+}
+
+.cmp-tree__wrap > * {
+  width: min(52vw, 760px);
+}
+
+.kin {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kin__row,
+.kin__fork {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr 1fr;
+  align-items: center;
+}
+
+.kin__k {
+  color: var(--ink-3);
+}
+
+/* a branch line runs down the middle of each value cell; the text sits on it */
+.kin__v {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 0.45rem 0;
+  text-align: center;
+  font-size: var(--fs-small);
+  color: var(--ink-2);
+}
+
+.kin__v--both {
+  grid-column: 2 / 4;
+  color: var(--ink);
+}
+
+.kin__v::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid var(--line-strong);
+}
+
+.kin__v > span {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.7rem;
+  background: var(--bg);
+  transition: background-color var(--theme-dur) ease;
+}
+
+.kin__row:first-child .kin__v::before {
+  top: 50%;
+}
+
+.is-leaf .kin__v::before {
+  bottom: 50%;
+}
+
+.kin__fork .kin__split {
+  grid-column: 2 / 4;
+  position: relative;
+  height: 4.2rem;
+}
+
+.kin__split svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.kin__split path {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+
+.kin__when {
+  position: absolute;
+  left: calc(50% + 0.9rem);
+  top: 0.1rem;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.kin__name {
+  font-size: clamp(1.3rem, 1.8vw, 1.8rem);
+  line-height: 1;
+  color: var(--ink);
+}
+
+.kin__sci {
+  font-size: 0.8rem;
+  color: var(--ink-3);
+}
+
 /* where they live */
 .cmp-range__wrap {
   gap: 1.4rem;
@@ -537,6 +648,7 @@
   }
 
   .cmp-stats__wrap > *,
+  .cmp-tree__wrap > *,
   .cmp-range__wrap > *,
   .cmp-more__list {
     width: auto;
@@ -844,4 +956,17 @@ body:has(.og-card) .grain {
   max-height: 46svh;
   overflow-y: auto;
   z-index: 60;
+}
+
+@media (max-width: 768px) {
+  .kin__row,
+  .kin__fork {
+    grid-template-columns: 3.9rem 1fr 1fr;
+  }
+
+  .kin__when {
+    left: calc(50% + 0.6rem);
+    right: 0;
+    white-space: normal;
+  }
 }

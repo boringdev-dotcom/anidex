@@ -69,6 +69,7 @@ const SPECIES: Record<string, Pose> = {
 const COMPARE: Record<string, Pose> = {
   'cmp-hero': P({ sx: 0.02, sy: 0.1, ss: 0.66, so: 1, spin: 0 }),
   'cmp-stats': P({ sx: 0.29, sy: 0.04, ss: 0.42, so: 0.9, spin: 0 }),
+  'cmp-tree': P({ sx: 0.29, sy: 0.04, ss: 0.42, so: 0.9, spin: 0 }),
   'cmp-range': P({ sx: 0.25, sy: 0.04, ss: 0.5, so: 0, gx: 0.2, gs: 0.7, go: 1, reveal: 1, spin: 0 }),
   'cmp-more': P({ sx: 0.2, sy: 0.06, ss: 0.5, so: 0.5, spin: 0 }),
 };
