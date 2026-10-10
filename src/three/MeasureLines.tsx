@@ -62,7 +62,10 @@ export function MeasureLines() {
     const ph = sp?.physical;
     const e = specimenInfo;
     if (!sp || !ph || e.key !== sp.slug) {
+      // forget what was drawn, so coming back to the same animal (after a variant preview or
+      // another page) measures it again instead of matching the old signature and staying off
       measureLocal.ready = false;
+      cache.sig = '';
       geometry.setDrawRange(0, 0);
       return;
     }

@@ -137,6 +137,8 @@ export function loadReferenceShape(kind: ReferenceKind): Promise<Shape> {
     const r = REFERENCES[kind];
     p = loadModelShape(r.url, r.yaw, POINT_COUNT > 20000 ? 9000 : 5000, hashString(kind));
     refCache.set(kind, p);
+    // a failed download is not kept, so the next "Compare to you" tries again
+    p.catch(() => refCache.delete(kind));
   }
   return p;
 }
