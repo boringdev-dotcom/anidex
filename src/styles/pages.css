@@ -28,9 +28,11 @@
 }
 
 .lineup-tag {
-  width: 10rem;
-  margin-left: -5rem;
-  margin-top: -2.4rem;
+  /* sized to the name and centred on the animal, hanging just under the floor */
+  width: auto;
+  margin: 0.55rem 0 0;
+  translate: -50% 0;
+  text-align: center;
 }
 
 .lineup-tag .pair-tag__name {
@@ -119,6 +121,37 @@
   .lineup__bar {
     align-items: stretch;
     flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  /* one scrolling row of compact chips, so the animals keep the screen */
+  .lineup__chips {
+    flex-wrap: nowrap;
+    /* size by the screen, not by the chips: otherwise phones widen the whole page to fit the row */
+    contain: inline-size;
+    overflow-x: auto;
+    margin: 0 calc(-1 * var(--gutter));
+    padding: 0 var(--gutter) 0.2rem;
+    scrollbar-width: none;
+  }
+
+  .lineup__chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .lineup-chip {
+    flex: none;
+    gap: 0.3rem;
+    padding: 0.3rem 0.25rem 0.3rem 0.7rem;
+  }
+
+  .lineup-chip__name {
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+
+  .lineup__actions .compare-btn {
+    padding: 0.5rem 0.85rem;
   }
 }
 
