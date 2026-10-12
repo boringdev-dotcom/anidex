@@ -102,7 +102,7 @@ const mobileSpecies = (key: string, p: Pose): Pose => ({
 const MOBILE_SPECIES: Record<string, Pose> = Object.fromEntries(Object.entries(SPECIES).map(([k, p]) => [k, mobileSpecies(k, p)]));
 /** Line-up: the whole row centre stage, wide. */
 const LINEUP: Record<string, Pose> = { lineup: P({ sx: 0, sy: 0.02, ss: 0.86, so: 1, spin: 0 }) };
-const MOBILE_LINEUP: Record<string, Pose> = { lineup: { ...LINEUP.lineup, sy: 0.06, ss: 0.34 } };
+const MOBILE_LINEUP: Record<string, Pose> = { lineup: { ...LINEUP.lineup, sy: -0.04, ss: 0.34 } };
 
 const MOBILE_DAILY: Record<string, Pose> = { daily: { ...DAILY.daily, sx: 0, sy: 0.27, ss: 0.36 } };
 const MOBILE_LANDING: Record<string, Pose> = {
@@ -500,13 +500,13 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
       project(sp.localToWorld(tmpV.set(pairInfo.b.x, pairInfo.b.top + 0.06, 0)), pl.b);
     }
 
-    // line-up page: a label above each member
+    // line-up page: a label under each member, hung from the shared floor so every name lines up
     const ll = live.lineupLabels;
     const rowShown = page === 'lineup' && !pv && lineupInfo.key === shapeNow && stippleUniforms.uMorph.value > 0.85;
     ll.opacity = damp(ll.opacity, rowShown ? eff.so : 0, reduced ? 60 : 5, dt);
     if (ll.opacity > 0.01) {
       lineupInfo.members.forEach((m, i) => {
-        if (ll.items[i]) project(sp.localToWorld(tmpV.set(m.x, m.top + 0.04, 0)), ll.items[i]);
+        if (ll.items[i]) project(sp.localToWorld(tmpV.set(m.x, lineupInfo.floor - 0.02, 0)), ll.items[i]);
       });
     }
 

@@ -240,13 +240,13 @@ export function loadPairShape(key: string, A: SpecimenSource, B: SpecimenSource,
 
 // ---------------- several animals in a row (line-up page) ----------------
 
-/** Layout of the current line-up shape, one entry per member in order, for the name labels. */
-export const lineupInfo: { key: string; members: PairSide[] } = { key: '', members: [] };
-const lineupLayouts = new Map<string, PairSide[]>();
+/** Layout of the current line-up shape: one entry per member in order, and the shared floor, for the name labels. */
+export const lineupInfo: { key: string; members: PairSide[]; floor: number } = { key: '', members: [], floor: 0 };
+const lineupLayouts = new Map<string, { members: PairSide[]; floor: number }>();
 
 export function activateLineupLayout(key: string) {
   const l = lineupLayouts.get(key);
-  if (l) Object.assign(lineupInfo, { key, members: l.map((m) => ({ ...m })) });
+  if (l) Object.assign(lineupInfo, { key, members: l.members.map((m) => ({ ...m })), floor: l.floor });
 }
 
 /** Any number of shapes (animals, or the visitor's own figure) side by side at true scale. */
@@ -255,11 +255,13 @@ export function loadLineupShape(key: string, parts: { id: string; shape: Promise
   let p = cache.get(id);
   if (!p) {
     p = Promise.all(parts.map((m) => m.shape)).then((shapes) => {
-      const { shape, members } = buildRow(
+      // a tighter gap than a pair: with a giant in the row, a gap set by its length leaves the rest tiny
+      const { shape, members, floor } = buildRow(
         shapes,
         parts.map((m) => m.size),
+        0.06,
       );
-      lineupLayouts.set(key, members);
+      lineupLayouts.set(key, { members, floor });
       return shape;
     });
     cache.set(id, p);
@@ -303,7 +305,8 @@ function shares(areas: number[]): number[] {
   }
 }
 
-function buildRow(srcs: Shape[], sizes: PairSize[]): { shape: Shape; members: PairSide[] } {
+/** `gapK`: the space between members, as a share of the longest one. */
+function buildRow(srcs: Shape[], sizes: PairSize[], gapK = 0.16): { shape: Shape; members: PairSide[]; floor: number } {
   const prep = (s: Shape, size: PairSize) => {
     const e = extents(s);
     // lay each animal's long axis along X so the row is seen side-on together
@@ -324,7 +327,7 @@ function buildRow(srcs: Shape[], sizes: PairSize[]): { shape: Shape; members: Pa
   }
   const ws = ps.map((p) => p.aw * p.k);
   const hs = ps.map((p) => p.ah * p.k);
-  const gap = 0.16 * Math.max(...ws) + 0.02 * big;
+  const gap = gapK * Math.max(...ws) + 0.02 * big;
   const W = ws.reduce((t, w) => t + w, 0) + gap * (ps.length - 1);
   const H = Math.max(...hs);
   // fit roughly the box a single specimen fills
@@ -377,5 +380,5 @@ function buildRow(srcs: Shape[], sizes: PairSize[]): { shape: Shape; members: Pa
   });
   const members = ps.map((p, i) => ({ x: cxs[i] * norm, top: (hs[i] - H / 2) * norm, w: ws[i] * norm, enlarged: p.grow }));
   const toneMid = srcs.reduce((t, s, i) => t + s.toneMid * counts[i], 0) / N;
-  return { shape: { positions, normals, tones, toneMid }, members };
+  return { shape: { positions, normals, tones, toneMid }, members, floor: (-H / 2) * norm };
 }

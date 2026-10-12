@@ -60,20 +60,21 @@ export default function LineupPage() {
   useEffect(() => {
     const tick = () => {
       const ll = live.lineupLabels;
-      let prevX = -Infinity;
-      let lift = false;
+      // names go in rows under the floor: each takes the first row where it clears its left neighbour
+      const rowEnds: number[] = [];
       tags.current.forEach((el, i) => {
         const a = ll.items[i];
         if (!el || !a) return;
         const show = a.on && ll.opacity > 0.02;
         el.style.opacity = show ? String(ll.opacity) : '0';
         if (!show) return;
-        lift = a.x - prevX < 130 ? !lift : false;
-        prevX = a.x;
-        // keep the whole name on screen (tags are 10rem wide, centred on the animal)
-        const half = Math.min(80, el.offsetWidth / 2);
-        const x = Math.min(window.innerWidth - half, Math.max(half, a.x));
-        el.style.transform = `translate3d(${x.toFixed(1)}px, ${(a.y - (lift ? 34 : 0)).toFixed(1)}px, 0)`;
+        const half = el.offsetWidth / 2;
+        // keep the whole name on screen
+        const x = Math.min(window.innerWidth - half - 8, Math.max(half + 8, a.x));
+        let row = rowEnds.findIndex((end) => x - half > end + 10);
+        if (row < 0) row = rowEnds.push(0) - 1;
+        rowEnds[row] = x + half;
+        el.style.transform = `translate3d(${x.toFixed(1)}px, ${(a.y + row * (el.offsetHeight + 6)).toFixed(1)}px, 0)`;
       });
     };
     gsap.ticker.add(tick);
