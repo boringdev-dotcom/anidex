@@ -6,7 +6,7 @@ import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { pool } from './db/pool.ts';
 import type { Species } from '../src/data/types.ts';
-import type { ListResponse, SpeciesRecord, SpeciesSummary, Stats } from '../src/data/api.ts';
+import type { ListResponse, SpeciesRecord, SpeciesSummary, Stats, TrendsResponse } from '../src/data/api.ts';
 
 export interface ListQuery {
   q?: string;
@@ -29,6 +29,8 @@ export interface Repo {
   /** every species' GBIF key and core range box, for the "near me" lookup */
   ranges(): Promise<{ slug: string; gbifKey: number; cls: string | null; bbox: [number, number, number, number] }[]>;
   summaries(slugs: string[]): Promise<SpeciesSummary[]>;
+  /** population series and Red List trends, for the "then and now" page */
+  trends(): Promise<TrendsResponse>;
 }
 
 const THREATENED = ['VU', 'EN', 'CR'];
@@ -148,6 +150,29 @@ function pgRepo(): Repo {
       );
       return r.rows.map((x) => ({ slug: x.slug, gbifKey: Number(x.gbif_key), cls: x.class, bbox: x.bbox }));
     },
+    async trends() {
+      // on-demand research is layered over the base data, as in get()
+      const POP = `coalesce(data->'research'->'fields'->'population', data->'population')`;
+      const TREND = `coalesce(data->'research'->'fields'->'status'->>'trend', data->'status'->>'trend', 'unknown')`;
+      const [items, tally] = await Promise.all([
+        db.query<Row & { population: TrendsResponse['items'][number]['population']; trend: string }>(
+          `select ${SUMMARY_COLS}, ${POP} as population, ${TREND} as trend
+             from species
+            where jsonb_typeof(${POP}->'points') = 'array' and jsonb_array_length(${POP}->'points') >= 2
+            order by popularity desc`,
+        ),
+        db.query<{ trend: string; n: string }>(`select ${TREND} as trend, count(*) as n from species group by 1`),
+      ]);
+      const t: TrendsResponse['tally'] = { increasing: 0, stable: 0, decreasing: 0, unknown: 0 };
+      for (const r of tally.rows) {
+        const k = (r.trend in t ? r.trend : 'unknown') as keyof typeof t;
+        t[k] += Number(r.n);
+      }
+      return {
+        items: items.rows.map((r) => ({ ...toSummary(r), population: r.population, trend: (r.trend in t ? r.trend : 'unknown') as keyof typeof t })),
+        tally: t,
+      };
+    },
     async summaries(slugs) {
       if (!slugs.length) return [];
       const r = await db.query<Row>(`select ${SUMMARY_COLS} from species where slug = any($1)`, [slugs]);
@@ -228,6 +253,14 @@ function jsonRepo(): Repo {
     },
     async ranges() {
       return all.map((s) => ({ slug: s.slug, gbifKey: s.gbifTaxonKey, cls: s.taxonomy.class, bbox: s.range.bbox }));
+    },
+    async trends() {
+      const tally: TrendsResponse['tally'] = { increasing: 0, stable: 0, decreasing: 0, unknown: 0 };
+      for (const s of all) tally[s.status.trend ?? 'unknown']++;
+      const items = all
+        .filter((s) => (s.population?.points.length ?? 0) >= 2)
+        .map((s) => ({ ...sum(s), population: s.population!, trend: s.status.trend }));
+      return { items, tally };
     },
     async summaries(slugs) {
       return all.filter((s) => slugs.includes(s.slug)).map(sum);

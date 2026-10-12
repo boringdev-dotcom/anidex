@@ -15,7 +15,7 @@ import { bestSlot } from './slots';
 import { specimenInfo } from './stipple/StipplePoints';
 import { measureLocal, measureUniforms } from './MeasureLines';
 import { figureInfo, figureUniforms } from './ScaleFigure';
-import { pairInfo, REFERENCES, type ReferenceKind } from './specimen/Specimen';
+import { lineupInfo, pairInfo, REFERENCES, type ReferenceKind } from './specimen/Specimen';
 
 /** Default camera tilt by body plan: low, flat animals read better seen partly from above. */
 const PLAN_TILT: Record<string, number> = { serpentine: 0.62, amphibian: 0.45, arthropod: 0.7, aquatic: 0.3 };
@@ -100,6 +100,10 @@ const mobileSpecies = (key: string, p: Pose): Pose => ({
   so: p.so * (key === 'help' ? 0.7 : 1),
 });
 const MOBILE_SPECIES: Record<string, Pose> = Object.fromEntries(Object.entries(SPECIES).map(([k, p]) => [k, mobileSpecies(k, p)]));
+/** Line-up: the whole row centre stage, wide. */
+const LINEUP: Record<string, Pose> = { lineup: P({ sx: 0, sy: 0.02, ss: 0.86, so: 1, spin: 0 }) };
+const MOBILE_LINEUP: Record<string, Pose> = { lineup: { ...LINEUP.lineup, sy: 0.06, ss: 0.34 } };
+
 const MOBILE_DAILY: Record<string, Pose> = { daily: { ...DAILY.daily, sx: 0, sy: 0.27, ss: 0.36 } };
 const MOBILE_LANDING: Record<string, Pose> = {
   'landing-hero': { ...LANDING['landing-hero'], sx: 0, sy: 0.1, ss: 0.31 },
@@ -165,7 +169,9 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
             ? OG
             : page === 'daily'
               ? mobile ? MOBILE_DAILY : DAILY
-              : mobile ? MOBILE_LANDING : LANDING;
+              : page === 'lineup'
+                ? mobile ? MOBILE_LINEUP : LINEUP
+                : mobile ? MOBILE_LANDING : LANDING;
     samplePoses(posesFor(poseMap, live.chapterKeys), live.pos, tgt.current);
     // subspecies chapter: the specimen is scaled to the selected tiger's real size, extinct ones fade to a ghost
     const familyIdx = live.chapterKeys.indexOf('family');
@@ -312,7 +318,7 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
       const settled = Math.abs(si.vYaw) < 0.25;
       if (!reduced && settled) sp.rotation.y += dt * c.spin * clamp((now - si.last - 600) / 1200) * (1 - cmp);
       // the compare page's pair is laid out along X: settle back to a slight three-quarter view
-      if (page === 'compare' && now - si.last > 1500) {
+      if ((page === 'compare' || page === 'lineup') && now - si.last > 1500) {
         const diff = wrap(-0.28 - sp.rotation.y);
         sp.rotation.y += diff * (1 - Math.exp(-2.5 * dt));
       }
@@ -492,6 +498,16 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     if (pl.opacity > 0.01) {
       project(sp.localToWorld(tmpV.set(pairInfo.a.x, pairInfo.a.top + 0.06, 0)), pl.a);
       project(sp.localToWorld(tmpV.set(pairInfo.b.x, pairInfo.b.top + 0.06, 0)), pl.b);
+    }
+
+    // line-up page: a label above each member
+    const ll = live.lineupLabels;
+    const rowShown = page === 'lineup' && !pv && lineupInfo.key === shapeNow && stippleUniforms.uMorph.value > 0.85;
+    ll.opacity = damp(ll.opacity, rowShown ? eff.so : 0, reduced ? 60 : 5, dt);
+    if (ll.opacity > 0.01) {
+      lineupInfo.members.forEach((m, i) => {
+        if (ll.items[i]) project(sp.localToWorld(tmpV.set(m.x, m.top + 0.04, 0)), ll.items[i]);
+      });
     }
 
     // collapse target: the focus point on the globe surface, in specimen-local space

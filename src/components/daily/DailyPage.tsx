@@ -8,6 +8,7 @@ import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { live, useStore } from '../../store/useStore';
 import { SpeciesPicker } from '../compare/SpeciesPicker';
 import { useTransitionNavigate } from '../ui/useTransitionNavigate';
+import { record } from '../../lib/journal';
 
 export interface DailyData {
   /** the visitor's local date, YYYY-MM-DD */
@@ -79,6 +80,7 @@ function Game({ day, number, practice, answer, suggestions }: DailyData) {
       if (!sp) return;
       const next = [...rows, { sp, clues: scoreGuess(sp, answer) }];
       setRows(next);
+      if (next.at(-1)!.clues.correct) record(answer, 'guessed');
       if (!practice) {
         const done = next.at(-1)!.clues.correct ? 'won' : next.length >= MAX_GUESSES ? 'lost' : null;
         saveGame(day, { guesses: next.map((r) => r.sp.slug), result: done });

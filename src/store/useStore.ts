@@ -24,7 +24,7 @@ export function savePrefs(p: { units: Units; userHeightM: number }) {
 const prefs = loadPrefs();
 
 export type Theme = 'light' | 'dark';
-export type Page = 'landing' | 'species' | 'compare' | 'og' | 'daily';
+export type Page = 'landing' | 'species' | 'compare' | 'og' | 'daily' | 'lineup';
 
 interface State {
   theme: Theme;
@@ -109,6 +109,11 @@ export const live = {
     opacity: 0,
     a: { x: 0, y: 0, on: false },
     b: { x: 0, y: 0, on: false },
+  },
+  /** Screen anchors (css px) above each member of the line-up, in order. */
+  lineupLabels: {
+    opacity: 0,
+    items: Array.from({ length: 8 }, () => ({ x: 0, y: 0, on: false })),
   },
   /** Normalised pointer position -1..1. */
   pointer: { x: 0, y: 0 },

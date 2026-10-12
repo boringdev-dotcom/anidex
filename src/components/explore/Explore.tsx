@@ -12,7 +12,7 @@ export interface ExploreData {
 }
 
 const STATUSES = ['CR', 'EN', 'VU', 'NT', 'LC', 'EX'];
-const CLASS_LABEL: Record<string, string> = {
+export const CLASS_LABEL: Record<string, string> = {
   Mammalia: 'Mammals',
   Aves: 'Birds',
   Reptilia: 'Reptiles',

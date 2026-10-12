@@ -143,6 +143,11 @@ export function loadReferenceShape(kind: ReferenceKind): Promise<Shape> {
   return p;
 }
 
+/** The visitor's figure for the line-up: the person model, or a procedural biped if it can't load. */
+export function loadYouShape(): Promise<Shape> {
+  return loadReferenceShape('human').catch(() => procedural({ key: 'you', specimen: { sizeClass: 'm', bodyPlan: 'biped' } }));
+}
+
 export function loadSpecimenShape(sp: SpecimenSource): Promise<Shape> {
   // keyed by model too: a species whose model arrives later gets its new shape
   const id = `${sp.key}|${sp.specimen.model?.url ?? ''}`;
@@ -223,7 +228,40 @@ export function loadPairShape(key: string, A: SpecimenSource, B: SpecimenSource,
   const id = `${key}|${sa.metres}|${sb.metres}|${A.specimen.model?.url ?? ''}|${B.specimen.model?.url ?? ''}`;
   let p = cache.get(id);
   if (!p) {
-    p = Promise.all([loadSpecimenShape(A), loadSpecimenShape(B)]).then(([shA, shB]) => buildPair(key, shA, shB, sa, sb));
+    p = Promise.all([loadSpecimenShape(A), loadSpecimenShape(B)]).then(([shA, shB]) => {
+      const { shape, members } = buildRow([shA, shB], [sa, sb]);
+      pairLayouts.set(key, { key, a: members[0], b: members[1] });
+      return shape;
+    });
+    cache.set(id, p);
+  }
+  return p;
+}
+
+// ---------------- several animals in a row (line-up page) ----------------
+
+/** Layout of the current line-up shape, one entry per member in order, for the name labels. */
+export const lineupInfo: { key: string; members: PairSide[] } = { key: '', members: [] };
+const lineupLayouts = new Map<string, PairSide[]>();
+
+export function activateLineupLayout(key: string) {
+  const l = lineupLayouts.get(key);
+  if (l) Object.assign(lineupInfo, { key, members: l.map((m) => ({ ...m })) });
+}
+
+/** Any number of shapes (animals, or the visitor's own figure) side by side at true scale. */
+export function loadLineupShape(key: string, parts: { id: string; shape: Promise<Shape>; size: PairSize }[]): Promise<Shape> {
+  const id = `${key}|${parts.map((m) => `${m.id}:${m.size.metres}`).join(',')}`;
+  let p = cache.get(id);
+  if (!p) {
+    p = Promise.all(parts.map((m) => m.shape)).then((shapes) => {
+      const { shape, members } = buildRow(
+        shapes,
+        parts.map((m) => m.size),
+      );
+      lineupLayouts.set(key, members);
+      return shape;
+    });
     cache.set(id, p);
   }
   return p;
@@ -243,48 +281,69 @@ function extents(s: Shape) {
   return e;
 }
 
-function buildPair(key: string, shA: Shape, shB: Shape, sa: PairSize, sb: PairSize): Shape {
+/**
+ * Point shares by visible area, but none below a floor (0.15 each for a pair), so no member is a
+ * smudge: members under the floor get it, and the rest split what is left in proportion.
+ */
+function shares(areas: number[]): number[] {
+  const floor = 0.3 / areas.length;
+  const out = new Array<number>(areas.length).fill(0);
+  let free = areas.map((_, i) => i);
+  let budget = 1;
+  for (;;) {
+    const sum = free.reduce((t, i) => t + areas[i], 0) || 1;
+    const low = free.filter((i) => (areas[i] / sum) * budget < floor);
+    if (!low.length) {
+      for (const i of free) out[i] = (areas[i] / sum) * budget;
+      return out;
+    }
+    for (const i of low) out[i] = floor;
+    budget -= floor * low.length;
+    free = free.filter((i) => !low.includes(i));
+  }
+}
+
+function buildRow(srcs: Shape[], sizes: PairSize[]): { shape: Shape; members: PairSide[] } {
   const prep = (s: Shape, size: PairSize) => {
     const e = extents(s);
-    // lay each animal's long axis along X so the pair is seen side-on together
+    // lay each animal's long axis along X so the row is seen side-on together
     const swap = e.maxZ - e.minZ > (e.maxX - e.minX) * 1.05;
     const aw = swap ? e.maxZ - e.minZ : e.maxX - e.minX;
     const ah = e.maxY - e.minY;
     // apes are modelled on all fours but measured standing: posed height is about 3/4 of it
     const crouched = size.standing && ah < aw * 1.1;
     const k = size.by === 'height' ? (size.metres * (crouched ? 0.75 : 1)) / ah : size.metres / aw;
-    return { s, e, swap, aw, ah, k };
+    return { s, e, swap, aw, ah, k, grow: 1 };
   };
-  const pa = prep(shA, sa);
-  const pb = prep(shB, sb);
-  // tiny animals next to giants stay visible: at least 4% of the larger one's length
-  const big = Math.max(pa.aw * pa.k, pb.aw * pb.k, pa.ah * pa.k, pb.ah * pb.k);
-  const grow = (p: typeof pa) => Math.max(1, (big * 0.04) / (p.aw * p.k));
-  const ga = grow(pa);
-  const gb = grow(pb);
-  pa.k *= ga;
-  pb.k *= gb;
-  const wA = pa.aw * pa.k;
-  const hA = pa.ah * pa.k;
-  const wB = pb.aw * pb.k;
-  const hB = pb.ah * pb.k;
-  const gap = 0.16 * Math.max(wA, wB) + 0.02 * big;
-  const W = wA + gap + wB;
-  const H = Math.max(hA, hB);
+  const ps = srcs.map((s, i) => prep(s, sizes[i]));
+  // tiny animals next to giants stay visible: at least 4% of the largest one's length
+  const big = Math.max(...ps.flatMap((p) => [p.aw * p.k, p.ah * p.k]));
+  for (const p of ps) {
+    p.grow = Math.max(1, (big * 0.04) / (p.aw * p.k));
+    p.k *= p.grow;
+  }
+  const ws = ps.map((p) => p.aw * p.k);
+  const hs = ps.map((p) => p.ah * p.k);
+  const gap = 0.16 * Math.max(...ws) + 0.02 * big;
+  const W = ws.reduce((t, w) => t + w, 0) + gap * (ps.length - 1);
+  const H = Math.max(...hs);
   // fit roughly the box a single specimen fills
   const norm = 1.3 / Math.max(W, H * 1.5);
-  const cxA = -W / 2 + wA / 2;
-  const cxB = W / 2 - wB / 2;
+  const cxs: number[] = [];
+  let x = -W / 2;
+  for (const w of ws) {
+    cxs.push(x + w / 2);
+    x += w + gap;
+  }
 
   const N = POINT_COUNT;
-  // points by visible area, so neither animal is a smudge or a solid blob
-  const areaA = wA * hA;
-  const areaB = wB * hB;
-  const nA = Math.round(N * Math.min(0.85, Math.max(0.15, areaA / (areaA + areaB))));
+  const share = shares(ws.map((w, i) => w * hs[i]));
+  const counts = share.map((f) => Math.round(N * f));
+  counts[counts.length - 1] = N - counts.slice(0, -1).reduce((t, c) => t + c, 0);
   const positions = new Float32Array(N * 3);
   const normals = new Float32Array(N * 3);
   const tones = new Float32Array(N);
-  const place = (p: typeof pa, cx: number, from: number, count: number) => {
+  const place = (p: (typeof ps)[number], cx: number, from: number, count: number) => {
     const { s, e, swap } = p;
     const mx = (e.minX + e.maxX) / 2;
     const mz = (e.minZ + e.maxZ) / 2;
@@ -311,13 +370,12 @@ function buildPair(key: string, shA: Shape, shB: Shape, sa: PairSize, sb: PairSi
       tones[from + j] = s.tones[i];
     }
   };
-  place(pa, cxA, 0, nA);
-  place(pb, cxB, nA, N - nA);
-  const layout = {
-    key,
-    a: { x: cxA * norm, top: (hA - H / 2) * norm, w: wA * norm, enlarged: ga },
-    b: { x: cxB * norm, top: (hB - H / 2) * norm, w: wB * norm, enlarged: gb },
-  };
-  pairLayouts.set(key, layout);
-  return { positions, normals, tones, toneMid: (shA.toneMid * nA + shB.toneMid * (N - nA)) / N };
+  let from = 0;
+  ps.forEach((p, i) => {
+    place(p, cxs[i], from, counts[i]);
+    from += counts[i];
+  });
+  const members = ps.map((p, i) => ({ x: cxs[i] * norm, top: (hs[i] - H / 2) * norm, w: ws[i] * norm, enlarged: p.grow }));
+  const toneMid = srcs.reduce((t, s, i) => t + s.toneMid * counts[i], 0) / N;
+  return { shape: { positions, normals, tones, toneMid }, members };
 }

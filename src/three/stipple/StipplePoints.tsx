@@ -4,7 +4,18 @@ import gsap from 'gsap';
 import { useStore } from '../../store/useStore';
 import { fetchSpecies, getSpecies, getSpecimenSource } from '../../data';
 import { realSize } from '../../lib/compare';
-import { activatePairLayout, getAmbientShape, loadEarthShape, loadPairShape, loadSpecimenShape, POINT_COUNT } from '../specimen/Specimen';
+import {
+  activateLineupLayout,
+  activatePairLayout,
+  getAmbientShape,
+  loadEarthShape,
+  loadLineupShape,
+  loadPairShape,
+  loadYouShape,
+  loadSpecimenShape,
+  POINT_COUNT,
+  type PairSize,
+} from '../specimen/Specimen';
 import type { Shape } from './sample';
 import { palette } from '../palette';
 import { stippleFragment, stippleVertex } from './shaders';
@@ -45,6 +56,22 @@ async function resolveShape(key: string): Promise<Shape> {
     const B = getSpecimenSource(b);
     if (!sa || !sb || !A || !B) return loadEarthShape();
     return loadPairShape(key, A, B, realSize(sa), realSize(sb));
+  }
+  if (key.startsWith('lineup:')) {
+    // several animals in a row at true scale (line-up page): "lineup:<a>|<b>|you@1.7"
+    const ids = key.slice(7).split('|');
+    const slugs = ids.filter((id) => !id.startsWith('you@'));
+    await Promise.all(slugs.map((s) => (getSpecies(s) ? null : fetchSpecies(s).catch(() => null))));
+    const parts = ids.flatMap((id): { id: string; shape: Promise<Shape>; size: PairSize }[] => {
+      if (id.startsWith('you@')) {
+        const m = Number(id.slice(4)) || 1.7;
+        return [{ id, shape: loadYouShape(), size: { metres: m, by: 'height', standing: false } }];
+      }
+      const sp = getSpecies(id);
+      const src = getSpecimenSource(id);
+      return sp && src ? [{ id, shape: loadSpecimenShape(src), size: realSize(sp) }] : [];
+    });
+    return parts.length ? loadLineupShape(key, parts) : loadEarthShape();
   }
   let src = getSpecimenSource(key);
   if (!src) {
@@ -97,6 +124,7 @@ export function StipplePoints() {
     resolveShape(shapeKey).then((shape) => {
       if (cancelled) return;
       if (shapeKey.startsWith('pair:')) activatePairLayout(shapeKey);
+      if (shapeKey.startsWith('lineup:')) activateLineupLayout(shapeKey);
       const from = geometry.getAttribute('aFrom') as THREE.BufferAttribute;
       const to = geometry.getAttribute('aTo') as THREE.BufferAttribute;
       const nFrom = geometry.getAttribute('aNFrom') as THREE.BufferAttribute;

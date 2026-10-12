@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useLoaderData } from 'react-router';
 import type { SpeciesRecord } from '../../data/api';
 import { live, useStore } from '../../store/useStore';
@@ -15,6 +15,8 @@ import { Vulnerability } from './chapters/Vulnerability';
 import { Sightings } from './chapters/Sightings';
 import { Help } from './chapters/Help';
 import { FooterNext } from './chapters/FooterNext';
+import { JournalToast } from '../journal/JournalToast';
+import { record, type Entry } from '../../lib/journal';
 
 interface Chapter {
   key: string;
@@ -45,11 +47,15 @@ function Story({ sp }: { sp: SpeciesRecord }) {
   };
   const chapters = CHAPTERS.filter((c) => has[c.key] ?? true);
   const keys = chapters.map((c) => c.key);
+  const [fresh, setFresh] = useState<Entry | null>(null);
 
   useEffect(() => {
     live.chapterKeys = keys;
     useStore.setState({ page: 'species', slug: sp.slug, shape: sp.slug, previewShape: null, activePlace: -1, compare: false });
     document.title = `${sp.commonName} · AniDex`;
+    // (an effect that runs twice must not clear the toast the first run raised)
+    const entry = record(sp, 'viewed');
+    if (entry) setFresh(entry);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sp]);
   useChapterTracking('.species .chapter', [sp.slug, chapters.length]);
@@ -59,6 +65,7 @@ function Story({ sp }: { sp: SpeciesRecord }) {
       <ProgressRail chapters={chapters.map((c) => c.label)} />
       <MeasureOverlay sp={sp} />
       <GlobeTapCard sp={sp} />
+      <JournalToast entry={fresh} />
       {chapters.map((c, i) => (
         <div key={c.key} style={{ display: 'contents' }}>
           {c.render(sp, i + 1)}
