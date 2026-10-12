@@ -10,6 +10,8 @@ A field guide to the animals we might lose. Search a species and scroll through 
 6. **How you can help.** Concrete actions and organisations to support.
 7. **Next specimen.** The point cloud morphs into the next animal.
 
+**Daily specimen** (`/daily`) is a guessing game: one animal a day, the same for everyone. It starts as a few scattered points of the specimen, and each wrong guess brings more of it back. Every guess is scored on four clues: how closely it is related, its size, its Red List status, and how far away and in which direction its range lies. Hints unlock after misses. Results, streaks and a shareable grid are kept in the browser, and practice rounds don't count toward the streak. The logic is in `src/lib/daily.ts`.
+
 Drag the animal or the globe to spin it. Light and dark themes follow the OS setting until you pick one.
 
 ## Run it

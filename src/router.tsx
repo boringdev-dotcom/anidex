@@ -5,6 +5,8 @@ import SpeciesPage from './components/species/SpeciesPage';
 import Explore, { type ExploreData } from './components/explore/Explore';
 import ComparePage, { type CompareData } from './components/compare/ComparePage';
 import OgPage, { type OgData } from './components/og/OgPage';
+import DailyPage, { type DailyData } from './components/daily/DailyPage';
+import { answerPool, dailyAnswer, practiceAnswer, puzzleNumber, todayKey } from './lib/daily';
 import { pairPath, parsePair } from './lib/compare';
 import { Header } from './components/ui/Header';
 import { Grain } from './components/ui/Grain';
@@ -77,6 +79,18 @@ async function compareLoader({ params }: LoaderFunctionArgs): Promise<CompareDat
   return { a, b, relA, relB };
 }
 
+/** Today's puzzle, or a practice round (?p=<seed>) that doesn't count toward the streak. */
+async function dailyLoader({ request }: LoaderFunctionArgs): Promise<DailyData> {
+  const seed = new URL(request.url).searchParams.get('p');
+  const { items } = await listSpecies({ sort: 'popular', pageSize: 100 });
+  const pool = answerPool(items);
+  const day = todayKey();
+  const slug = seed ? practiceAnswer(pool, seed) : dailyAnswer(pool, day);
+  const answer = await fetchSpecies(slug);
+  if (!answer) throw new Error(`daily answer ${slug} not found`);
+  return { day, number: puzzleNumber(day), practice: seed, answer, suggestions: items.slice(0, 12) };
+}
+
 async function ogLoader({ params }: LoaderFunctionArgs): Promise<OgData> {
   const [sp, stats] = await Promise.all([params.slug ? fetchSpecies(params.slug).catch(() => null) : null, fetchStats().catch(() => null)]);
   return { sp, stats };
@@ -91,6 +105,7 @@ export const router = createBrowserRouter([
       { path: '/', element: <Landing />, loader: landingLoader },
       { path: '/species/:slug', element: <SpeciesPage />, loader: speciesLoader },
       { path: '/explore', element: <Explore />, loader: exploreLoader },
+      { path: '/daily', element: <DailyPage />, loader: dailyLoader },
       { path: '/compare', loader: () => redirect(DEFAULT_PAIR) },
       { path: '/compare/:pair', element: <ComparePage />, loader: compareLoader },
       // social card renders for scripts/og.ts (not linked from the site)

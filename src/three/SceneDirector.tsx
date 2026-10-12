@@ -80,6 +80,9 @@ const OG: Record<string, Pose> = {
   'og-earth': P({ sx: 0.23, sy: -0.05, ss: 0.8, so: 1, spin: 0 }),
 };
 
+/** Daily puzzle: the mystery specimen to the right of the guesses (on phones, above them). */
+const DAILY: Record<string, Pose> = { daily: P({ sx: 0.2, sy: 0.04, ss: 0.62, so: 1, spin: 0.14 }) };
+
 /**
  * Phones use a split layout: the top ~46% of the screen is a fixed 3D stage (see .stage-band),
  * so everything is centred in that band and sized to fill it. ss/gs here are fractions of the
@@ -97,6 +100,7 @@ const mobileSpecies = (key: string, p: Pose): Pose => ({
   so: p.so * (key === 'help' ? 0.7 : 1),
 });
 const MOBILE_SPECIES: Record<string, Pose> = Object.fromEntries(Object.entries(SPECIES).map(([k, p]) => [k, mobileSpecies(k, p)]));
+const MOBILE_DAILY: Record<string, Pose> = { daily: { ...DAILY.daily, sx: 0, sy: 0.27, ss: 0.36 } };
 const MOBILE_LANDING: Record<string, Pose> = {
   'landing-hero': { ...LANDING['landing-hero'], sx: 0, sy: 0.1, ss: 0.31 },
   'landing-index': { ...LANDING['landing-index'], sx: 0, sy: 0.3, ss: 0.24, so: 0.08 },
@@ -152,7 +156,16 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     palette.uTime.value = state.clock.elapsedTime;
     const { page, slug, activePlace } = useStore.getState();
     const mobile = size.width <= 768; // matches the CSS breakpoint for the phone stage band
-    const poseMap = page === 'species' ? (mobile ? MOBILE_SPECIES : SPECIES) : page === 'compare' ? COMPARE : page === 'og' ? OG : mobile ? MOBILE_LANDING : LANDING;
+    const poseMap =
+      page === 'species'
+        ? mobile ? MOBILE_SPECIES : SPECIES
+        : page === 'compare'
+          ? COMPARE
+          : page === 'og'
+            ? OG
+            : page === 'daily'
+              ? mobile ? MOBILE_DAILY : DAILY
+              : mobile ? MOBILE_LANDING : LANDING;
     samplePoses(posesFor(poseMap, live.chapterKeys), live.pos, tgt.current);
     // subspecies chapter: the specimen is scaled to the selected tiger's real size, extinct ones fade to a ghost
     const familyIdx = live.chapterKeys.indexOf('family');
@@ -489,7 +502,11 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     stippleUniforms.uTarget.value.copy(v.current);
 
     // uniforms
-    stippleUniforms.uAlive.value = 1;
+    // the daily puzzle shows only part of the specimen; the rest returns as guesses are made
+    // (it drops at once, so a new puzzle never shows its answer whole, and returns slowly)
+    const aliveTo = page === 'daily' ? live.alive : 1;
+    const aliveNow = stippleUniforms.uAlive.value;
+    stippleUniforms.uAlive.value = aliveTo < aliveNow ? aliveTo : damp(aliveNow, aliveTo, reduced ? 60 : 1.6, dt);
     stippleUniforms.uCollapse.value = eff.coll;
     stippleUniforms.uOpacity.value = eff.so;
     stippleUniforms.uDpr.value = state.viewport.dpr;
@@ -499,7 +516,7 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     const invert = themeNow === 'light' ? 1 : 0;
     stippleUniforms.uExposure.value = damp(stippleUniforms.uExposure.value, shown?.specimen.tone?.[themeNow] ?? 0, 4, dt);
     stippleUniforms.uToneInvert.value = damp(stippleUniforms.uToneInvert.value, invert, reduced ? 60 : 5, dt);
-    plinthUniforms.uOpacity.value = eff.so * (1 - eff.coll) * (page === 'species' || page === 'compare' || page === 'og' ? 0.28 : 0) * (1 - 0.7 * meas.current.cmp);
+    plinthUniforms.uOpacity.value = eff.so * (1 - eff.coll) * (page === 'species' || page === 'compare' || page === 'og' || page === 'daily' ? 0.28 : 0) * (1 - 0.7 * meas.current.cmp);
 
     globeUniforms.uOpacity.value = eff.go;
     globeUniforms.uReveal.value = eff.reveal;

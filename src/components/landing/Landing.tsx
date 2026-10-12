@@ -94,6 +94,21 @@ export default function Landing() {
               </svg>
               What lives near me?
             </button>
+            <a
+              href="/daily"
+              className="near__btn near__btn--daily label label--ink"
+              onClick={(e) => {
+                e.preventDefault();
+                go('/daily', 'ambient');
+              }}
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
+                {[[3, 4], [6, 2.5], [10, 3], [13, 5], [4, 8], [8, 7], [12, 9], [5, 12], [9, 11.5], [12.5, 13]].map(([x, y], i) => (
+                  <circle key={i} cx={x} cy={y} r={i % 3 ? 0.9 : 1.3} />
+                ))}
+              </svg>
+              Guess today’s specimen
+            </a>
             <span className={`near__note label${near.state === 'locating' || near.state === 'loading' ? ' is-busy' : ''}`} role="status" aria-live="polite">
               {NEAR_NOTE[near.state] ?? 'Uses your location once, rounded to about 50 km. Not stored.'}
             </span>

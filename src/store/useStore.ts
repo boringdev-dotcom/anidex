@@ -24,7 +24,7 @@ export function savePrefs(p: { units: Units; userHeightM: number }) {
 const prefs = loadPrefs();
 
 export type Theme = 'light' | 'dark';
-export type Page = 'landing' | 'species' | 'compare' | 'og';
+export type Page = 'landing' | 'species' | 'compare' | 'og' | 'daily';
 
 interface State {
   theme: Theme;
@@ -116,6 +116,8 @@ export const live = {
   year: null as number | null,
   /** Region of the range history the globe should face while scrubbing, or -1. */
   historyFocus: -1,
+  /** Share of the specimen's points shown on the daily puzzle (the rest drift off as ash). */
+  alive: 1,
 };
 
 useStore.subscribe((s, prev) => {

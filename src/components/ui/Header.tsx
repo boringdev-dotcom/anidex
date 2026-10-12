@@ -31,6 +31,9 @@ export function Header() {
         )}
       </div>
       <nav className="site-header__right" aria-label="Site">
+        <Link to="/daily" className="label label--ink header-link">
+          Daily
+        </Link>
         <Link to="/explore" className="label label--ink header-link">
           Explore
         </Link>
