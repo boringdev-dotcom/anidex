@@ -24,7 +24,7 @@ export function savePrefs(p: { units: Units; userHeightM: number }) {
 const prefs = loadPrefs();
 
 export type Theme = 'light' | 'dark';
-export type Page = 'landing' | 'species' | 'compare' | 'og';
+export type Page = 'landing' | 'species' | 'compare' | 'og' | 'daily' | 'lineup';
 
 interface State {
   theme: Theme;
@@ -110,12 +110,19 @@ export const live = {
     a: { x: 0, y: 0, on: false },
     b: { x: 0, y: 0, on: false },
   },
+  /** Screen anchors (css px) above each member of the line-up, in order. */
+  lineupLabels: {
+    opacity: 0,
+    items: Array.from({ length: 8 }, () => ({ x: 0, y: 0, on: false })),
+  },
   /** Normalised pointer position -1..1. */
   pointer: { x: 0, y: 0 },
   /** Year currently shown by the population scrubber, or null outside that chapter. */
   year: null as number | null,
   /** Region of the range history the globe should face while scrubbing, or -1. */
   historyFocus: -1,
+  /** Share of the specimen's points shown on the daily puzzle (the rest drift off as ash). */
+  alive: 1,
 };
 
 useStore.subscribe((s, prev) => {

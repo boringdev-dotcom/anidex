@@ -39,6 +39,14 @@ species.get(
 );
 
 species.get(
+  '/trends',
+  h(async (_req, res) => {
+    res.set('Cache-Control', 'public, max-age=300');
+    res.json(await repo.trends());
+  }),
+);
+
+species.get(
   '/species',
   h(async (req, res) => {
     const status = str(req.query.status)?.split(',').filter((s) => /^[A-Z]{2}$/.test(s));

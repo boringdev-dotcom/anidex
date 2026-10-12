@@ -57,6 +57,17 @@ export interface SpecimenStatusResponse {
   position?: number;
 }
 
+/** "Then and now": species with a population series, and how every species' Red List trend tallies. */
+export interface TrendItem extends SpeciesSummary {
+  population: NonNullable<Species['population']>;
+  trend: Species['status']['trend'];
+}
+export interface TrendsResponse {
+  items: TrendItem[];
+  /** species by Red List population trend (increasing, stable, decreasing, unknown) */
+  tally: Record<Species['status']['trend'], number>;
+}
+
 /** "What lives near me": species with recent wild records around a point. */
 export interface NearResponse {
   radiusKm: number;

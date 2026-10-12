@@ -3,7 +3,7 @@
  * which fills an in-memory cache. Rendering and the 3D scene then read synchronously with `getSpecies`.
  */
 import type { Species, Variant } from './types';
-import type { ListResponse, NearResponse, ResearchStatusResponse, SpecimenStatusResponse, SpeciesRecord, SpeciesSummary, Stats } from './api';
+import type { ListResponse, NearResponse, TrendsResponse, ResearchStatusResponse, SpecimenStatusResponse, SpeciesRecord, SpeciesSummary, Stats } from './api';
 
 const full = new Map<string, SpeciesRecord>();
 const summaries = new Map<string, SpeciesSummary>();
@@ -94,6 +94,12 @@ export async function relatedSpecies(slug: string, limit = 6): Promise<SpeciesSu
   const { items } = await getJSON<{ items: SpeciesSummary[] }>(`/api/species/${encodeURIComponent(slug)}/related?limit=${limit}`);
   rememberSummaries(items);
   return items;
+}
+
+export async function fetchTrends(): Promise<TrendsResponse> {
+  const r = await getJSON<TrendsResponse>('/api/trends');
+  rememberSummaries(r.items);
+  return r;
 }
 
 let statsP: Promise<Stats> | null = null;

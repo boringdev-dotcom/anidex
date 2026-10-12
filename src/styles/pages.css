@@ -1,0 +1,614 @@
+/* ---------- line-up (/lineup) ---------- */
+
+.lineup__stage {
+  height: 100vh;
+  height: 100svh;
+  padding: calc(var(--header-h) + 2vh) var(--gutter) 4vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.lineup__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  position: relative;
+  z-index: 3;
+}
+
+.lineup__title {
+  font-size: clamp(2.6rem, 5.4vw, 5.8rem);
+  letter-spacing: -0.03em;
+}
+
+.lineup__fact {
+  color: var(--ink-2);
+  max-width: 36ch;
+}
+
+.lineup-tag {
+  width: 10rem;
+  margin-left: -5rem;
+  margin-top: -2.4rem;
+}
+
+.lineup-tag .pair-tag__name {
+  font-size: 1.1rem;
+}
+
+.lineup__bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 5;
+}
+
+.lineup__chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.lineup-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  padding: 0.4rem 0.4rem 0.4rem 0.85rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+}
+
+.lineup-chip__name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.lineup-chip__size {
+  color: var(--ink-3);
+  font-size: 0.6rem;
+}
+
+.lineup-chip__x {
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  line-height: 1;
+  color: var(--ink-2);
+  align-self: center;
+}
+
+.lineup-chip__x:hover {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.lineup__actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-end;
+}
+
+.lineup__picker {
+  left: auto;
+  right: 0;
+}
+
+@media (max-width: 768px) {
+  .lineup__fact {
+    font-size: 0.92rem;
+  }
+
+  .lineup-tag .pair-tag__name {
+    font-size: 0.92rem;
+  }
+
+  .lineup-tag .pair-tag__k {
+    display: none;
+  }
+
+  .lineup-chip__size {
+    display: none;
+  }
+
+  .lineup__bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+/* ---------- then and now (/trends) ---------- */
+
+.trends__inner {
+  padding: calc(var(--header-h) + 5vh) var(--gutter) 10vh;
+  min-height: 100vh;
+  position: relative;
+  z-index: 2;
+}
+
+.trends__head {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  max-width: 980px;
+  margin-bottom: 5vh;
+}
+
+.trends__head em {
+  color: var(--ink-2);
+}
+
+.tally {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-width: 620px;
+}
+
+.tally__bar {
+  display: flex;
+  height: 8px;
+  gap: 2px;
+}
+
+.tally__seg {
+  flex-basis: 0;
+  border-radius: 1px;
+}
+
+.tally__seg--increasing,
+.tally__k--increasing {
+  --c: var(--st-LC);
+}
+
+.tally__seg--stable,
+.tally__k--stable {
+  --c: var(--ink-3);
+}
+
+.tally__seg--decreasing,
+.tally__k--decreasing {
+  --c: var(--st-CR);
+}
+
+.tally__seg {
+  background: var(--c);
+}
+
+.tally__legend {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 0.82rem;
+}
+
+.tally__k {
+  color: var(--c);
+  font-weight: 600;
+}
+
+.trends__cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3vw;
+  margin-bottom: 5vh;
+}
+
+.trend-col .h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+
+.trend-col__note {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+  margin: 0.3rem 0 1rem;
+}
+
+.trend-list {
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.trend-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px 5.2rem;
+  grid-template-areas:
+    'name spark change'
+    'fig fig fig';
+  align-items: center;
+  column-gap: 1rem;
+  row-gap: 0.15rem;
+  padding: 0.75rem 0.3rem;
+  border-bottom: 1px solid var(--line);
+  transition: background-color 0.25s ease;
+}
+
+.trend-row:hover {
+  background: color-mix(in oklab, var(--ink) 5%, transparent);
+}
+
+.trend-row__name {
+  grid-area: name;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.trend-row__name .display {
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.trend-row__scope {
+  color: var(--ink-3);
+  font-size: 0.58rem;
+}
+
+.trend-row .spark {
+  grid-area: spark;
+  width: 120px;
+  height: 34px;
+}
+
+.trend-row__change {
+  grid-area: change;
+  justify-self: end;
+  font-size: 1.7rem;
+}
+
+.trend-row.is-up .trend-row__change {
+  color: var(--st-LC);
+}
+
+.trend-row.is-down .trend-row__change {
+  color: var(--st-CR);
+}
+
+.trend-row__fig {
+  grid-area: fig;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+}
+
+.spark__all {
+  fill: none;
+  stroke: var(--line-strong);
+  stroke-width: 1.2;
+}
+
+.spark__win {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.spark__dot {
+  fill: var(--ink);
+}
+
+.trend-col__empty {
+  padding: 1rem 0;
+}
+
+.trends__foot {
+  margin-top: 4vh;
+  max-width: 70ch;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+}
+
+@media (max-width: 768px) {
+  .trends__cols {
+    grid-template-columns: 1fr;
+    gap: 6vh;
+  }
+
+  .trend-row {
+    grid-template-columns: minmax(0, 1fr) 84px 4.4rem;
+  }
+
+  .trend-row .spark {
+    width: 84px;
+  }
+
+  .trend-row__name .display {
+    font-size: 1.2rem;
+  }
+
+  .trend-row__change {
+    font-size: 1.35rem;
+  }
+
+  .trend-row__unit {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .trends__inner > .trend-col {
+    max-width: calc(50% - 1.5vw);
+  }
+}
+
+/* ---------- field journal (/journal) ---------- */
+
+.journal__inner {
+  padding: calc(var(--header-h) + 5vh) var(--gutter) 10vh;
+  min-height: 100vh;
+  position: relative;
+  z-index: 2;
+}
+
+.journal__head {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  max-width: 760px;
+  margin-bottom: 5vh;
+}
+
+.journal__head em {
+  color: var(--ink-2);
+}
+
+.journal__start {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.rank {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  max-width: 520px;
+}
+
+.rank__line {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.9rem;
+}
+
+.rank__title {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.rank__next {
+  color: var(--ink-3);
+  margin-left: auto;
+}
+
+.rank__bar {
+  height: 4px;
+  background: var(--line);
+}
+
+.rank__bar span {
+  display: block;
+  height: 100%;
+  background: var(--ink);
+  transition: width 0.8s var(--ease-out);
+}
+
+.journal__facts {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 0.85rem;
+}
+
+.kinds {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 0.5rem 2.5rem;
+  margin-bottom: 5vh;
+  max-width: 1100px;
+}
+
+.kinds li {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr 4.5rem;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--ink-3);
+}
+
+.kinds li.is-seen {
+  color: var(--ink);
+}
+
+.kinds__name {
+  font-size: 0.9rem;
+}
+
+.kinds li .label {
+  text-align: right;
+}
+
+.kinds__bar {
+  height: 3px;
+  background: var(--line);
+}
+
+.kinds__bar span {
+  display: block;
+  height: 100%;
+  background: currentColor;
+}
+
+.stamps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+  gap: 0.8rem;
+}
+
+.stamp {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  height: 100%;
+  padding: 0.85rem 0.95rem 0.8rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  background: color-mix(in oklab, var(--bg) 82%, transparent);
+  position: relative;
+  transition:
+    border-color 0.3s ease,
+    transform 0.3s var(--ease-out);
+}
+
+/* the stamp's perforated edge, in its Red List colour */
+.stamp::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px dashed color-mix(in oklab, var(--status, var(--ink-3)) 55%, transparent);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.stamp:hover {
+  border-color: var(--ink);
+  transform: translateY(-2px);
+}
+
+.stamp__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stamp__badge {
+  color: var(--st-LC);
+}
+
+.stamp__name {
+  font-size: 1.5rem;
+  line-height: 1;
+  margin-top: 0.4rem;
+}
+
+.stamp__sci {
+  font-size: 0.82rem;
+}
+
+.stamp__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 0.6rem;
+}
+
+.journal__foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.6rem 2rem;
+  margin-top: 6vh;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+}
+
+.journal__clear {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* "New in your journal" */
+.jtoast {
+  position: fixed;
+  /* centred, clear of the species title on the left and the measurements on the right */
+  left: 50%;
+  translate: -50% 0;
+  bottom: calc(1.4rem + env(safe-area-inset-bottom));
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.6rem 0.8rem 0.6rem 0.6rem;
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  box-shadow: 0 16px 40px -20px rgb(0 0 0 / 0.5);
+  animation: jtoast-in 0.6s var(--ease-out) both 0.8s;
+}
+
+.jtoast__no {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.1rem;
+  height: 3.1rem;
+  border-radius: 50%;
+  border: 1px dashed var(--ink-2);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.jtoast__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.jtoast__sub {
+  font-size: 0.85rem;
+  color: var(--ink-2);
+}
+
+.jtoast__open {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+}
+
+@keyframes jtoast-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@media (max-width: 768px) {
+  .kinds li {
+    grid-template-columns: 7rem 1fr 4rem;
+  }
+
+  .stamps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .stamp__name {
+    font-size: 1.2rem;
+  }
+
+  .jtoast {
+    left: 12px;
+    right: 12px;
+    translate: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jtoast {
+    animation: none;
+  }
+}

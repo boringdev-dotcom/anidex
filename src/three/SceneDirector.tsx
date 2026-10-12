@@ -15,7 +15,7 @@ import { bestSlot } from './slots';
 import { specimenInfo } from './stipple/StipplePoints';
 import { measureLocal, measureUniforms } from './MeasureLines';
 import { figureInfo, figureUniforms } from './ScaleFigure';
-import { pairInfo, REFERENCES, type ReferenceKind } from './specimen/Specimen';
+import { lineupInfo, pairInfo, REFERENCES, type ReferenceKind } from './specimen/Specimen';
 
 /** Default camera tilt by body plan: low, flat animals read better seen partly from above. */
 const PLAN_TILT: Record<string, number> = { serpentine: 0.62, amphibian: 0.45, arthropod: 0.7, aquatic: 0.3 };
@@ -80,6 +80,9 @@ const OG: Record<string, Pose> = {
   'og-earth': P({ sx: 0.23, sy: -0.05, ss: 0.8, so: 1, spin: 0 }),
 };
 
+/** Daily puzzle: the mystery specimen to the right of the guesses (on phones, above them). */
+const DAILY: Record<string, Pose> = { daily: P({ sx: 0.2, sy: 0.04, ss: 0.62, so: 1, spin: 0.14 }) };
+
 /**
  * Phones use a split layout: the top ~46% of the screen is a fixed 3D stage (see .stage-band),
  * so everything is centred in that band and sized to fill it. ss/gs here are fractions of the
@@ -97,6 +100,11 @@ const mobileSpecies = (key: string, p: Pose): Pose => ({
   so: p.so * (key === 'help' ? 0.7 : 1),
 });
 const MOBILE_SPECIES: Record<string, Pose> = Object.fromEntries(Object.entries(SPECIES).map(([k, p]) => [k, mobileSpecies(k, p)]));
+/** Line-up: the whole row centre stage, wide. */
+const LINEUP: Record<string, Pose> = { lineup: P({ sx: 0, sy: 0.02, ss: 0.86, so: 1, spin: 0 }) };
+const MOBILE_LINEUP: Record<string, Pose> = { lineup: { ...LINEUP.lineup, sy: 0.06, ss: 0.34 } };
+
+const MOBILE_DAILY: Record<string, Pose> = { daily: { ...DAILY.daily, sx: 0, sy: 0.27, ss: 0.36 } };
 const MOBILE_LANDING: Record<string, Pose> = {
   'landing-hero': { ...LANDING['landing-hero'], sx: 0, sy: 0.1, ss: 0.31 },
   'landing-index': { ...LANDING['landing-index'], sx: 0, sy: 0.3, ss: 0.24, so: 0.08 },
@@ -152,7 +160,18 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     palette.uTime.value = state.clock.elapsedTime;
     const { page, slug, activePlace } = useStore.getState();
     const mobile = size.width <= 768; // matches the CSS breakpoint for the phone stage band
-    const poseMap = page === 'species' ? (mobile ? MOBILE_SPECIES : SPECIES) : page === 'compare' ? COMPARE : page === 'og' ? OG : mobile ? MOBILE_LANDING : LANDING;
+    const poseMap =
+      page === 'species'
+        ? mobile ? MOBILE_SPECIES : SPECIES
+        : page === 'compare'
+          ? COMPARE
+          : page === 'og'
+            ? OG
+            : page === 'daily'
+              ? mobile ? MOBILE_DAILY : DAILY
+              : page === 'lineup'
+                ? mobile ? MOBILE_LINEUP : LINEUP
+                : mobile ? MOBILE_LANDING : LANDING;
     samplePoses(posesFor(poseMap, live.chapterKeys), live.pos, tgt.current);
     // subspecies chapter: the specimen is scaled to the selected tiger's real size, extinct ones fade to a ghost
     const familyIdx = live.chapterKeys.indexOf('family');
@@ -299,7 +318,7 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
       const settled = Math.abs(si.vYaw) < 0.25;
       if (!reduced && settled) sp.rotation.y += dt * c.spin * clamp((now - si.last - 600) / 1200) * (1 - cmp);
       // the compare page's pair is laid out along X: settle back to a slight three-quarter view
-      if (page === 'compare' && now - si.last > 1500) {
+      if ((page === 'compare' || page === 'lineup') && now - si.last > 1500) {
         const diff = wrap(-0.28 - sp.rotation.y);
         sp.rotation.y += diff * (1 - Math.exp(-2.5 * dt));
       }
@@ -481,6 +500,16 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
       project(sp.localToWorld(tmpV.set(pairInfo.b.x, pairInfo.b.top + 0.06, 0)), pl.b);
     }
 
+    // line-up page: a label above each member
+    const ll = live.lineupLabels;
+    const rowShown = page === 'lineup' && !pv && lineupInfo.key === shapeNow && stippleUniforms.uMorph.value > 0.85;
+    ll.opacity = damp(ll.opacity, rowShown ? eff.so : 0, reduced ? 60 : 5, dt);
+    if (ll.opacity > 0.01) {
+      lineupInfo.members.forEach((m, i) => {
+        if (ll.items[i]) project(sp.localToWorld(tmpV.set(m.x, m.top + 0.04, 0)), ll.items[i]);
+      });
+    }
+
     // collapse target: the focus point on the globe surface, in specimen-local space
     root.current?.updateMatrixWorld(true);
     latLonToVec3(focus.lat, focus.lon, 1.0, v.current);
@@ -489,7 +518,11 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     stippleUniforms.uTarget.value.copy(v.current);
 
     // uniforms
-    stippleUniforms.uAlive.value = 1;
+    // the daily puzzle shows only part of the specimen; the rest returns as guesses are made
+    // (it drops at once, so a new puzzle never shows its answer whole, and returns slowly)
+    const aliveTo = page === 'daily' ? live.alive : 1;
+    const aliveNow = stippleUniforms.uAlive.value;
+    stippleUniforms.uAlive.value = aliveTo < aliveNow ? aliveTo : damp(aliveNow, aliveTo, reduced ? 60 : 1.6, dt);
     stippleUniforms.uCollapse.value = eff.coll;
     stippleUniforms.uOpacity.value = eff.so;
     stippleUniforms.uDpr.value = state.viewport.dpr;
@@ -499,7 +532,7 @@ export function SceneDirector({ specimen, globe, root, figure }: Props) {
     const invert = themeNow === 'light' ? 1 : 0;
     stippleUniforms.uExposure.value = damp(stippleUniforms.uExposure.value, shown?.specimen.tone?.[themeNow] ?? 0, 4, dt);
     stippleUniforms.uToneInvert.value = damp(stippleUniforms.uToneInvert.value, invert, reduced ? 60 : 5, dt);
-    plinthUniforms.uOpacity.value = eff.so * (1 - eff.coll) * (page === 'species' || page === 'compare' || page === 'og' ? 0.28 : 0) * (1 - 0.7 * meas.current.cmp);
+    plinthUniforms.uOpacity.value = eff.so * (1 - eff.coll) * (page === 'species' || page === 'compare' || page === 'og' || page === 'daily' ? 0.28 : 0) * (1 - 0.7 * meas.current.cmp);
 
     globeUniforms.uOpacity.value = eff.go;
     globeUniforms.uReveal.value = eff.reveal;

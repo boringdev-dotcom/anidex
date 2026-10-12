@@ -10,6 +10,14 @@ A field guide to the animals we might lose. Search a species and scroll through 
 6. **How you can help.** Concrete actions and organisations to support.
 7. **Next specimen.** The point cloud morphs into the next animal.
 
+**Daily specimen** (`/daily`) is a guessing game: one animal a day, the same for everyone. It starts as a few scattered points of the specimen, and each wrong guess brings more of it back. Every guess is scored on four clues: how closely it is related, its size, its Red List status, and how far away and in which direction its range lies. Hints unlock after misses. Results, streaks and a shareable grid are kept in the browser, and practice rounds don't count toward the streak. The logic is in `src/lib/daily.ts`.
+
+**Line-up** (`/lineup/<slug>,<slug>,…,you`) stands up to six animals side by side at true scale, smallest to largest, with an optional figure at the visitor's own height. It reuses the compare page's point-cloud builder (`buildRow` in `src/three/specimen/Specimen.ts`), which lays out any number of shapes on one floor.
+
+**Then and now** (`/trends`) ranks every species with a population series by how much it has grown or shrunk, over its whole record or since 1970 or 2000, next to a tally of Red List population trends across all species. Data comes from `/api/trends`.
+
+**Field journal** (`/journal`) is the visitor's collection: every species page they open, and every daily specimen they solve, is stamped in and numbered in the order they met it. It shows progress by animal group and earns titles at 5, 10, 25, 50 and 100 species. It lives in the browser's local storage (`src/lib/journal.ts`).
+
 Drag the animal or the globe to spin it. Light and dark themes follow the OS setting until you pick one.
 
 ## Run it
