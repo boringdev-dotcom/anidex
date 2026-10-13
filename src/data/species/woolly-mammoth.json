@@ -1,0 +1,180 @@
+{
+  "slug": "woolly-mammoth",
+  "commonName": "Woolly mammoth",
+  "scientificName": "Mammuthus primigenius",
+  "descriptor": "A shaggy, small-eared elephant of the Ice Age steppe. Its last herd outlived the building of the pyramids.",
+  "aliases": [
+    "mammoth",
+    "mammuthus",
+    "ice age elephant",
+    "tundra mammoth"
+  ],
+  "taxonomy": {
+    "class": "Mammalia",
+    "order": "Proboscidea",
+    "family": "Elephantidae"
+  },
+  "gbifTaxonKey": 4825833,
+  "specimen": {
+    "sizeClass": "xl",
+    "bodyPlan": "quadruped",
+    "proportions": {
+      "length": 0.8,
+      "height": 0.8,
+      "bulk": 0.9,
+      "neck": 0.1,
+      "tail": 0.2
+    },
+    "features": [
+      "trunk",
+      "hump"
+    ],
+    "promptDetail": "long shaggy dark brown coat hanging almost to the ground, a high domed head with a peak, a shoulder hump and a back that slopes down to the hips, very small ears, a short tail, a long trunk, and two very long ivory tusks that curve outward and then spiral inward",
+    "model": {
+      "url": "/models/woolly-mammoth-4347ede813.glb",
+      "yaw": 1.5707963267948966
+    }
+  },
+  "physical": {
+    "weightKg": [
+      4500,
+      6000
+    ],
+    "weightNote": "adult males; females were about half that",
+    "heightM": [
+      2.7,
+      3.4
+    ],
+    "heightLabel": "at shoulder",
+    "lengthM": [
+      2.7,
+      3.4
+    ],
+    "lengthLabel": "standing height",
+    "lifespanYrs": [
+      60,
+      60
+    ],
+    "fact": "The last woolly mammoths lived on Wrangel Island until about 4,000 years ago, some five centuries after the Great Pyramid was built.",
+    "compare": "human",
+    "source": {
+      "label": "Larramendi 2016, Acta Palaeontologica Polonica",
+      "url": "https://doi.org/10.4202/app.00136.2014",
+      "year": 2016
+    }
+  },
+  "range": {
+    "summary": "Woolly mammoths lived across the mammoth steppe, a belt of cold dry grassland that ran from Spain and Britain through Siberia and over the Bering land bridge to Alaska, Canada and the northern United States. Frozen carcasses with skin, hair and stomach contents still thaw out of the Siberian and Yukon permafrost.",
+    "centroid": {
+      "lat": 62,
+      "lon": 110
+    },
+    "bbox": [
+      -170,
+      36,
+      180,
+      80
+    ],
+    "regions": [
+      "Britain",
+      "Yakutia",
+      "Wrangel Island",
+      "Alaska",
+      "Yukon"
+    ],
+    "countries": [
+      "RU",
+      "US",
+      "CA",
+      "GB",
+      "FR",
+      "DE",
+      "NL",
+      "PL"
+    ]
+  },
+  "fossil": {
+    "period": "Ice Age (Pleistocene)",
+    "mya": [
+      0.8,
+      0.004
+    ],
+    "story": "Woolly mammoths grazed the steppe alongside woolly rhinos, cave lions and wild horses. People hunted them, built huts from their bones and painted them on cave walls. Small herds held on for thousands of years on Arctic islands after the mainland herds were gone.",
+    "source": {
+      "label": "Vartanyan et al. 2008, Quaternary Research",
+      "url": "https://doi.org/10.1016/j.yqres.2008.03.005",
+      "year": 2008
+    }
+  },
+  "status": {
+    "iucn": "EX",
+    "trend": "unknown",
+    "threats": [
+      {
+        "title": "The steppe disappeared",
+        "detail": "As the Ice Age ended, a warmer and wetter climate turned the open grassland into forest, bog and mossy tundra. The mainland herds were gone by about 10,000 years ago."
+      },
+      {
+        "title": "Hunted by people",
+        "detail": "Butchered bones, stone points and whole huts built from mammoth bone show that people hunted them. How much hunting added to the pressure of a changing climate is still debated."
+      },
+      {
+        "title": "Last stands on islands",
+        "detail": "Mammoths survived on St. Paul Island, Alaska, until about 5,600 years ago, when its fresh water ran short, and on Wrangel Island until about 4,000 years ago. Why the Wrangel herd finally died out is not known."
+      }
+    ],
+    "source": {
+      "label": "Graham et al. 2016, PNAS",
+      "url": "https://doi.org/10.1073/pnas.1604903113",
+      "year": 2016
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Zoological Museum, St Petersburg",
+        "country": "RU",
+        "lat": 59.94,
+        "lon": 30.31,
+        "note": "The Berezovka mammoth, a frozen adult dug from a Siberian riverbank in 1901 and mounted in the position it was found."
+      },
+      {
+        "name": "Mammoth Museum, Yakutsk",
+        "country": "RU",
+        "lat": 62.02,
+        "lon": 129.71,
+        "note": "A research museum in the heart of the permafrost country where most frozen mammoths are found."
+      },
+      {
+        "name": "Institute of Natural Sciences, Brussels",
+        "country": "BE",
+        "lat": 50.84,
+        "lon": 4.38,
+        "note": "The Lier mammoth, found in 1860 and one of the first mammoth skeletons mounted in western Europe."
+      },
+      {
+        "name": "Yukon Beringia Interpretive Centre, Whitehorse",
+        "country": "CA",
+        "lat": 60.71,
+        "lon": -135.08,
+        "note": "Ice Age animals of the land bridge, on the North American side of the mammoth steppe."
+      }
+    ],
+    "bestMonths": [],
+    "tip": "Look at the tusks: they grew a layer every day, so a cross-section records a mammoth's whole life, season by season."
+  },
+  "next": "woolly-rhinoceros",
+  "summary": {
+    "text": "The woolly mammoth is an extinct species of mammoth that lived from the Middle Pleistocene until its extinction in the Holocene epoch. It was one of the last in a line of mammoth species, beginning with the African Mammuthus subplanifrons in the early Pliocene. The woolly mammoth began to diverge from the steppe mammoth about 800,000 years ago in Siberia. Its closest extant relative is the Asian elephant. The Columbian mammoth lived alongside the woolly mammoth in North America, and DNA studies show that the two hybridised with each other. Mammoth remains were long known in Asia before they became known to Europeans. The origin of these remains was long debated and often explained as the remains of legendary creatures. The mammoth was identified as an extinct elephant species by Georges Cuvier in 1796.",
+    "source": "Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Woolly_mammoth",
+    "license": "CC BY-SA 4.0"
+  },
+  "photo": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Siegsdorfer_Mammut.jpg",
+    "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ad/Siegsdorfer_Mammut.jpg/330px-Siegsdorfer_Mammut.jpg",
+    "credit": "Lou.gruber",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Siegsdorfer_Mammut.jpg"
+  }
+}

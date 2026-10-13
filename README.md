@@ -82,11 +82,11 @@ The index and search pick it up automatically.
 A species with a `fossil` block (`period`, `mya`, `story`, `source`) gets a different story, because there is no living range, population or Red List assessment to show:
 
 - **Where its bones were found.** `range` holds the fossil sites; the globe plots GBIF's fossil records on today's map.
-- **When it lived.** A strip of deep time from the Triassic to today, in place of the population chapter.
+- **When it lived.** A strip of deep time in place of the population chapter: Triassic to today for dinosaurs, the Pleistocene to today for Ice Age animals. `mya` is in millions of years, so 4,000 years ago is `0.004`.
 - **Extinction.** `status.iucn` is `EX` and `status.threats` lists what ended it, as far as the rock record says.
 - **Where to see one.** `sightings.places` are museums and dig sites; leave `bestMonths` empty.
 
-Use `"class": "Dinosauria"` with the order `Saurischia` or `Ornithischia`, and leave out `population`, `rangeHistory` and `help`. `tyrannosaurus-rex.json` is the template.
+Leave out `population`, `rangeHistory` and `help`. Dinosaurs use `"class": "Dinosauria"` with the order `Saurischia` or `Ornithischia` (`tyrannosaurus-rex.json` is the template); Ice Age mammals keep their real class and order (`woolly-mammoth.json`).
 
 ## 3D specimens
 
