@@ -4,7 +4,21 @@
     {
       "name": "anidex",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 5173
+    },
+    {
+      "name": "anidex-local",
+      "runtimeExecutable": "env",
+      "runtimeArgs": [
+        "DATABASE_URL=",
+        "npm",
+        "run",
+        "dev"
+      ],
       "port": 5173
     }
   ]

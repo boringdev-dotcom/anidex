@@ -93,7 +93,7 @@ export interface Physical {
   weightKg?: [number, number];
   weightNote?: string;
   heightM: [number, number] | null;
-  heightLabel: 'at shoulder' | 'standing' | null;
+  heightLabel: 'at shoulder' | 'at hip' | 'standing' | null;
   lengthM: [number, number];
   lengthLabel: string;
   /** wild lifespan; absent when nobody knows (the ocean sunfish, the dodo) */
@@ -187,6 +187,21 @@ export interface Species {
   };
 
   physical?: Physical;
+
+  /**
+   * Present for animals known only from fossils (dinosaurs). Their pages swap the living-animal
+   * chapters for fossil sites, when it lived, what ended it and where to see a skeleton:
+   * `range` holds the fossil sites, `status.threats` what ended it, `sightings.places` the museums.
+   */
+  fossil?: {
+    /** e.g. "Late Cretaceous" */
+    period: string;
+    /** When it appears in and disappears from the rock record, in millions of years ago: [first, last]. */
+    mya: [number, number];
+    /** Two or three sentences on the world it lived in. */
+    story: string;
+    source: Source;
+  };
 
   /** Subspecies or populations, shown in their own chapter when present. */
   variants?: Variant[];

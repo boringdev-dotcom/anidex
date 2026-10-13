@@ -69,9 +69,9 @@ export function Vitals({ sp }: { sp: Species }) {
   const isHand = ph.compare === 'hand';
   const items = [
     ph.weightKg ? { k: 'Weight', v: fmtWeight(ph.weightKg, units), note: ph.weightNote } : null,
-    ph.heightM ? { k: ph.heightLabel === 'standing' ? 'Height' : 'Shoulder', v: fmtLength(ph.heightM, units) } : null,
+    ph.heightM ? { k: ph.heightLabel === 'standing' ? 'Height' : ph.heightLabel === 'at hip' ? 'Hip' : 'Shoulder', v: fmtLength(ph.heightM, units) } : null,
     ph.lengthLabel === 'standing height' ? null : { k: ph.lengthLabel === 'wingspan' ? 'Wingspan' : 'Length', v: fmtLength(ph.lengthM, units) },
-    ph.lifespanYrs ? { k: 'Lifespan', v: fmtYears(ph.lifespanYrs), note: 'in the wild' } : null,
+    ph.lifespanYrs ? { k: 'Lifespan', v: fmtYears(ph.lifespanYrs), note: sp.fossil ? 'estimated from growth rings in bone' : 'in the wild' } : null,
   ].filter(Boolean) as { k: string; v: string; note?: string }[];
 
   return (

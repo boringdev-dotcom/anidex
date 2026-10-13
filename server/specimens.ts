@@ -42,6 +42,8 @@ export interface PromptInput {
   detail?: string;
   /** extinct subspecies get a reconstruction line */
   extinct?: boolean;
+  /** known only from fossils (dinosaurs): a life reconstruction, not a skeleton */
+  fossil?: boolean;
 }
 
 export const POSE: Record<string, string> = {
@@ -58,6 +60,7 @@ export function specimenPrompt(p: PromptInput): string {
   return [
     `A single adult ${p.commonName} (${p.scientificName}), ${POSE[p.bodyPlan] ?? POSE.quadruped}.`,
     p.detail ? `${p.detail[0].toUpperCase()}${p.detail.slice(1)}.` : '',
+    p.fossil ? 'This animal is known only from fossils: show a careful, scientifically up-to-date life reconstruction of the living animal with skin and muscle, not a skeleton, a toy or a movie monster.' : '',
     p.extinct ? 'This animal is extinct: show a careful, scientifically plausible reconstruction based on museum specimens and archival photographs.' : '',
     'The entire animal is fully visible and centered with generous margin, nothing cropped: every leg, foot, the tail and ears are in frame.',
     'Isolated on a pure plain white background, soft even studio lighting, no cast shadow, no ground, no props, no text.',

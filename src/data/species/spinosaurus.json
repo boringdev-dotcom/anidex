@@ -1,0 +1,162 @@
+{
+  "slug": "spinosaurus",
+  "commonName": "Spinosaurus",
+  "scientificName": "Spinosaurus aegyptiacus",
+  "descriptor": "A sail-backed river predator from North Africa, longer than Tyrannosaurus, with a crocodile's snout and a paddle for a tail.",
+  "aliases": [
+    "spine lizard",
+    "spinosaurid",
+    "sail-backed dinosaur",
+    "dinosaur"
+  ],
+  "taxonomy": {
+    "class": "Dinosauria",
+    "order": "Saurischia",
+    "family": "Spinosauridae"
+  },
+  "gbifTaxonKey": 4967112,
+  "specimen": {
+    "sizeClass": "xl",
+    "bodyPlan": "biped",
+    "proportions": {
+      "length": 1,
+      "height": 0.6,
+      "bulk": 0.6,
+      "neck": 0.5,
+      "tail": 0.9
+    },
+    "promptDetail": "a long narrow crocodile-like snout with conical teeth, a tall sail of skin running along the back, a long body held horizontal on two short sturdy hind legs, strong clawed arms, and a tall deep paddle-shaped tail like a newt's, scaly skin in muted grey-green with paler underside and faint banding on the sail",
+    "model": {
+      "url": "/models/spinosaurus-1c203a73ea.glb",
+      "yaw": 1.5707963267948966
+    }
+  },
+  "physical": {
+    "weightKg": [
+      7400,
+      7400
+    ],
+    "weightNote": "from a 2022 digital reconstruction; earlier estimates differ",
+    "heightM": null,
+    "heightLabel": null,
+    "lengthM": [
+      14,
+      14
+    ],
+    "lengthLabel": "snout to tail tip",
+    "fact": "Spines up to 1.65 m long rose from its back to form a sail, and its tail was a tall flexible paddle unlike any other known dinosaur's.",
+    "compare": "human",
+    "source": {
+      "label": "Sereno et al. 2022, eLife",
+      "url": "https://doi.org/10.7554/eLife.80092",
+      "year": 2022
+    }
+  },
+  "range": {
+    "summary": "Spinosaurus fossils come from North Africa, in rocks left by a vast river system that drained toward the Tethys Sea. The first skeleton was found in Egypt's Bahariya Oasis in 1912. Most newer material, including the only associated skeleton, comes from the Kem Kem beds of south-eastern Morocco.",
+    "centroid": {
+      "lat": 29,
+      "lon": 8
+    },
+    "bbox": [
+      -10,
+      18,
+      33,
+      37
+    ],
+    "regions": [
+      "Morocco",
+      "Algeria",
+      "Tunisia",
+      "Egypt"
+    ],
+    "countries": [
+      "MA",
+      "DZ",
+      "TN",
+      "EG"
+    ]
+  },
+  "fossil": {
+    "period": "Late Cretaceous",
+    "mya": [
+      99,
+      94
+    ],
+    "story": "Spinosaurus lived along great rivers crowded with giant sawfish, coelacanths and crocodile relatives. With its long snout, conical teeth and paddle tail it is the best case for a dinosaur that hunted in water. How well it actually swam is still argued over.",
+    "source": {
+      "label": "Natural History Museum, London: Dino Directory",
+      "url": "https://www.nhm.ac.uk/discover/dino-directory/spinosaurus.html"
+    }
+  },
+  "status": {
+    "iucn": "EX",
+    "trend": "unknown",
+    "threats": [
+      {
+        "title": "Gone by 94 million years ago",
+        "detail": "Spinosaurus is not found in younger rocks. Later traces of its family are scarce and disputed."
+      },
+      {
+        "title": "Rising seas",
+        "detail": "Around that time sea levels rose and flooded much of North Africa's river plains, and the oceans went through a worldwide low-oxygen crisis that disrupted coastal life."
+      },
+      {
+        "title": "A specialist's risk",
+        "detail": "An animal built around big river fish depends on its rivers. That link is a reasonable guess, not an established cause."
+      }
+    ],
+    "source": {
+      "label": "Natural History Museum, London: Dino Directory",
+      "url": "https://www.nhm.ac.uk/discover/dino-directory/spinosaurus.html"
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Bahariya Oasis",
+        "country": "EG",
+        "lat": 28.35,
+        "lon": 28.87,
+        "note": "The Western Desert oasis where Ernst Stromer's expedition found the first Spinosaurus in 1912."
+      },
+      {
+        "name": "Kem Kem beds, near Erfoud",
+        "country": "MA",
+        "lat": 31.43,
+        "lon": -4.23,
+        "note": "The red sandstones that yielded the newer skeleton and its paddle tail, described in 2014 and 2020."
+      },
+      {
+        "name": "Museo di Storia Naturale, Milan",
+        "country": "IT",
+        "lat": 45.47,
+        "lon": 9.2,
+        "note": "Holds the largest known Spinosaurus snout, nearly a metre long."
+      },
+      {
+        "name": "Paläontologisches Museum, Munich",
+        "country": "DE",
+        "lat": 48.15,
+        "lon": 11.56,
+        "note": "Where the first skeleton was kept until an air raid destroyed it in April 1944. Only Stromer's drawings and photographs survive."
+      }
+    ],
+    "bestMonths": [],
+    "tip": "No museum has a real, complete Spinosaurus. Every full skeleton on display is a reconstruction pieced together from several partial animals."
+  },
+  "next": "stegosaurus",
+  "summary": {
+    "text": "Spinosaurus is a genus of large spinosaurid theropod dinosaurs that lived in what is now North Africa during the Cenomanian age of the Late Cretaceous period, about 100 to 94 million years ago. The genus was known first from Egyptian remains discovered in 1912 and described by German palaeontologist Ernst Stromer in 1915. The original remains were destroyed in World War II, but additional material came to light in the early 21st century. It is unclear whether one or two species are represented in the fossils reported in the scientific literature. The type species, S. aegyptiacus, is mainly known from the Bahariya Formation in Egypt and the Kem Kem beds in Morocco. The other species, S. mirabilis, is known from the Farak Formation in Niger. Possible junior synonyms include Sigilmassasaurus and the dubious S. maroccanus from the Kem Kem beds and Oxalaia from the Alcântara Formation in Brazil, though the distinction and validity of these taxa have been debated.",
+    "source": "Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Spinosaurus",
+    "license": "CC BY-SA 4.0"
+  },
+  "photo": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/FSAC-KK-11888.jpg/3840px-FSAC-KK-11888.jpg",
+    "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f0/FSAC-KK-11888.jpg/330px-FSAC-KK-11888.jpg",
+    "credit": "3blindMies",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:FSAC-KK-11888.jpg"
+  }
+}

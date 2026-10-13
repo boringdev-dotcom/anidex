@@ -58,6 +58,7 @@ const SPECIES: Record<string, Pose> = {
   family: P({ sx: 0.21, sy: 0.19, ss: 0.5, so: 1, gx: 0.2, spin: 0.2 }),
   range: P({ sx: 0, sy: 0.05, ss: 0.64, so: 0, coll: 1, gx: 0.17, gs: 0.68, go: 1, reveal: 1, ripple: 1 }),
   population: P({ sx: 0.24, sy: 0.1, ss: 0.46, so: 0, coll: 1, gx: 0.26, gy: 0.14, gs: 0.5, go: 1, reveal: 1, hist: 1 }),
+  era: P({ sx: 0.3, sy: 0.14, ss: 0.4, so: 0.95, gx: 0.21, spin: 0.12 }),
   status: P({ sx: 0.3, sy: 0.12, ss: 0.38, so: 0.95, gx: 0.21 }),
   about: P({ sx: 0.3, sy: 0.12, ss: 0.42, so: 0.95, gx: 0.21, spin: 0.12 }),
   sightings: P({ sx: 0.3, sy: 0.03, ss: 0.4, so: 0, coll: 1, gx: 0.2, gs: 0.66, go: 1, reveal: 1, pins: 1 }),

@@ -11,6 +11,7 @@ import { About } from './chapters/About';
 import { Family } from './chapters/Family';
 import { Range } from './chapters/Range';
 import { Population } from './chapters/Population';
+import { Era } from './chapters/Era';
 import { Vulnerability } from './chapters/Vulnerability';
 import { Sightings } from './chapters/Sightings';
 import { Help } from './chapters/Help';
@@ -30,6 +31,7 @@ const CHAPTERS: Chapter[] = [
   { key: 'family', label: 'Subspecies', render: (sp, n) => <Family sp={sp} n={n} /> },
   { key: 'range', label: 'Range', render: (sp, n) => <Range sp={sp} n={n} /> },
   { key: 'population', label: 'Population', render: (sp, n) => <Population sp={sp} n={n} /> },
+  { key: 'era', label: 'Era', render: (sp, n) => <Era sp={sp} n={n} /> },
   { key: 'status', label: 'Status', render: (sp, n) => <Vulnerability sp={sp} n={n} /> },
   { key: 'sightings', label: 'Sightings', render: (sp, n) => <Sightings sp={sp} n={n} /> },
   { key: 'help', label: 'Help', render: (sp, n) => <Help sp={sp} n={n} /> },
@@ -42,6 +44,7 @@ function Story({ sp }: { sp: SpeciesRecord }) {
     about: sp.tier === 'auto' || !!sp.photo || !!sp.summary,
     family: (sp.variants?.length ?? 0) > 0,
     population: (sp.population?.points.length ?? 0) > 0,
+    era: !!sp.fossil,
     sightings: (sp.sightings?.places.length ?? 0) > 0,
     help: (sp.help?.actions.length ?? 0) > 0,
   };

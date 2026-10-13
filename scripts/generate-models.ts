@@ -46,6 +46,8 @@ interface Sp {
   commonName: string;
   scientificName: string;
   specimen: { bodyPlan: string; promptDetail?: string; model?: { url: string; yaw?: number } };
+  /** present for animals known only from fossils (dinosaurs) */
+  fossil?: unknown;
   /** set for subspecies tasks: "<species>--<variant>" lives inside the parent species file */
   parent?: { file: string; variant: string; extinct: boolean };
   /** full prompt for non-animal reference models (scale comparisons) */
@@ -106,6 +108,7 @@ function prompt(sp: Sp): string {
     bodyPlan: sp.specimen.bodyPlan,
     detail: sp.specimen.promptDetail ?? DETAIL[sp.slug],
     extinct: sp.parent?.extinct,
+    fossil: !!sp.fossil,
   });
 }
 

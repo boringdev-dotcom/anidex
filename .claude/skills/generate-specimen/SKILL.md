@@ -17,6 +17,8 @@ Pipeline (stages in `server/specimens.ts`, shared by `scripts/generate-models.ts
 
 **Subspecies.** A species can list `variants` in its JSON, like the tiger's nine subspecies. Each variant becomes its own task with key `<species>--<variant>` (e.g. `tiger--amur`). It stores `models/tiger--amur-<hash>.glb` and wires the model into that variant's `specimen.model` inside the parent JSON. `--only tiger` selects the species and all its variants; `--only tiger--amur` selects one. Variant prompts use `variants[].specimen.promptDetail`. Extinct variants (`alive: false`) get a "careful reconstruction" line in the prompt. A variant that already points at a model (e.g. Bengal reusing the `bengal-tiger` model) is skipped.
 
+**Fossil animals.** A species with a `fossil` block (the dinosaurs) gets a "life reconstruction, not a skeleton" line in the prompt. Describe posture as well as skin in `specimen.promptDetail` (tail off the ground, body horizontal, feathers), because the generic pose line knows nothing about dinosaurs.
+
 Every stage is cached in `scripts/.cache/<slug>/` (`reference.png`, `raw.glb`, `thumbnail.png`), so reruns only pay for missing steps.
 
 ## Before you start

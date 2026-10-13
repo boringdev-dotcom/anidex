@@ -41,6 +41,9 @@ export function Sightings({ sp, n }: { sp: Species; n: number }) {
   }, [chapter, CH]);
 
   const shown = active >= 0 ? places[active] : null;
+  // fossil animals: the places are museums and dig sites, open all year
+  const fossil = !!sp.fossil;
+  const when = monthRanges(bestMonths);
   return (
     <section className="chapter ch-sight" aria-labelledby="sight-title">
       <div className="stage split">
@@ -49,14 +52,14 @@ export function Sightings({ sp, n }: { sp: Species; n: number }) {
             <p className="slot-title">{shown ? shown.name : 'Where to go'}</p>
             <p className="slot-sub">{shown ? shown.country : `${places.length} places`}</p>
           </div>
-          <span className="slot-tag">{monthRanges(bestMonths)}</span>
+          <span className="slot-tag">{fossil ? 'Museums and sites' : when}</span>
         </StageSlot>
         <div className="col-text">
           <Reveal split="fade">
-            <ChapterLabel n={n}>Where and when to see them</ChapterLabel>
+            <ChapterLabel n={n}>{fossil ? 'Where to see one' : 'Where and when to see them'}</ChapterLabel>
           </Reveal>
           <Reveal as="h2" id="sight-title" className="display h2" split="lines">
-            {`Best seen ${monthRanges(bestMonths).replace(/^Year-round$/, 'year-round')}`}
+            {fossil ? 'Meet it in the bone' : `Best seen ${when.replace(/^Year-round$/, 'year-round')}`}
           </Reveal>
           <ol className="places" ref={listRef} onMouseLeave={() => set(-1)}>
             {places.map((p, i) => (
@@ -87,7 +90,7 @@ export function Sightings({ sp, n }: { sp: Species; n: number }) {
             ))}
           </ol>
           <Reveal className="sight__foot" split="fade" delay={0.3}>
-            <MonthRing months={bestMonths} />
+            {!fossil && <MonthRing months={bestMonths} />}
             {tip && <p className="sight__tip">{tip}</p>}
           </Reveal>
         </div>

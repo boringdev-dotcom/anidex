@@ -1,0 +1,183 @@
+{
+  "slug": "tyrannosaurus-rex",
+  "commonName": "Tyrannosaurus rex",
+  "scientificName": "Tyrannosaurus rex",
+  "descriptor": "The tyrant lizard king: a twelve-metre predator with the strongest bite of any known land animal, and one of the last dinosaurs.",
+  "aliases": [
+    "t rex",
+    "t. rex",
+    "trex",
+    "tyrannosaurus",
+    "tyrant lizard",
+    "dinosaur"
+  ],
+  "taxonomy": {
+    "class": "Dinosauria",
+    "order": "Saurischia",
+    "family": "Tyrannosauridae"
+  },
+  "gbifTaxonKey": 4822633,
+  "specimen": {
+    "sizeClass": "xl",
+    "bodyPlan": "biped",
+    "proportions": {
+      "length": 0.9,
+      "height": 0.6,
+      "bulk": 0.8,
+      "neck": 0.3,
+      "tail": 0.9
+    },
+    "promptDetail": "huge deep-jawed head, tiny two-fingered arms, body held horizontal and balanced over two massive hind legs by a long heavy tail held straight out off the ground, pebbly scaly skin in mottled brown and olive with darker banding along the back",
+    "model": {
+      "url": "/models/tyrannosaurus-rex-252bf2fb45.glb",
+      "yaw": 1.5707963267948966
+    }
+  },
+  "physical": {
+    "weightKg": [
+      5000,
+      8900
+    ],
+    "weightNote": "Scotty, the heaviest known adult, is estimated at about 8.9 t",
+    "heightM": [
+      3.7,
+      4
+    ],
+    "heightLabel": "at hip",
+    "lengthM": [
+      11,
+      13
+    ],
+    "lengthLabel": "snout to tail tip",
+    "lifespanYrs": [
+      28,
+      30
+    ],
+    "fact": "Its bite at the back teeth is estimated at 35,000 to 57,000 newtons, the strongest of any land animal known, living or extinct.",
+    "compare": "human",
+    "source": {
+      "label": "Persons, Currie and Erickson 2019, The Anatomical Record",
+      "url": "https://doi.org/10.1002/ar.24118",
+      "year": 2019
+    }
+  },
+  "range": {
+    "summary": "Every Tyrannosaurus rex fossil comes from western North America. In its day that was Laramidia, a long island continent cut off from the east by a shallow inland sea. Finds run from Alberta and Saskatchewan through Montana, the Dakotas and Wyoming to Utah, with about fifty partial skeletons known.",
+    "centroid": {
+      "lat": 45,
+      "lon": -106
+    },
+    "bbox": [
+      -115,
+      29,
+      -100,
+      54
+    ],
+    "regions": [
+      "Alberta",
+      "Saskatchewan",
+      "Montana",
+      "South Dakota",
+      "Wyoming",
+      "Utah"
+    ],
+    "countries": [
+      "US",
+      "CA"
+    ]
+  },
+  "fossil": {
+    "period": "Late Cretaceous",
+    "mya": [
+      68,
+      66
+    ],
+    "story": "Tyrannosaurus rex was the top predator of Laramidia, a warm coastal plain of rivers and forests beside an inland sea. It shared that world with Triceratops, Edmontosaurus and Ankylosaurus. It lived closer in time to us than to Stegosaurus.",
+    "source": {
+      "label": "Natural History Museum, London: Dino Directory",
+      "url": "https://www.nhm.ac.uk/discover/dino-directory/tyrannosaurus.html"
+    }
+  },
+  "status": {
+    "iucn": "EX",
+    "trend": "unknown",
+    "threats": [
+      {
+        "title": "An asteroid strike",
+        "detail": "About 66 million years ago an asteroid roughly 10 km wide hit what is now the Yucatán Peninsula in Mexico, leaving the buried Chicxulub crater, about 180 km across."
+      },
+      {
+        "title": "Years of dark and cold",
+        "detail": "Dust, soot and sulphur thrown into the sky dimmed the sun. Plants and plankton died back, and food chains collapsed from the bottom up."
+      },
+      {
+        "title": "Too big to hide",
+        "detail": "Almost no land animal heavier than about 25 kg is known to have survived. Small animals that could shelter and live on seeds, insects or carrion came through, the birds among them."
+      },
+      {
+        "title": "Volcanoes in the background",
+        "detail": "The Deccan Traps in India were pouring out lava around the same time. Most researchers now see them as a lesser stress beside the impact."
+      }
+    ],
+    "source": {
+      "label": "Hull et al. 2020, Science",
+      "url": "https://doi.org/10.1126/science.aay5055",
+      "year": 2020
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Field Museum, Chicago",
+        "country": "US",
+        "lat": 41.87,
+        "lon": -87.62,
+        "note": "SUE, the most complete T. rex known at about 90% of the skeleton, found in South Dakota in 1990."
+      },
+      {
+        "name": "American Museum of Natural History, New York",
+        "country": "US",
+        "lat": 40.78,
+        "lon": -73.97,
+        "note": "The mount that fixed the animal in the public mind, built from a skeleton Barnum Brown dug out of Montana in 1908."
+      },
+      {
+        "name": "T. rex Discovery Centre, Eastend",
+        "country": "CA",
+        "lat": 49.52,
+        "lon": -108.82,
+        "note": "Scotty, the heaviest T. rex yet measured, shown near the Saskatchewan valley where it was found in 1991."
+      },
+      {
+        "name": "National Museum of Natural History, Washington",
+        "country": "US",
+        "lat": 38.89,
+        "lon": -77.03,
+        "note": "The Nation's T. rex, found in Montana in 1988 and posed over a fallen Triceratops."
+      },
+      {
+        "name": "Naturalis, Leiden",
+        "country": "NL",
+        "lat": 52.16,
+        "lon": 4.47,
+        "note": "Trix, one of the oldest and best-preserved individuals, excavated in Montana in 2013."
+      }
+    ],
+    "bestMonths": [],
+    "tip": "Real bone is heavy and fragile, so many mounts are partly cast. The real skull is often shown separately, at eye level."
+  },
+  "next": "triceratops",
+  "summary": {
+    "text": "Tyrannosaurus is a genus of large theropod dinosaur. The type species Tyrannosaurus rex, often shortened to T. rex or colloquially T-Rex, is one of the best represented theropods. It lived throughout what is now western North America, on what was then an island continent known as Laramidia. Tyrannosaurus had a much wider range than other tyrannosaurids. Fossils are found in a variety of geological formations which have been dated to the late Maastrichtian age of the late Cretaceous period, 69 to 66 million years ago, with isolated specimens possibly indicating an earlier origin in the middle Campanian age. It was one of the last known members of the tyrannosaurids and among the last non-avian dinosaurs to exist before the Cretaceous–Paleogene extinction event.",
+    "source": "Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Tyrannosaurus",
+    "license": "CC BY-SA 4.0"
+  },
+  "photo": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/94/Tyrannosaurus_Rex_Holotype.jpg/3840px-Tyrannosaurus_Rex_Holotype.jpg",
+    "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/94/Tyrannosaurus_Rex_Holotype.jpg/330px-Tyrannosaurus_Rex_Holotype.jpg",
+    "credit": "ScottRobertAnselmo",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Tyrannosaurus_Rex_Holotype.jpg"
+  }
+}

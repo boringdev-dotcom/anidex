@@ -16,6 +16,7 @@ export const CLASS_LABEL: Record<string, string> = {
   Mammalia: 'Mammals',
   Aves: 'Birds',
   Reptilia: 'Reptiles',
+  Dinosauria: 'Dinosaurs',
   Amphibia: 'Amphibians',
   Actinopterygii: 'Ray-finned fish',
   Elasmobranchii: 'Sharks & rays',

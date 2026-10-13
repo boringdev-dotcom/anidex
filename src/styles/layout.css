@@ -220,6 +220,7 @@
 .ch-hero { height: 150vh; }
 .ch-range { height: 240vh; }
 .ch-pop { height: 300vh; }
+.ch-era { height: 200vh; }
 .ch-status { height: 200vh; }
 .ch-sight { height: 230vh; }
 .ch-help { height: 170vh; }
@@ -821,6 +822,136 @@
 
 .tl-handle__hint {
   fill: var(--ink);
+}
+
+/* ---------- species: era (fossil animals) ---------- */
+
+.era {
+  gap: 3vh;
+}
+
+.era__head,
+.era__readout,
+.era__story,
+.era__scale {
+  max-width: 56vw;
+}
+
+.era__head .chapter-label {
+  margin-bottom: 1rem;
+}
+
+.era__number {
+  font-size: clamp(3.2rem, 6.6vw, 7.6rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  padding-bottom: 0.12em;
+}
+
+.era__to {
+  font-size: 0.4em;
+  color: var(--ink-2);
+  letter-spacing: 0;
+}
+
+.era__delta {
+  margin-top: 0.6rem;
+  color: var(--ink-2);
+}
+
+.era__story {
+  max-width: 38rem;
+}
+
+.era__strip {
+  position: relative;
+  display: flex;
+  /* room above for the animal's name, below for the period names and their start years */
+  padding: 1.9rem 0 3.6rem;
+}
+
+.era__period {
+  position: relative;
+  height: 14px;
+  border-left: 1px solid var(--line-strong);
+  background: color-mix(in oklab, var(--ink) 7%, transparent);
+}
+
+.era__period:nth-child(even) {
+  background: color-mix(in oklab, var(--ink) 13%, transparent);
+}
+
+.era__period-name,
+.era__period-from {
+  position: absolute;
+  left: 0.4rem;
+  white-space: nowrap;
+}
+
+.era__period-name {
+  top: calc(100% + 0.5rem);
+}
+
+.era__period-from {
+  top: calc(100% + 1.7rem);
+  color: var(--ink-3);
+}
+
+.era__band {
+  position: absolute;
+  top: calc(1.9rem - 5px);
+  height: 24px;
+  min-width: 3px;
+  background: var(--ink);
+}
+
+.era__band-name {
+  position: absolute;
+  bottom: calc(100% + 0.35rem);
+  left: 0;
+  white-space: nowrap;
+}
+
+/* a band near the right edge reads leftward so its name stays inside the strip */
+.era__band--end .era__band-name {
+  left: auto;
+  right: 0;
+}
+
+.era__today {
+  position: absolute;
+  right: 0;
+  top: calc(1.9rem + 14px + 1.7rem);
+  color: var(--ink-3);
+}
+
+.era__note {
+  color: var(--ink-3);
+  max-width: 34rem;
+}
+
+.ch-era .caption {
+  margin-top: 0;
+}
+
+@media (max-width: 768px) {
+  .era__head,
+  .era__readout,
+  .era__story,
+  .era__scale {
+    max-width: none;
+  }
+
+  /* the period names would collide at this width: the start years carry the scale */
+  .era__period-name {
+    font-size: 0.56rem;
+    letter-spacing: 0.02em;
+  }
+
+  .era__period:nth-child(4) .era__period-name {
+    left: auto;
+    right: 0;
+  }
 }
 
 /* ---------- species: status ---------- */
