@@ -189,14 +189,14 @@ export interface Species {
   physical?: Physical;
 
   /**
-   * Present for animals known only from fossils (dinosaurs). Their pages swap the living-animal
+   * Present for animals known only from fossils (dinosaurs, Ice Age mammals). Their pages swap the living-animal
    * chapters for fossil sites, when it lived, what ended it and where to see a skeleton:
    * `range` holds the fossil sites, `status.threats` what ended it, `sightings.places` the museums.
    */
   fossil?: {
     /** e.g. "Late Cretaceous" */
     period: string;
-    /** When it appears in and disappears from the rock record, in millions of years ago: [first, last]. */
+    /** When it appears in and disappears from the fossil record, in millions of years ago: [first, last] (0.004 = 4,000 years). */
     mya: [number, number];
     /** Two or three sentences on the world it lived in. */
     story: string;

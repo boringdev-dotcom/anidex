@@ -1,7 +1,7 @@
 import type { Species } from '../data/types';
 import { COUNTRY_CENTROIDS } from '../data/countryCentroids';
 import { STATUS_LABEL } from '../data';
-import { countryName, fmtEstimate, fmtLength, fmtWeight, fmtYears, mid, type Units } from './format';
+import { countryName, fmtAgo, fmtEstimate, fmtLength, fmtWeight, fmtYears, mid, type Units } from './format';
 
 /** "/compare/lion-vs-tiger" */
 export const pairPath = (a: string, b: string) => `/compare/${a}-vs-${b}`;
@@ -186,12 +186,12 @@ export function overlapSentence(a: Species, b: Species): string {
   // fossil animals: what matters is whether the two were ever alive at the same time
   if (a.fossil && b.fossil) {
     const gap = Math.max(a.fossil.mya[1], b.fossil.mya[1]) - Math.min(a.fossil.mya[0], b.fossil.mya[0]);
-    if (gap > 0) return `About ${gap} million years apart. These two never met.`;
+    if (gap > 0) return `About ${fmtAgo(gap)} years apart. These two never met.`;
     if (!shared.length) return 'Alive at the same time, on different continents. These two never met.';
     return `Both lived in what is now ${shared.length === 1 ? shared[0] : `${shared.slice(0, -1).join(', ')} and ${shared.at(-1)}`}, at the same time.`;
   }
   const gone = a.fossil ? a : b.fossil ? b : null;
-  if (gone) return `${gone.commonName} died out about ${gone.fossil!.mya[1]} million years ago. These two never met.`;
+  if (gone) return `${gone.commonName} died out about ${fmtAgo(gone.fossil!.mya[1])} years ago. These two never met.`;
   if (!shared.length) return 'Their ranges don’t overlap. In the wild, these two never meet.';
   if (shared.length === 1) return `Both live in ${shared[0]}.`;
   if (shared.length <= 3) return `Both live in ${shared.slice(0, -1).join(', ')} and ${shared.at(-1)}.`;

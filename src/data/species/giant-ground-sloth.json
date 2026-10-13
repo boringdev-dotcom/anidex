@@ -1,0 +1,162 @@
+{
+  "slug": "giant-ground-sloth",
+  "commonName": "Giant ground sloth",
+  "scientificName": "Megatherium americanum",
+  "descriptor": "A ground sloth the size of an elephant, six metres long, that could rear up on its hind legs to pull down branches.",
+  "aliases": [
+    "megatherium",
+    "ground sloth",
+    "giant sloth",
+    "great beast"
+  ],
+  "taxonomy": {
+    "class": "Mammalia",
+    "order": "Pilosa",
+    "family": "Megatheriidae"
+  },
+  "gbifTaxonKey": 8537552,
+  "specimen": {
+    "sizeClass": "xl",
+    "bodyPlan": "quadruped",
+    "proportions": {
+      "length": 0.85,
+      "height": 0.6,
+      "bulk": 1,
+      "neck": 0.2,
+      "tail": 0.6
+    },
+    "promptDetail": "an enormous bear-shaped ground sloth standing on all four legs, with a small blunt head on a thick neck, a huge barrel body and very broad hips, a thick heavy tail resting toward the ground, massive limbs ending in long curved claws with the feet turned inward so it walks on their outer edges, coarse shaggy grey-brown fur",
+    "model": {
+      "url": "/models/giant-ground-sloth-4765133034.glb",
+      "yaw": 1.5707963267948966
+    }
+  },
+  "physical": {
+    "weightKg": [
+      3500,
+      4000
+    ],
+    "heightM": null,
+    "heightLabel": null,
+    "lengthM": [
+      5,
+      6
+    ],
+    "lengthLabel": "nose to tail tip",
+    "fact": "Its claws were too long to put flat, so it walked on the sides of its feet. Rearing up on its hind legs and tail, it stood about 3.5 m tall.",
+    "compare": "human",
+    "source": {
+      "label": "Natural History Museum, London: What was Megatherium?",
+      "url": "https://www.nhm.ac.uk/discover/what-was-megatherium.html"
+    }
+  },
+  "range": {
+    "summary": "Megatherium americanum is best known from the Pampas of Argentina and Uruguay, with finds north to southern Bolivia and south to the edge of Patagonia. The first skeleton was dug from a riverbank near Luján, Argentina, in 1787.",
+    "centroid": {
+      "lat": -34,
+      "lon": -60
+    },
+    "bbox": [
+      -76,
+      -42,
+      -48,
+      -14
+    ],
+    "regions": [
+      "Argentina",
+      "Uruguay",
+      "Bolivia"
+    ],
+    "countries": [
+      "AR",
+      "UY",
+      "BO",
+      "CL",
+      "PY"
+    ]
+  },
+  "fossil": {
+    "period": "Ice Age (Pleistocene)",
+    "mya": [
+      0.4,
+      0.012
+    ],
+    "story": "Megatherium browsed the open woodlands and grasslands of the Pampas. It was the first fossil animal ever mounted as a skeleton, in Madrid in the late 1780s, and Charles Darwin collected its bones in Argentina in 1832.",
+    "source": {
+      "label": "Politis et al. 2019, Science Advances",
+      "url": "https://doi.org/10.1126/sciadv.aau4546",
+      "year": 2019
+    }
+  },
+  "status": {
+    "iucn": "EX",
+    "trend": "unknown",
+    "threats": [
+      {
+        "title": "Hunted by the first South Americans",
+        "detail": "At Campo Laborde in Argentina a giant sloth was killed and butchered with stone tools about 12,600 years ago."
+      },
+      {
+        "title": "A changing climate",
+        "detail": "The end of the Ice Age reshaped the grasslands and woodlands it fed in, at the same moment people were spreading through the continent."
+      },
+      {
+        "title": "Slow to recover",
+        "detail": "Very large animals breed slowly, so even light hunting can outpace births. Almost every South American mammal over a tonne vanished in the same few thousand years."
+      }
+    ],
+    "source": {
+      "label": "Politis et al. 2019, Science Advances",
+      "url": "https://doi.org/10.1126/sciadv.aau4546",
+      "year": 2019
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Museo Nacional de Ciencias Naturales, Madrid",
+        "country": "ES",
+        "lat": 40.44,
+        "lon": -3.69,
+        "note": "The original Luján skeleton, shipped to Spain in 1788 and still standing in its eighteenth-century pose."
+      },
+      {
+        "name": "Natural History Museum, London",
+        "country": "GB",
+        "lat": 51.5,
+        "lon": -0.18,
+        "note": "A towering skeleton cast reared up against a tree trunk, near bones that Darwin sent home."
+      },
+      {
+        "name": "Museo de La Plata",
+        "country": "AR",
+        "lat": -34.91,
+        "lon": -57.93,
+        "note": "One of the great collections of Pampas giants, in the region where they lived."
+      },
+      {
+        "name": "Museo Argentino de Ciencias Naturales, Buenos Aires",
+        "country": "AR",
+        "lat": -34.61,
+        "lon": -58.44,
+        "note": "Ground sloths, glyptodonts and other Ice Age mammals of Argentina."
+      }
+    ],
+    "bestMonths": [],
+    "tip": "Its living relatives are the tree sloths, which weigh about as much as a small dog. Megatherium was up to ten times their length."
+  },
+  "next": "axolotl",
+  "summary": {
+    "text": "Megatherium is an extinct genus of large ground sloths endemic to South America that lived from the Pliocene through the end of the Late Pleistocene. It is best known for the elephant-sized, 3.5–4 tonnes (7,700–8,800 lb) type species Megatherium americanum, which is primarily known from the Pampas, but which ranged southwards to northernmost Patagonia and northwards to southern Bolivia during the late Middle Pleistocene and Late Pleistocene. Various other species have been described, including those belonging to the Andean subgenus Pseudomegatherium, which range in size from comparable to M. americanum down to approximately 1 tonne (2,200 lb).",
+    "source": "Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Megatherium",
+    "license": "CC BY-SA 4.0"
+  },
+  "photo": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Megatherium_americanum_Skeleton_NHM.JPG",
+    "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/ce/Megatherium_americanum_Skeleton_NHM.JPG/330px-Megatherium_americanum_Skeleton_NHM.JPG",
+    "credit": "en:User:Ballista",
+    "license": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Megatherium_americanum_Skeleton_NHM.JPG"
+  }
+}

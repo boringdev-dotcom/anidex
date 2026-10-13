@@ -848,6 +848,11 @@
   padding-bottom: 0.12em;
 }
 
+/* "800,000 to 4,000" is much longer than "68 to 66" */
+.era__number--years {
+  font-size: clamp(2.2rem, 4.6vw, 5.4rem);
+}
+
 .era__to {
   font-size: 0.4em;
   color: var(--ink-2);
@@ -895,6 +900,12 @@
 .era__period-from {
   top: calc(100% + 1.7rem);
   color: var(--ink-3);
+}
+
+/* a slice too narrow for a left-aligned name: it reads leftward from the strip's end */
+.era__period--bare .era__period-name {
+  left: auto;
+  right: 0;
 }
 
 .era__band {
@@ -951,6 +962,10 @@
   .era__period:nth-child(4) .era__period-name {
     left: auto;
     right: 0;
+  }
+
+  .era__number--years {
+    font-size: clamp(1.9rem, 9vw, 3rem);
   }
 }
 

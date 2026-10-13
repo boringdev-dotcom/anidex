@@ -107,4 +107,11 @@ export function fmtYears([a, b]: [number, number]): string {
   return span(trim(a, 0), trim(b, 0), 'yrs');
 }
 
+/** A span or age given in millions of years, as words for "… years (ago)": "66 million", "1.6 million", "4,000". */
+export function fmtAgo(mya: number): string {
+  if (mya >= 10) return `${Math.round(mya)} million`;
+  if (mya >= 1) return `${trim(mya)} million`;
+  return fmt(Number((mya * 1e6).toPrecision(2)));
+}
+
 export const mid = ([a, b]: [number, number]) => (a + b) / 2;

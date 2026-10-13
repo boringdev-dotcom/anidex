@@ -1,0 +1,167 @@
+{
+  "slug": "woolly-rhinoceros",
+  "commonName": "Woolly rhinoceros",
+  "scientificName": "Coelodonta antiquitatis",
+  "descriptor": "A two-horned rhino in a thick coat, with a front horn over a metre long, that grazed the Ice Age steppe from Spain to Siberia.",
+  "aliases": [
+    "woolly rhino",
+    "coelodonta",
+    "ice age rhino"
+  ],
+  "taxonomy": {
+    "class": "Mammalia",
+    "order": "Perissodactyla",
+    "family": "Rhinocerotidae"
+  },
+  "gbifTaxonKey": 4969546,
+  "specimen": {
+    "sizeClass": "l",
+    "bodyPlan": "quadruped",
+    "proportions": {
+      "length": 0.85,
+      "height": 0.55,
+      "bulk": 0.9,
+      "neck": 0.1,
+      "tail": 0.2
+    },
+    "features": [
+      "horns",
+      "hump"
+    ],
+    "promptDetail": "thick shaggy reddish-brown coat, a large muscular hump over the shoulders, a long head carried low, two horns on the snout with the front horn very long, flattened side to side and curving back, the second horn much shorter, short sturdy legs, small ears and a short tail",
+    "model": {
+      "url": "/models/woolly-rhinoceros-f0dd4dd25e.glb",
+      "yaw": 1.5707963267948966
+    }
+  },
+  "physical": {
+    "weightKg": [
+      1500,
+      2000
+    ],
+    "heightM": [
+      1.45,
+      1.6
+    ],
+    "heightLabel": "at shoulder",
+    "lengthM": [
+      3.2,
+      3.6
+    ],
+    "lengthLabel": "head to tail",
+    "fact": "Its front horn could pass a metre in length and was flattened side to side. Wear on the front edge suggests it swept the horn back and forth to clear snow from grass.",
+    "compare": "human",
+    "source": {
+      "label": "Wikipedia: Woolly rhinoceros, and the studies it cites",
+      "url": "https://en.wikipedia.org/wiki/Woolly_rhinoceros"
+    }
+  },
+  "range": {
+    "summary": "The woolly rhinoceros ranged across northern Eurasia, from Spain and Britain through central Europe and Mongolia to the far north-east of Siberia. Unlike the mammoth it never crossed the Bering land bridge into North America. Frozen bodies with wool and horns have been found in the Siberian permafrost.",
+    "centroid": {
+      "lat": 55,
+      "lon": 90
+    },
+    "bbox": [
+      -10,
+      35,
+      180,
+      76
+    ],
+    "regions": [
+      "Spain",
+      "Britain",
+      "Poland",
+      "Yakutia",
+      "Chukotka"
+    ],
+    "countries": [
+      "RU",
+      "GB",
+      "FR",
+      "ES",
+      "DE",
+      "PL",
+      "UA",
+      "MN",
+      "CN"
+    ]
+  },
+  "fossil": {
+    "period": "Ice Age (Pleistocene)",
+    "mya": [
+      0.5,
+      0.014
+    ],
+    "story": "The woolly rhinoceros shared the mammoth steppe with mammoths, bison and cave hyenas, cropping grass close to the ground. Ice Age artists painted it from life on the walls of Chauvet Cave in France about 36,000 years ago.",
+    "source": {
+      "label": "Lord et al. 2020, Current Biology",
+      "url": "https://doi.org/10.1016/j.cub.2020.07.046",
+      "year": 2020
+    }
+  },
+  "status": {
+    "iucn": "EX",
+    "trend": "unknown",
+    "threats": [
+      {
+        "title": "A sudden warming",
+        "detail": "The last woolly rhinos are about 14,000 years old, from north-east Siberia. That matches an abrupt warm spell that brought shrubs, deeper snow and wetter ground to the steppe."
+      },
+      {
+        "title": "Not simply hunted out",
+        "detail": "Ancient DNA shows the population stayed large and stable for thousands of years after people reached Siberia, then crashed late and fast. That points to climate more than hunting."
+      },
+      {
+        "title": "Nowhere left to go",
+        "detail": "Its range shrank eastward from about 17,000 years ago until only the far north-east was left."
+      }
+    ],
+    "source": {
+      "label": "Lord et al. 2020, Current Biology",
+      "url": "https://doi.org/10.1016/j.cub.2020.07.046",
+      "year": 2020
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Natural History Museum, Kraków",
+        "country": "PL",
+        "lat": 50.05,
+        "lon": 19.94,
+        "note": "The Starunia rhinoceros, found in 1929 pickled in salt and natural wax, and shown as a nearly complete animal with its skin."
+      },
+      {
+        "name": "Mammoth Museum, Yakutsk",
+        "country": "RU",
+        "lat": 62.02,
+        "lon": 129.71,
+        "note": "The permafrost country that produced Sasha, a frozen calf with strawberry-blond wool found in 2014."
+      },
+      {
+        "name": "Grotte Chauvet 2, Ardèche",
+        "country": "FR",
+        "lat": 44.39,
+        "lon": 4.42,
+        "note": "A full replica of Chauvet Cave, where rhinos drawn about 36,000 years ago show the dark band artists saw around their bellies."
+      }
+    ],
+    "bestMonths": [],
+    "tip": "The horns were keratin, not bone, so they almost never fossilised. Nearly all the horns in museums came out of permafrost."
+  },
+  "next": "smilodon",
+  "summary": {
+    "text": "The woolly rhinoceros is an extinct species of rhinoceros that inhabited northern Eurasia during the Pleistocene epoch. The woolly rhinoceros was large, comparable in size to the largest living rhinoceros species, the white rhinoceros, and covered with long, thick hair that allowed it to survive in the extremely cold, harsh mammoth steppe. It had a massive hump reaching from its shoulder and fed mainly by grazing on herbaceous plants that grew in the steppe. Mummified carcasses preserved in permafrost and many bone remains of woolly rhinoceroses have been found. Images of woolly rhinoceroses are found among cave paintings in Europe and Asia, and evidence has been found suggesting that the species was hunted by humans. Like other Pleistocene megafauna, the species became extinct as part of the end-Pleistocene extinction event. The range of the woolly rhinoceros contracted towards Siberia beginning around 17,000 years ago, with the youngest reliable records being around 14,000 years old in northeast Siberia, coinciding with the Bølling–Allerød warming, which likely disrupted its habitat, with environmental DNA records possibly extending the range of the species around 9,800 years ago. Its closest living relative is the Sumatran rhinoceros.",
+    "source": "Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Woolly_rhinoceros",
+    "license": "CC BY-SA 4.0"
+  },
+  "photo": {
+    "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Coelodonta_antiquitatis_.jpg/3840px-Coelodonta_antiquitatis_.jpg",
+    "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Coelodonta_antiquitatis_.jpg/330px-Coelodonta_antiquitatis_.jpg",
+    "credit": "Didier Descouens",
+    "license": "CC BY-SA 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Coelodonta_antiquitatis_.jpg"
+  }
+}
