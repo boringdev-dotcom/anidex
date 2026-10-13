@@ -22,7 +22,7 @@ export function parsePair(s: string): [string, string] | null {
 const CLASS_LENGTH_M: Record<string, number> = { xs: 0.04, s: 0.35, m: 1.3, l: 3, xl: 12 };
 /** Rough typical length by taxonomic class, for species not researched yet (their size class is a placeholder). */
 const TAXON_LENGTH_M: Record<string, number> = {
-  Mammalia: 1, Aves: 0.3, Reptilia: 0.8, Amphibia: 0.1, Actinopterygii: 0.4, Elasmobranchii: 2,
+  Dinosauria: 8, Mammalia: 1, Aves: 0.3, Reptilia: 0.8, Amphibia: 0.1, Actinopterygii: 0.4, Elasmobranchii: 2,
   Insecta: 0.03, Arachnida: 0.03, Malacostraca: 0.15, Cephalopoda: 0.6, Gastropoda: 0.05, Clitellata: 0.15, Coelacanthi: 1.8,
 };
 
@@ -183,6 +183,15 @@ export function sharedCountries(a: Species, b: Species): string[] {
 
 export function overlapSentence(a: Species, b: Species): string {
   const shared = sharedCountries(a, b).map(countryName);
+  // fossil animals: what matters is whether the two were ever alive at the same time
+  if (a.fossil && b.fossil) {
+    const gap = Math.max(a.fossil.mya[1], b.fossil.mya[1]) - Math.min(a.fossil.mya[0], b.fossil.mya[0]);
+    if (gap > 0) return `About ${gap} million years apart. These two never met.`;
+    if (!shared.length) return 'Alive at the same time, on different continents. These two never met.';
+    return `Both lived in what is now ${shared.length === 1 ? shared[0] : `${shared.slice(0, -1).join(', ')} and ${shared.at(-1)}`}, at the same time.`;
+  }
+  const gone = a.fossil ? a : b.fossil ? b : null;
+  if (gone) return `${gone.commonName} died out about ${gone.fossil!.mya[1]} million years ago. These two never met.`;
   if (!shared.length) return 'Their ranges don’t overlap. In the wild, these two never meet.';
   if (shared.length === 1) return `Both live in ${shared[0]}.`;
   if (shared.length <= 3) return `Both live in ${shared.slice(0, -1).join(', ')} and ${shared.at(-1)}.`;

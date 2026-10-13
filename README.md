@@ -77,6 +77,17 @@ Vite, React 19, TypeScript, React Three Fiber on three.js, GSAP with ScrollTrigg
 
 The index and search pick it up automatically.
 
+### Dinosaurs and other fossil animals
+
+A species with a `fossil` block (`period`, `mya`, `story`, `source`) gets a different story, because there is no living range, population or Red List assessment to show:
+
+- **Where its bones were found.** `range` holds the fossil sites; the globe plots GBIF's fossil records on today's map.
+- **When it lived.** A strip of deep time from the Triassic to today, in place of the population chapter.
+- **Extinction.** `status.iucn` is `EX` and `status.threats` lists what ended it, as far as the rock record says.
+- **Where to see one.** `sightings.places` are museums and dig sites; leave `bestMonths` empty.
+
+Use `"class": "Dinosauria"` with the order `Saurischia` or `Ornithischia`, and leave out `population`, `rangeHistory` and `help`. `tyrannosaurus-rex.json` is the template.
+
 ## 3D specimens
 
 Each species has a textured GLB in `public/models/`, generated with fal.ai and sampled into the stipple point cloud. The texture sets each point's size and strength like a halftone, so stripes, patches and wing veins show through. Each animal is auto-exposed around its own median tone in each theme, so pale and dark animals both read on black and on cream; `specimen.tone` fine-tunes one theme if needed.

@@ -1,0 +1,159 @@
+{
+  "slug": "stegosaurus",
+  "commonName": "Stegosaurus",
+  "scientificName": "Stegosaurus stenops",
+  "descriptor": "A plated plant-eater of the Late Jurassic, with two rows of bony plates along its back and four spikes on its tail.",
+  "aliases": [
+    "roofed lizard",
+    "plated dinosaur",
+    "stegosaur",
+    "dinosaur"
+  ],
+  "taxonomy": {
+    "class": "Dinosauria",
+    "order": "Ornithischia",
+    "family": "Stegosauridae"
+  },
+  "gbifTaxonKey": 8541999,
+  "specimen": {
+    "sizeClass": "xl",
+    "bodyPlan": "quadruped",
+    "proportions": {
+      "length": 0.85,
+      "height": 0.6,
+      "bulk": 0.8,
+      "neck": 0.25,
+      "tail": 0.7
+    },
+    "promptDetail": "two alternating rows of large upright kite-shaped bony plates along the neck, arched back and tail, four long spikes at the tip of the tail, a very small narrow head held low, front legs much shorter than the hind legs so the hips are the highest point, scaly skin in olive and brown with reddish-toned plates",
+    "model": {
+      "url": "/models/stegosaurus-09e5224022.glb",
+      "yaw": 1.5707963267948966
+    }
+  },
+  "physical": {
+    "weightKg": [
+      1600,
+      3500
+    ],
+    "weightNote": "Sophie, a young adult, is estimated at about 1.6 t",
+    "heightM": null,
+    "heightLabel": null,
+    "lengthM": [
+      5.6,
+      7
+    ],
+    "lengthLabel": "beak to tail spikes",
+    "fact": "Its tail spikes are called a thagomizer, a word coined in a 1982 Far Side cartoon and later adopted by palaeontologists.",
+    "compare": "human",
+    "source": {
+      "label": "Maidment et al. 2015, PLOS ONE",
+      "url": "https://doi.org/10.1371/journal.pone.0138352",
+      "year": 2015
+    }
+  },
+  "range": {
+    "summary": "Stegosaurus stenops comes from the Morrison Formation of the western United States, river and floodplain deposits that stretch from Montana to New Mexico. The best skeletons are from Garden Park in Colorado, Como Bluff and the Bighorn Basin in Wyoming, and the quarries of eastern Utah.",
+    "centroid": {
+      "lat": 40.5,
+      "lon": -107
+    },
+    "bbox": [
+      -113,
+      35,
+      -101,
+      46
+    ],
+    "regions": [
+      "Wyoming",
+      "Colorado",
+      "Utah"
+    ],
+    "countries": [
+      "US"
+    ]
+  },
+  "fossil": {
+    "period": "Late Jurassic",
+    "mya": [
+      152,
+      145
+    ],
+    "story": "Stegosaurus lived on a seasonally dry floodplain of rivers, ferns and conifers, alongside Allosaurus, Diplodocus and Brachiosaurus. Grass and flowers did not exist yet. By the time Tyrannosaurus appeared, Stegosaurus had been gone for nearly 80 million years.",
+    "source": {
+      "label": "Natural History Museum, London: Dino Directory",
+      "url": "https://www.nhm.ac.uk/discover/dino-directory/stegosaurus.html"
+    }
+  },
+  "status": {
+    "iucn": "EX",
+    "trend": "unknown",
+    "threats": [
+      {
+        "title": "No single catastrophe",
+        "detail": "Stegosaurus disappears from the rocks at the end of the Jurassic, about 145 million years ago. No impact or eruption has been tied to its loss."
+      },
+      {
+        "title": "A changing world",
+        "detail": "The shift from Jurassic to Cretaceous brought falling sea levels, a changing climate and a turnover in plant life, and many dinosaur groups declined across it."
+      },
+      {
+        "title": "The plated dinosaurs fade",
+        "detail": "A few stegosaur relatives lasted into the Early Cretaceous, then the whole group vanished, tens of millions of years before the asteroid."
+      }
+    ],
+    "source": {
+      "label": "Tennant et al. 2017, Biological Reviews",
+      "url": "https://doi.org/10.1111/brv.12255",
+      "year": 2017
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Natural History Museum, London",
+        "country": "GB",
+        "lat": 51.5,
+        "lon": -0.18,
+        "note": "Sophie, the most complete Stegosaurus known at about 85% of the skeleton, found in Wyoming in 2003."
+      },
+      {
+        "name": "Denver Museum of Nature & Science",
+        "country": "US",
+        "lat": 39.75,
+        "lon": -104.94,
+        "note": "Colorado's state fossil, with a mounted skeleton from Garden Park near Cañon City."
+      },
+      {
+        "name": "Carnegie Museum of Natural History, Pittsburgh",
+        "country": "US",
+        "lat": 40.44,
+        "lon": -79.95,
+        "note": "Mounted among its Morrison neighbours, including Apatosaurus and Allosaurus."
+      },
+      {
+        "name": "Dinosaur National Monument, Utah",
+        "country": "US",
+        "lat": 40.44,
+        "lon": -109.3,
+        "note": "A quarry wall with about 1,500 bones still in the rock, Stegosaurus among them."
+      }
+    ],
+    "bestMonths": [],
+    "tip": "The plates sat in the skin, not on the skeleton, so their arrangement was argued over for decades. Skeletons found with plates in place settled it: two alternating rows."
+  },
+  "next": "brachiosaurus",
+  "summary": {
+    "text": "Stegosaurus is a genus of extinct herbivorous four-legged armored dinosaurs from the Late Jurassic, characterized by the distinctive kite-shaped upright plates along their backs and spikes on their tails. Fossils of the genus have been found in the western United States and in Portugal, where they are found in Kimmeridgian- to Tithonian-aged strata, dating to between 155 and 145 million years ago. Of the species that have been classified in the upper Morrison Formation of the western US, only three are universally recognized: S. stenops, S. ungulatus and S. sulcatus. The remains of over 80 individual animals of this genus have been found. Stegosaurus would have lived alongside dinosaurs such as Apatosaurus, Diplodocus, Camarasaurus and Allosaurus, the latter of which may have preyed on it.",
+    "source": "Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Stegosaurus",
+    "license": "CC BY-SA 4.0"
+  },
+  "photo": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/b/bc/Journal.pone.0138352.g001A.jpg",
+    "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bc/Journal.pone.0138352.g001A.jpg/330px-Journal.pone.0138352.g001A.jpg",
+    "credit": "Susannah Maidment et al. and Natural History Museum, London",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Journal.pone.0138352.g001A.jpg"
+  }
+}

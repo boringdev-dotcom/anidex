@@ -14,8 +14,11 @@ interface Look {
 }
 const cache = new Map<string, Promise<Look>>();
 
-/** Wild observations of a species around a point since 2000 (GBIF), with the countries they came from. */
-function lookup(taxonKey: number, lat: number, lon: number): Promise<Look> {
+/**
+ * Wild observations of a species around a point since 2000 (GBIF), with the countries they came from.
+ * For fossil animals: every record around the point, whatever its date or kind.
+ */
+function lookup(taxonKey: number, lat: number, lon: number, fossil: boolean): Promise<Look> {
   const key = `${taxonKey}|${lat.toFixed(1)}|${lon.toFixed(1)}`;
   let p = cache.get(key);
   if (!p) {
@@ -26,13 +29,15 @@ function lookup(taxonKey: number, lat: number, lon: number): Promise<Look> {
       hasCoordinate: 'true',
       hasGeospatialIssue: 'false',
       occurrenceStatus: 'PRESENT',
-      year: `2000,${new Date().getFullYear()}`,
       decimalLatitude: `${Math.max(-90, lat - BOX)},${Math.min(90, lat + BOX)}`,
       decimalLongitude: `${Math.max(-180, lon - dLon)},${Math.min(180, lon + dLon)}`,
       facet: 'country',
       facetLimit: '3',
     });
-    for (const b of ['HUMAN_OBSERVATION', 'MACHINE_OBSERVATION', 'OBSERVATION']) q.append('basisOfRecord', b);
+    if (!fossil) {
+      q.set('year', `2000,${new Date().getFullYear()}`);
+      for (const b of ['HUMAN_OBSERVATION', 'MACHINE_OBSERVATION', 'OBSERVATION']) q.append('basisOfRecord', b);
+    }
     p = fetch(`https://api.gbif.org/v1/occurrence/search?${q}`)
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
       .then((b: { count: number; facets?: { counts: { name: string }[] }[] }) => ({
@@ -75,6 +80,7 @@ const coord = (v: number, pos: string, neg: string) => `${Math.abs(v).toFixed(1)
 export function GlobeTapCard({ sp }: { sp: Species }) {
   const tap = useStore((s) => s.globeTap);
   const [look, setLook] = useState<Look | null | 'error'>(null);
+  const fossil = !!sp.fossil;
   const ref = useRef<HTMLDivElement>(null);
   const openedAt = useRef(0);
 
@@ -86,14 +92,14 @@ export function GlobeTapCard({ sp }: { sp: Species }) {
     setLook(null);
     openedAt.current = window.scrollY;
     let live = true;
-    lookup(sp.gbifTaxonKey, tap.lat, tap.lon).then(
+    lookup(sp.gbifTaxonKey, tap.lat, tap.lon, fossil).then(
       (l) => live && setLook(l),
       () => live && setLook('error'),
     );
     return () => {
       live = false;
     };
-  }, [tap, sp.gbifTaxonKey]);
+  }, [tap, sp.gbifTaxonKey, fossil]);
 
   // close on scroll away, or on a press anywhere outside the card (a new globe tap reopens it)
   useEffect(() => {
@@ -145,11 +151,19 @@ export function GlobeTapCard({ sp }: { sp: Species }) {
       </div>
       <p className="tapcard__place">{look ? place : 'Looking…'}</p>
       {look === 'error' ? (
-        <p className="tapcard__count">Couldn’t reach the sightings records just now.</p>
+        <p className="tapcard__count">Couldn’t reach the {fossil ? 'fossil' : 'sightings'} records just now.</p>
       ) : ready ? (
         <>
           <p className="tapcard__count">
-            {look.count > 0 ? (
+            {fossil ? (
+              look.count > 0 ? (
+                <>
+                  <span className="num">{fmt(look.count)}</span> fossil record{look.count === 1 ? '' : 's'} from within about 220 km
+                </>
+              ) : (
+                <>No fossil records from within about 220 km.</>
+              )
+            ) : look.count > 0 ? (
               <>
                 <span className="num">{fmt(look.count)}</span> wild sighting{look.count === 1 ? '' : 's'} recorded within about 220 km since 2000
               </>
@@ -157,7 +171,11 @@ export function GlobeTapCard({ sp }: { sp: Species }) {
               <>No wild sightings recorded within about 220 km since 2000.</>
             )}
           </p>
-          {look.count > 0 && <p className="label tapcard__hint">Sightings, not a head count: one animal can be recorded many times.</p>}
+          {look.count > 0 && (
+            <p className="label tapcard__hint">
+              {fossil ? 'Records, not animals: one skeleton can be catalogued many times, and many finds are not catalogued here.' : 'Sightings, not a head count: one animal can be recorded many times.'}
+            </p>
+          )}
         </>
       ) : null}
       {region && (

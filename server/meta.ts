@@ -42,11 +42,13 @@ interface Row {
   iucn: string | null;
   og: string | null;
   descriptor: string | null;
+  /** set for animals known only from fossils, e.g. "Late Cretaceous" */
+  period: string | null;
 }
 async function rows(slugs: string[]): Promise<Map<string, Row>> {
   if (!pool) return new Map();
   const r = await pool.query<Row>(
-    `select slug, common_name, scientific_name, iucn, og, data->>'descriptor' as descriptor from species where slug = any($1)`,
+    `select slug, common_name, scientific_name, iucn, og, data->>'descriptor' as descriptor, data->'fossil'->>'period' as period from species where slug = any($1)`,
     [slugs],
   );
   return new Map(r.rows.map((x) => [x.slug, x]));
@@ -63,7 +65,7 @@ export async function pageMeta(path: string): Promise<Meta> {
       const status = r.iucn ? STATUS[r.iucn] : null;
       return {
         title: `${r.common_name} · AniDex`,
-        description: [r.descriptor ?? r.scientific_name, status ? `IUCN status: ${status}.` : ''].filter(Boolean).join(' '),
+        description: [r.descriptor ?? r.scientific_name, r.period ? `Lived in the ${r.period}.` : status ? `IUCN status: ${status}.` : ''].filter(Boolean).join(' '),
         image: imageUrl(r.og) ?? fallback.image,
         url,
       };

@@ -1,0 +1,153 @@
+{
+  "slug": "velociraptor",
+  "commonName": "Velociraptor",
+  "scientificName": "Velociraptor mongoliensis",
+  "descriptor": "A feathered, turkey-sized hunter of the Gobi with a hooked killing claw on each foot, far smaller than its film namesake.",
+  "aliases": [
+    "raptor",
+    "swift thief",
+    "dromaeosaur",
+    "dinosaur"
+  ],
+  "taxonomy": {
+    "class": "Dinosauria",
+    "order": "Saurischia",
+    "family": "Dromaeosauridae"
+  },
+  "gbifTaxonKey": 4822952,
+  "specimen": {
+    "sizeClass": "m",
+    "bodyPlan": "biped",
+    "proportions": {
+      "length": 0.8,
+      "height": 0.4,
+      "bulk": 0.3,
+      "neck": 0.4,
+      "tail": 0.9
+    },
+    "promptDetail": "small and lightly built, fully covered in feathers with long wing-like feathers on the arms and a feathered fan at the end of a long stiff tail, a long low narrow snout, body held horizontal on two slender legs with one large curved sickle claw raised on each foot, sandy brown and cream plumage with darker barring",
+    "model": {
+      "url": "/models/velociraptor-f197a834ba.glb",
+      "yaw": 1.5707963267948966
+    }
+  },
+  "physical": {
+    "weightKg": [
+      7,
+      20
+    ],
+    "weightNote": "estimates vary widely with the method used",
+    "heightM": [
+      0.5,
+      0.5
+    ],
+    "heightLabel": "at hip",
+    "lengthM": [
+      1.5,
+      2.1
+    ],
+    "lengthLabel": "snout to tail tip",
+    "fact": "Quill knobs on a forearm bone show that it carried large feathers. It stood about as tall as a turkey, half the height of the film version.",
+    "compare": "human",
+    "source": {
+      "label": "Turner, Makovicky and Norell 2007, Science",
+      "url": "https://doi.org/10.1126/science.1145076",
+      "year": 2007
+    }
+  },
+  "range": {
+    "summary": "Velociraptor mongoliensis is known from a handful of sites in the Gobi Desert of southern Mongolia, in red sandstones laid down by dunes and seasonal streams. The first was found at the Flaming Cliffs in 1923. A second species, Velociraptor osmolskae, comes from just across the border in Inner Mongolia, China.",
+    "centroid": {
+      "lat": 44.1,
+      "lon": 103.7
+    },
+    "bbox": [
+      97,
+      41,
+      111,
+      47
+    ],
+    "regions": [
+      "Flaming Cliffs",
+      "Tugrik"
+    ],
+    "countries": [
+      "MN"
+    ]
+  },
+  "fossil": {
+    "period": "Late Cretaceous",
+    "mya": [
+      74,
+      70
+    ],
+    "story": "Velociraptor hunted among the dunes and oases of a desert in what is now the Gobi. Its most famous fossil, the Fighting Dinosaurs, preserves one locked together with a Protoceratops, the two apparently buried mid-struggle by collapsing sand.",
+    "source": {
+      "label": "Natural History Museum, London: Dino Directory",
+      "url": "https://www.nhm.ac.uk/discover/dino-directory/velociraptor.html"
+    }
+  },
+  "status": {
+    "iucn": "EX",
+    "trend": "unknown",
+    "threats": [
+      {
+        "title": "Gone before the asteroid",
+        "detail": "The last Velociraptor fossils are about 70 million years old, some four million years before the impact that ended the age of dinosaurs. Why it vanished is not known."
+      },
+      {
+        "title": "A thin record",
+        "detail": "It is known from a few desert sites in one region, so its true span in time may be longer than the rocks show."
+      },
+      {
+        "title": "Its relatives carried on",
+        "detail": "Other dromaeosaurs lived to the very end of the Cretaceous, 66 million years ago. Their close cousins, the birds, are still here."
+      }
+    ],
+    "source": {
+      "label": "Natural History Museum, London: Dino Directory",
+      "url": "https://www.nhm.ac.uk/discover/dino-directory/velociraptor.html"
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "American Museum of Natural History, New York",
+        "country": "US",
+        "lat": 40.78,
+        "lon": -73.97,
+        "note": "Holds the first Velociraptor ever found: a crushed skull and a claw collected at the Flaming Cliffs in 1923."
+      },
+      {
+        "name": "Central Museum of Mongolian Dinosaurs, Ulaanbaatar",
+        "country": "MN",
+        "lat": 47.92,
+        "lon": 106.91,
+        "note": "Mongolia's national dinosaur museum, with fossils from the Gobi sites where Velociraptor lived."
+      },
+      {
+        "name": "Flaming Cliffs (Bayanzag)",
+        "country": "MN",
+        "lat": 44.14,
+        "lon": 103.73,
+        "note": "The red sandstone cliffs where Velociraptor was discovered, reached from Dalanzadgad."
+      }
+    ],
+    "bestMonths": [],
+    "tip": "Outside Mongolia and New York, most Velociraptor skeletons on display are casts. They are still the best way to see how small it really was."
+  },
+  "next": "spinosaurus",
+  "summary": {
+    "text": "Velociraptor is a genus of small dromaeosaurid dinosaurs that lived in Asia during the Late Cretaceous epoch, about 75 million to 71 million years ago (Mya). Two species are currently recognized, although others have been assigned in the past. The type species is V. mongoliensis, named and described in 1924. Fossils of this species have been discovered in the Djadochta Formation, Mongolia. A second species, V. osmolskae, was named in 2008 for skull material from the Bayan Mandahu Formation, China. A possible record is known from the Nemegt Formation.",
+    "source": "Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Velociraptor",
+    "license": "CC BY-SA 4.0"
+  },
+  "photo": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Velociraptor_skeleton_white_background.jpg",
+    "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3d/Velociraptor_skeleton_white_background.jpg/330px-Velociraptor_skeleton_white_background.jpg",
+    "credit": "Eduard Solà Vázquez",
+    "license": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Velociraptor_skeleton_white_background.jpg"
+  }
+}

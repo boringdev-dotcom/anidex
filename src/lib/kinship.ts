@@ -8,7 +8,7 @@ import type { Species } from '../data/types';
 export type Rank = 'Kingdom' | 'Phylum' | 'Class' | 'Order' | 'Family' | 'Genus' | 'Species';
 
 const PHYLUM: Record<string, string> = {
-  Mammalia: 'Chordata', Aves: 'Chordata', Reptilia: 'Chordata', Amphibia: 'Chordata',
+  Mammalia: 'Chordata', Aves: 'Chordata', Reptilia: 'Chordata', Dinosauria: 'Chordata', Amphibia: 'Chordata',
   Actinopterygii: 'Chordata', Sarcopterygii: 'Chordata', Elasmobranchii: 'Chordata', Chondrichthyes: 'Chordata', Holocephali: 'Chordata',
   Insecta: 'Arthropoda', Malacostraca: 'Arthropoda', Arachnida: 'Arthropoda', Branchiopoda: 'Arthropoda', Merostomata: 'Arthropoda', Chilopoda: 'Arthropoda', Diplopoda: 'Arthropoda',
   Cephalopoda: 'Mollusca', Gastropoda: 'Mollusca', Bivalvia: 'Mollusca',
@@ -18,7 +18,7 @@ const PHYLUM: Record<string, string> = {
 };
 
 const CLASS_COMMON: Record<string, string> = {
-  Mammalia: 'mammals', Aves: 'birds', Reptilia: 'reptiles', Amphibia: 'amphibians', Actinopterygii: 'ray-finned fish',
+  Mammalia: 'mammals', Aves: 'birds', Reptilia: 'reptiles', Dinosauria: 'dinosaurs', Amphibia: 'amphibians', Actinopterygii: 'ray-finned fish',
   Elasmobranchii: 'sharks and rays', Chondrichthyes: 'cartilaginous fish', Insecta: 'insects', Malacostraca: 'crustaceans',
   Arachnida: 'arachnids', Cephalopoda: 'cephalopods', Gastropoda: 'snails and slugs', Bivalvia: 'bivalves', Anthozoa: 'corals and anemones',
 };
@@ -43,6 +43,10 @@ const SARCOPTERYGII = [...OSTEICHTHYES, C('Sarcopterygii', 410)];
 const AMNIOTA = [...SARCOPTERYGII, C('Tetrapoda', 352), C('Amniota', 319)];
 const SAUROPSIDA = [...AMNIOTA, C('Sauropsida', 280)];
 const ARCHOSAURIA = [...SAUROPSIDA, C('Archelosauria', 255), C('Archosauria', 245)];
+// birds are living dinosaurs, on the saurischian side; no date is given below Dinosauria because
+// it depends on which saurischian a bird is compared with
+const DINOSAURIA = [...ARCHOSAURIA, C('Dinosauria', 233)];
+const SAURISCHIA = [...DINOSAURIA, C('Saurischia')];
 const PLACENTALIA = [...AMNIOTA, C('Mammalia', 180), C('Theria', 160), C('Placentalia', 99)];
 const BOREOEUTHERIA = [...PLACENTALIA, C('Boreoeutheria', 94)];
 
@@ -76,7 +80,9 @@ function lineage(cls: string, order: string): Clade[] {
     case 'Mammalia':
       return MAMMAL_GROUP[order] ?? [...AMNIOTA, C('Mammalia', 180)];
     case 'Aves':
-      return [...ARCHOSAURIA, C('Aves')];
+      return [...SAURISCHIA, C('Aves')];
+    case 'Dinosauria':
+      return order === 'Saurischia' ? SAURISCHIA : [...DINOSAURIA, C(order)];
     case 'Reptilia':
       return REPTILE_GROUP[order] ?? [...SAUROPSIDA, C('Lepidosauria')];
     case 'Amphibia':

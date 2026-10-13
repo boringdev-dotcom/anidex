@@ -1,0 +1,161 @@
+{
+  "slug": "brachiosaurus",
+  "commonName": "Brachiosaurus",
+  "scientificName": "Brachiosaurus altithorax",
+  "descriptor": "A giraffe-shaped giant of the Late Jurassic, with front legs longer than its hind legs and a head held high above the trees.",
+  "aliases": [
+    "arm lizard",
+    "sauropod",
+    "long-necked dinosaur",
+    "dinosaur"
+  ],
+  "taxonomy": {
+    "class": "Dinosauria",
+    "order": "Saurischia",
+    "family": "Brachiosauridae"
+  },
+  "gbifTaxonKey": 4967320,
+  "specimen": {
+    "sizeClass": "xl",
+    "bodyPlan": "quadruped",
+    "proportions": {
+      "length": 1,
+      "height": 1,
+      "bulk": 0.8,
+      "neck": 1,
+      "tail": 0.6
+    },
+    "promptDetail": "a very long neck held steeply upward, a small head with a domed crest above the eyes, front legs clearly longer than the hind legs so the back slopes down from high shoulders to the hips, a deep chest, a relatively short tail held off the ground, four pillar-like legs, wrinkled scaly skin in grey-brown with a paler underside",
+    "model": {
+      "url": "/models/brachiosaurus-0fa0db2bb2.glb",
+      "yaw": 1.5707963267948966
+    }
+  },
+  "physical": {
+    "weightKg": [
+      28000,
+      47000
+    ],
+    "weightNote": "estimates range widely because no complete skeleton is known",
+    "heightM": [
+      9,
+      12
+    ],
+    "heightLabel": "standing",
+    "lengthM": [
+      18,
+      22
+    ],
+    "lengthLabel": "snout to tail tip",
+    "fact": "Its front legs were longer than its hind legs, so its back sloped down from the shoulders like a giraffe's. The name means arm lizard.",
+    "compare": "human",
+    "source": {
+      "label": "Taylor 2009, Journal of Vertebrate Paleontology",
+      "url": "https://doi.org/10.1671/039.029.0309",
+      "year": 2009
+    }
+  },
+  "range": {
+    "summary": "Brachiosaurus is one of the rarest animals of the Morrison Formation. The first skeleton was dug out near Grand Junction, Colorado, in 1900, and only a few other partial skeletons have turned up since, mostly in western Colorado and Utah. None is complete.",
+    "centroid": {
+      "lat": 39.1,
+      "lon": -108.7
+    },
+    "bbox": [
+      -112,
+      35,
+      -102,
+      43
+    ],
+    "regions": [
+      "Colorado",
+      "Utah"
+    ],
+    "countries": [
+      "US"
+    ]
+  },
+  "fossil": {
+    "period": "Late Jurassic",
+    "mya": [
+      152,
+      145
+    ],
+    "story": "Brachiosaurus browsed the tall conifers of the Morrison floodplain, reaching higher than any of its neighbours. The towering skeleton in Berlin that was long called Brachiosaurus is now classed as its African cousin, Giraffatitan.",
+    "source": {
+      "label": "Natural History Museum, London: Dino Directory",
+      "url": "https://www.nhm.ac.uk/discover/dino-directory/brachiosaurus.html"
+    }
+  },
+  "status": {
+    "iucn": "EX",
+    "trend": "unknown",
+    "threats": [
+      {
+        "title": "No single catastrophe",
+        "detail": "Brachiosaurus disappears from the rocks at the end of the Jurassic, about 145 million years ago. No impact or eruption has been tied to its loss."
+      },
+      {
+        "title": "A changing world",
+        "detail": "The shift from Jurassic to Cretaceous brought falling sea levels, a changing climate and a turnover in plant life, and many dinosaur groups declined across it."
+      },
+      {
+        "title": "Cousins lasted longer",
+        "detail": "Other brachiosaurids are known from Early Cretaceous rocks in North America, tens of millions of years later."
+      }
+    ],
+    "source": {
+      "label": "Tennant et al. 2017, Biological Reviews",
+      "url": "https://doi.org/10.1111/brv.12255",
+      "year": 2017
+    }
+  },
+  "sightings": {
+    "places": [
+      {
+        "name": "Field Museum, Chicago",
+        "country": "US",
+        "lat": 41.87,
+        "lon": -87.62,
+        "note": "Holds the first skeleton, found in 1900 near Grand Junction, and built a full-size cast of the whole animal from it."
+      },
+      {
+        "name": "Dinosaur Journey Museum, Fruita",
+        "country": "US",
+        "lat": 39.15,
+        "lon": -108.74,
+        "note": "The local museum for the Morrison quarries around Grand Junction, where Brachiosaurus was first found."
+      },
+      {
+        "name": "Riggs Hill, Grand Junction",
+        "country": "US",
+        "lat": 39.07,
+        "lon": -108.65,
+        "note": "The 1900 discovery site, now a short marked trail."
+      },
+      {
+        "name": "Museum für Naturkunde, Berlin",
+        "country": "DE",
+        "lat": 52.53,
+        "lon": 13.38,
+        "note": "Giraffatitan, the close cousin long displayed as Brachiosaurus. At 13.27 m it is the tallest mounted dinosaur skeleton in the world."
+      }
+    ],
+    "bestMonths": [],
+    "tip": "Most pictures of Brachiosaurus are really based on Giraffatitan from Tanzania, which is far better known. The American animal was probably longer in the body and tail."
+  },
+  "next": "axolotl",
+  "summary": {
+    "text": "Brachiosaurus is a genus of sauropod dinosaur that lived in North America during the Late Jurassic, about 155.6 to 145.5 million years ago. It was first described by American paleontologist Elmer S. Riggs in 1903 from fossils found in the Colorado River valley in western Colorado, United States. Riggs named the dinosaur Brachiosaurus altithorax; the generic name is Greek for \"arm lizard\", in reference to its proportionately long arms, and the specific name means \"deep chest\". Brachiosaurus is estimated to have been between 18 and 22 meters long; body mass estimates of the subadult holotype specimen range from 28.3 to 46.9 metric tons. It had a disproportionately long neck, small skull, and large overall size, all of which are typical for sauropods. Atypically, Brachiosaurus had longer forelimbs than hindlimbs, which resulted in a steeply inclined trunk and a proportionally shorter tail.",
+    "source": "Wikipedia",
+    "url": "https://en.wikipedia.org/wiki/Brachiosaurus",
+    "license": "CC BY-SA 4.0"
+  },
+  "photo": {
+    "url": "https://upload.wikimedia.org/wikipedia/commons/e/ed/Brachiosaurus_mount.jpg",
+    "thumb": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ed/Brachiosaurus_mount.jpg/330px-Brachiosaurus_mount.jpg",
+    "credit": "Matt Wedel",
+    "license": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Brachiosaurus_mount.jpg"
+  }
+}
